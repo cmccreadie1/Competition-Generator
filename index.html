@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>MatchPro v7.5.0</title>
+    <link rel="manifest" href="manifest.json">
+    <link rel="apple-touch-icon" href="icon.svg">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    
+    <!-- External Libraries -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/exceljs/4.3.0/exceljs.min.js"></script>
+
+    <style>
+        :root {
+            --bg: #f8fafc; --card: #ffffff; --text: #0f172a; --subtext: #64748b;
+            --accent: #0284c7; --accent-hover: #0369a1; --border: #e2e8f0;
+            --row-red: #fee2e2; --row-yellow: #fef9c3; --row-green: #dcfce7; --row-blue: #dbeafe;
+            --text-red: #991b1b; --text-yellow: #854d0e; --text-green: #166534; --text-blue: #1e40af;
+        }
+        body { font-family: 'Inter', system-ui, sans-serif; background: var(--bg); color: var(--text); margin: 0; padding: 0; }
+
+        .fixed-header { 
+            position: fixed; top: 0; left: 0; right: 0; z-index: 5000; 
+            background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border); padding: 12px 20px; 
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+
+        .header-content { display: flex; justify-content: space-between; align-items: center; max-width: 1000px; margin: 0 auto; }
+        .app-logo { width: 110px; }
+        
+        .btn-history { background: #f1f5f9; color: var(--text); padding: 8px 16px; border-radius: 8px; font-size: 11px; font-weight: 700; border: 1px solid var(--border); cursor: pointer; text-transform: uppercase; }
+
+        #entrySection, #resultsSection { max-width: 1000px; margin: 0 auto; padding: 160px 20px 40px; }
+        #resultsSection { padding-top: 100px; }
+
+        .card { background: var(--card); border: 1px solid var(--border); border-radius: 16px; padding: 24px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); margin-bottom: 24px; }
+        
+        label { color: var(--subtext); font-weight: 700; font-size: 11px; text-transform: uppercase; display: block; margin-bottom: 8px; }
+        input { background: #ffffff; border: 1px solid var(--border); color: var(--text); padding: 12px; border-radius: 8px; width: 100%; box-sizing: border-box; font-size: 14px; font-weight: 600; outline: none; }
+        input:focus { border-color: var(--accent); ring: 2px var(--accent); }
+
+        .entry-grid { display: grid; grid-template-columns: 1fr; gap: 20px; }
+        @media (min-width: 768px) { .entry-grid { grid-template-columns: 1fr 1fr; } }
+
+        .btn-main { background: var(--accent); color: white; padding: 16px; border-radius: 12px; font-weight: 700; font-size: 14px; border: none; cursor: pointer; width: 100%; transition: background 0.2s; }
+        .btn-main:hover { background: var(--accent-hover); }
+
+        .results-nav { background: var(--card); padding: 16px; border-radius: 16px; border: 1px solid var(--border); margin-bottom: 24px; display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
+        .btn-nav { padding: 10px; border-radius: 8px; font-size: 10px; font-weight: 800; border: none; cursor: pointer; color: white; text-transform: uppercase; }
+
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        th { text-align: left; font-size: 11px; color: var(--subtext); text-transform: uppercase; padding: 12px; border-bottom: 2px solid var(--border); }
+        td { padding: 12px; border-bottom: 1px solid var(--border); font-size: 14px; }
+
+        .badge { padding: 4px 8px; border-radius: 4px; font-weight: 800; font-size: 10px; text-transform: uppercase; }
+        .badge-red { background: var(--row-red); color: var(--text-red); }
+        .badge-yellow { background: var(--row-yellow); color: var(--text-yellow); }
+        .badge-green { background: var(--row-green); color: var(--text-green); }
+        .badge-blue { background: var(--row-blue); color: var(--text-blue); }
+
+        @media print { .no-print { display: none !important; } #resultsSection { padding-top: 0; } body { background: white; } }
+    </style>
+</head>
+<body>
+
+<div class="fixed-header no-print">
+    <div class="header-content">
+        <div style="display:flex; align-items:center; gap:10px;">
+            <img src="icon.svg" alt="Logo" class="app-logo">
+            <span style="font-weight:900; font-size:12px; color:var(--accent);">v7.5.0</span>
+        </div>
+        <button onclick="toggleHistory()" class="btn-history">History</button>
+    </div>
+</div>
+
+<div id="entrySection" class="no-print">
+    <div class="card">
+        <div style="margin-bottom: 20px;"><label>COMPETITION NAME</label><input type="text" id="matchTitle" placeholder="Enter Title..."></div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom:20px;">
+            <div><label>TEAMS</label><input type="number" id="initTeams" value="24"></div>
+            <div><label>INDIVIDUALS</label><input type="number" id="initIndivs" value="4"></div>
+        </div>
+        <button class="btn-main" onclick="bulkInit()">BUILD ENTRY LIST</button>
+    </div>
+    <div id="entryList" class="entry-grid"></div>
+    <div id="drawAction" style="display:none; margin-top:30px;">
+        <button class="btn-main" style="background:#0f172a;" onclick="runDraw()">PROCESS TEAM DRAW</button>
+    </div>
+</div>
+
+<div id="resultsSection" style="display:none;">
+    <div class="results-nav no-print">
+        <button onclick="window.print()" class="btn-nav" style="background:#64748b;">Print</button>
+        <button onclick="exportToVault()" class="btn-nav" style="background:#16a34a;">Vault Export</button>
+        <button onclick="handleAmend()" class="btn-nav" style="background:#ea580c;">Amend</button>
+        <button onclick="location.reload()" class="btn-nav" style="background:#ef4444;">Reset</button>
+    </div>
+    <div id="resultsArea"></div>
+</div>
+
+<script>
+    const zones = ['Red', 'Yellow', 'Green', 'Blue'];
+    const rotationMap = { 'Red': 'Blue', 'Blue': 'Red', 'Yellow': 'Green', 'Green': 'Yellow' };
+    let currentDrawData = [];
+
+    function bulkInit() {
+        const list = document.getElementById('entryList'); list.innerHTML = '';
+        const t = parseInt(document.getElementById('initTeams').value) || 0;
+        const i = parseInt(document.getElementById('initIndivs').value) || 0;
+        for(let x=0; x<t; x++) addNewItem('team');
+        for(let y=0; y<i; y++) addNewItem('indiv');
+        document.getElementById('drawAction').style.display = 'block';
+    }
+
+    function addNewItem(type) {
+        const list = document.getElementById('entryList');
+        const div = document.createElement('div'); div.className = 'card'; div.dataset.type = type;
+        const del = `<button onclick="this.parentElement.remove()" style="float:right; border:none; background:none; color:red; cursor:pointer;">×</button>`;
+        if(type === 'team') {
+            div.innerHTML = `${del}<label>Team Name</label><input type="text" class="t-name" style="margin-bottom:10px;">` +
+                [1,2,3,4].map(n => `<input type="text" class="a-name" placeholder="Angler ${n}" style="margin-bottom:5px;">`).join('');
+        } else {
+            div.innerHTML = `${del}<label>Individual Angler</label><input type="text" class="a-name">`;
+        }
+        list.appendChild(div);
+    }
+
+    function shuffle(array) { for (let i = array.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [array[i], array[j]] = [array[j], array[i]]; } }
+
+    function runDraw() {
+        let teams = []; let indivs = [];
+        document.querySelectorAll('.card[data-type]').forEach(block => {
+            const names = Array.from(block.querySelectorAll('.a-name')).map(i => i.value.trim()).filter(n => n);
+            const tName = block.querySelector('.t-name')?.value.trim() || "";
+            if(block.dataset.type === 'team' && names.length) teams.push({ tName, anglers: names });
+            else if(names[0]) indivs.push({ name: names[0], team: "" });
+        });
+
+        const totalAnglers = (teams.length * 4) + indivs.length;
+        const base = Math.floor(totalAnglers / 4);
+        const rem = totalAnglers % 4;
+        let map1 = zones.map((name, i) => ({ name, size: base + (i < rem ? 1 : 0), pool: [] }));
+        let cur = 1; map1.forEach(m => { for(let p=cur; p<cur+m.size; p++) m.pool.push(p); shuffle(m.pool); cur += m.size; });
+
+        let results = [];
+        teams.forEach(t => {
+            let zIdx = [0,1,2,3]; shuffle(zIdx);
+            let teamResults = { tName: t.tName, anglers: [] };
+            t.anglers.forEach((name, i) => {
+                const z1 = zones[zIdx[i]];
+                const p1 = map1[zIdx[i]].pool.pop();
+                teamResults.anglers.push({ name, team: t.tName, z1, p1, z2: rotationMap[z1] });
+            });
+            results.push(teamResults);
+        });
+
+        if(indivs.length) {
+            let soloGroup = { tName: "Individuals", anglers: [] };
+            indivs.forEach(a => {
+                let avail = map1.map((m, i) => i).filter(i => map1[i].pool.length > 0);
+                const zIdx = avail[Math.floor(Math.random() * avail.length)];
+                const z1 = zones[zIdx];
+                const p1 = map1[zIdx].pool.pop();
+                soloGroup.anglers.push({ name: a.name, team: "", z1, p1, z2: rotationMap[z1] });
+            });
+            results.push(soloGroup);
+        }
+
+        currentDrawData = results;
+        renderResults(results);
+        document.getElementById('entrySection').style.display = 'none';
+        document.getElementById('resultsSection').style.display = 'block';
+    }
+
+    function renderResults(data) {
+        const area = document.getElementById('resultsArea'); area.innerHTML = '';
+        data.forEach(group => {
+            let html = `<div class="card"><h3>${group.tName || 'Solo Anglers'}</h3><table><thead><tr><th>Angler</th><th>Day 1</th><th>Day 2</th></tr></thead><tbody>`;
+            group.anglers.forEach(a => {
+                html += `<tr><td><b>${a.name}</b></td>
+                    <td><span class="badge badge-${a.z1.toLowerCase()}">${a.z1} (${a.p1})</span></td>
+                    <td><span class="badge badge-${a.z2.toLowerCase()}">${a.z2}</span></td></tr>`;
+            });
+            area.innerHTML += html + `</tbody></table></div>`;
+        });
+    }
+
+    async function exportToVault() {
+        const workbook = new ExcelJS.Workbook();
+        try {
+            const response = await fetch('COMPETITION_TEMPLATE.xlsx');
+            if (!response.ok) throw new Error("Template file not found. Ensure COMPETITION_TEMPLATE.xlsx is in the root folder.");
+            const arrayBuffer = await response.arrayBuffer();
+            await workbook.xlsx.load(arrayBuffer);
+            const sheet = workbook.getWorksheet('DATA_IMPORT');
+            
+            let rowIdx = 2;
+            currentDrawData.forEach(group => {
+                group.anglers.forEach(a => {
+                    const row = sheet.getRow(rowIdx++);
+                    row.getCell(1).value = a.name;
+                    row.getCell(2).value = a.team;
+                    row.getCell(3).value = a.z1;
+                    row.getCell(4).value = a.z2;
+                });
+            });
+
+            const buffer = await workbook.xlsx.writeBuffer();
+            const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = `Vault_Export_${Date.now()}.xlsx`;
+            link.click();
+        } catch (err) { alert(`Error: ${err.message}`); }
+    }
+
+    function handleAmend() { document.getElementById('entrySection').style.display = 'block'; document.getElementById('resultsSection').style.display = 'none'; }
+    function toggleHistory() { /* History Drawer Logic */ }
+</script>
+</body>
+</html>
