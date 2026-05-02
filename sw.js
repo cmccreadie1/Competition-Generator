@@ -1,4 +1,4 @@
-const CACHE_NAME = 'matchpro-v7.6.1-header-patch';
+const CACHE_NAME = 'matchpro-v7.7.0-dual-peg-patch';
 const ASSETS_TO_CACHE = [
     './',
     './index.html',
