@@ -1,4 +1,4 @@
-const CACHE_NAME = 'matchpro-v7.5.2-compatibility-patch'; // Forced cache clear
+const CACHE_NAME = 'matchpro-v7.5.3-universal-patch';
 const ASSETS_TO_CACHE = [
     './',
     './index.html',
