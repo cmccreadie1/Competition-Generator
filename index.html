@@ -3,13 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>MatchPro v7.5.2</title>
+    <title>MatchPro v7.5.3</title>
     <link rel="manifest" href="manifest.json">
     <link rel="apple-touch-icon" href="icon.svg">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
     
-    <!-- External Libraries -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/exceljs/4.3.0/exceljs.min.js"></script>
 
@@ -30,9 +29,7 @@
         .card { background: var(--card); border: 1px solid var(--border); border-radius: 16px; padding: 24px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05); margin-bottom: 24px; position: relative; }
         label { color: var(--subtext); font-weight: 700; font-size: 11px; text-transform: uppercase; display: block; margin-bottom: 8px; letter-spacing: 0.05em; }
         input { background: #ffffff; border: 1px solid var(--border); color: var(--text); padding: 12px; border-radius: 10px; width: 100%; box-sizing: border-box; font-size: 14px; font-weight: 600; outline: none; }
-        .entry-grid { display: grid; grid-template-columns: 1fr; gap: 20px; }
-        @media (min-width: 768px) { .entry-grid { grid-template-columns: 1fr 1fr; } }
-        .btn-main { background: var(--accent); color: white; padding: 16px; border-radius: 12px; font-weight: 700; font-size: 14px; border: none; cursor: pointer; width: 100%; }
+        .btn-main { background: var(--accent); color: white; padding: 16px; border-radius: 12px; font-weight: 700; font-size: 14px; border: none; cursor: pointer; width: 100%; transition: background 0.2s; }
         .results-nav { background: var(--card); padding: 16px; border-radius: 16px; border: 1px solid var(--border); margin-bottom: 24px; display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
         .btn-nav { padding: 12px 2px; border-radius: 10px; font-size: 9px; font-weight: 800; border: none; cursor: pointer; color: white; text-transform: uppercase; }
         table { width: 100%; border-collapse: collapse; }
@@ -53,7 +50,7 @@
     <div class="header-content">
         <div style="display:flex; align-items:center; gap:12px;">
             <img src="icon.svg" alt="Logo" class="app-logo">
-            <span class="version-tag">v7.5.2</span>
+            <span class="version-tag">v7.5.3</span>
         </div>
         <button style="background:transparent; border:none; font-weight:700; color:var(--subtext); font-size:12px; cursor:pointer;">HISTORY</button>
     </div>
@@ -61,14 +58,14 @@
 
 <div id="entrySection" class="no-print">
     <div class="card">
-        <div style="margin-bottom: 25px;"><label>COMPETITION NAME</label><input type="text" id="matchTitle" placeholder="e.g. Summer Open 2026"></div>
+        <div style="margin-bottom: 25px;"><label>COMPETITION NAME</label><input type="text" id="matchTitle" placeholder="e.g. Open Championship 2026"></div>
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom:25px;">
             <div><label>INITIAL TEAMS</label><input type="number" id="initTeams" value="24"></div>
             <div><label>INDIVIDUALS</label><input type="number" id="initIndivs" value="4"></div>
         </div>
         <button class="btn-main" onclick="bulkInit()">GENERATE DATA ENTRY FIELDS</button>
     </div>
-    <div id="entryList" class="entry-grid"></div>
+    <div id="entryList" style="display:grid; grid-template-columns: repeat(auto-fill, minmax(350px, 1fr)); gap:20px;"></div>
     <div id="drawAction" style="display:none; margin-top:30px;"><button class="btn-main" style="background:#0f172a;" onclick="runDraw()">PROCESS RANDOMIZED DRAW</button></div>
 </div>
 
@@ -174,17 +171,19 @@
             if (!response.ok) throw new Error("Template file not found. Ensure it is named COMPETITION_TEMPLATE.xlsx in your root folder.");
             const arrayBuffer = await response.arrayBuffer();
             await workbook.xlsx.load(arrayBuffer);
+            
+            // TARGET PROTECTION: Clear AutoFilters from ALL sheets before saving
+            workbook.eachSheet((sheet) => {
+                sheet.autoFilter = null;
+                if (sheet.tables) { sheet.eachTable((table) => { table.autoFilter = null; }); }
+            });
+
             const sheet = workbook.getWorksheet('DATA_IMPORT');
             if (!sheet) throw new Error("Could not find a worksheet named 'DATA_IMPORT' inside the Excel file.");
-
-            // DEEP FIX: Force-clear filter buttons to prevent library crash
-            sheet.autoFilter = null;
-            if (sheet.tables) { sheet.eachTable((table) => { table.autoFilter = null; }); }
 
             let rowIdx = 2;
             currentDrawData.forEach(group => {
                 group.anglers.forEach(a => {
-                    // COMPATIBILITY MODE: Direct cell mapping bypasses filter metadata
                     sheet.getCell(rowIdx, 1).value = a.name;
                     sheet.getCell(rowIdx, 2).value = a.team === "" ? null : a.team;
                     sheet.getCell(rowIdx, 3).value = a.z1;
