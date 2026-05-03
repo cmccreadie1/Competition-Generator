@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ZONEDRAW v10.10.0</title>
+    <title>ZONEDRAW v10.11.0</title>
     <link rel="manifest" href="manifest.json">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
@@ -27,7 +27,8 @@
         /* Header Navigation */
         .fixed-header { position: fixed; top: 0; left: 0; right: 0; z-index: 5000; background: rgba(15, 23, 42, 0.98); backdrop-filter: blur(15px); border-bottom: 1px solid var(--border); padding: 12px 20px; }
         .header-content { display: flex; justify-content: space-between; align-items: center; max-width: 1400px; margin: 0 auto; }
-        .brand-name { font-size: 18px; font-weight: 900; letter-spacing: -1px; color: var(--accent); }
+        .brand-name { font-size: 18px; font-weight: 900; letter-spacing: -1px; color: var(--text); display: flex; align-items: center; }
+        .v-tag { font-size: 14px; color: var(--accent); margin-left: 8px; letter-spacing: 0.5px; }
         
         /* Jumbo Home Button */
         .home-btn { background: rgba(255,255,255,0.05); border: 2px solid rgba(255,255,255,0.2); color: white; padding: 10px 20px; border-radius: 10px; cursor: pointer; font-size: 14px; font-weight: 900; transition: 0.2s; box-shadow: 0 4px 10px rgba(0,0,0,0.3); }
@@ -91,11 +92,15 @@
         .group-label { grid-column: 1 / -1; font-size: 1.4rem; font-weight: 900; color: var(--accent); border-left: 5px solid var(--accent); padding-left: 15px; margin: 40px 0 20px; letter-spacing: 1px; }
         .entry-group-label { font-size: 1.1rem; font-weight: 900; color: var(--border); margin: 30px 0 15px; letter-spacing: 1px; text-align: left; }
 
-        /* Zone Map Modal */
+        /* Zone Map Modal & Legend */
         #zoneMapModal { display: none; position: fixed; inset: 0; background: rgba(15,23,42,0.98); z-index: 9999; justify-content: center; align-items: center; backdrop-filter: blur(5px); }
         .zm-box { background: white; color: black; padding: 40px; border-radius: 16px; max-width: 600px; width: 90%; box-shadow: 0 20px 60px rgba(0,0,0,0.5); }
         .zm-row { display: flex; justify-content: space-between; padding: 15px; border-bottom: 2px solid #ddd; font-size: 18px; font-weight: 900; }
         .zm-color { padding: 5px 15px; border-radius: 8px; color: white; text-shadow: 1px 1px 2px rgba(0,0,0,0.5); }
+        
+        .horizontal-legend { display: flex; justify-content: center; gap: 20px; flex-wrap: wrap; margin: -15px 0 30px 0; font-size: 12px; font-weight: 900; letter-spacing: 1px; }
+        .legend-item { display: flex; align-items: center; gap: 8px; background: rgba(255,255,255,0.05); padding: 6px 12px; border-radius: 8px; border: 1px solid var(--border); }
+        .legend-swatch { width: 14px; height: 14px; border-radius: 4px; }
 
         @media print { 
             body.printing-map > :not(#zoneMapModal) { display: none !important; }
@@ -111,6 +116,7 @@
             body:not(.printing-map) .angler-name { color: black !important; }
             body:not(.printing-map) .draw-pill { color: black !important; border: 1px solid #ccc; background: none !important; }
             body:not(.printing-map) .fixed-header { display: none; }
+            body:not(.printing-map) .legend-item { color: black !important; border: 1px solid #ccc !important; }
             
             body:not(.printing-map) .check-sheet-table th { color: black !important; border-bottom: 2px solid black !important; }
             body:not(.printing-map) .check-sheet-table td { border-bottom: 1px solid #ddd !important; }
@@ -126,7 +132,7 @@
 <div class="fixed-header no-print">
     <div class="header-content">
         <button class="home-btn" onclick="showHub()" tabindex="-1">🏠 RETURN TO HOMEPAGE</button>
-        <div class="brand-name">ZONEDRAW <span id="vTag" style="font-size:10px; opacity:0.5;">v10.10.0</span></div>
+        <div class="brand-name">ZONEDRAW <span id="vTag" class="v-tag">v10.11.0</span></div>
         <div style="width: 180px;"></div>
     </div>
 </div>
@@ -189,6 +195,9 @@
         <button onclick="saveAndFinish()" class="btn-action" style="background:#ef4444;">SAVE & FINISH</button>
     </div>
     <h1 id="resTitle" style="text-align:center; font-size:2.5rem; margin-bottom:30px; letter-spacing:1px;"></h1>
+    
+    <!-- Dynamic Horizontal Legend -->
+    <div id="horizontalLegend" class="horizontal-legend" style="display:none;"></div>
     
     <div id="resultsArea">
         <div id="teamsBucketContainer" style="display:none;">
@@ -489,7 +498,7 @@
         }, 35);
     }
 
-    // CONTINUOUS PEG ALGORITHM CORRECTED
+    // CONTINUOUS PEG ALGORITHM
     function runDraw() {
         syncScreenToState(); 
 
@@ -593,6 +602,19 @@
         document.querySelectorAll('body > div[id$="Section"]').forEach(s => s.style.display = 'none');
         document.getElementById('resultsSection').style.display = 'block';
         document.getElementById('resTitle').innerText = document.getElementById('matchTitle').value || "MATCH RESULTS";
+        
+        // Populate the Horizontal Legend dynamically
+        const legend = document.getElementById('horizontalLegend');
+        if(currentZoneSize > 0) {
+            let lh = `<div class="legend-item"><div class="legend-swatch" style="background:var(--red-g);"></div> RED: 1 - ${currentZoneSize}</div>`;
+            lh += `<div class="legend-item"><div class="legend-swatch" style="background:var(--yellow-g);"></div> YELLOW: ${currentZoneSize + 1} - ${currentZoneSize * 2}</div>`;
+            lh += `<div class="legend-item"><div class="legend-swatch" style="background:var(--green-g);"></div> GREEN: ${currentZoneSize * 2 + 1} - ${currentZoneSize * 3}</div>`;
+            lh += `<div class="legend-item"><div class="legend-swatch" style="background:var(--blue-g);"></div> BLUE: ${currentZoneSize * 3 + 1} - ${currentZoneSize * 4}</div>`;
+            legend.innerHTML = lh;
+            legend.style.display = 'flex';
+        } else {
+            legend.style.display = 'none';
+        }
         
         const tb = document.getElementById('teamsBucket'); tb.innerHTML = '';
         const sb = document.getElementById('solosBucket'); sb.innerHTML = '';
