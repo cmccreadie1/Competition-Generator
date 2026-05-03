@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ZONEDRAW v10.13.0</title>
+    <title>ZONEDRAW v10.14.0</title>
     <link rel="manifest" href="manifest.json">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
@@ -124,23 +124,24 @@
             body.printing-dispatch > :not(#dispatchSection) { display: none !important; }
             .dispatch-slip { border: 5px solid black !important; }
 
-            body:not(.printing-map):not(.printing-dispatch) .no-print { display: none !important; } 
-            body:not(.printing-map):not(.printing-dispatch) { background: white !important; color: black !important; }
-            body:not(.printing-map):not(.printing-dispatch) .bucket-grid { display: grid !important; grid-template-columns: repeat(2, 1fr) !important; gap: 10px !important; }
-            body:not(.printing-map):not(.printing-dispatch) .zone-card { border: 1px solid #ddd !important; background: white !important; page-break-inside: avoid; opacity: 1 !important; transform: none !important; box-shadow: none !important; }
-            body:not(.printing-map):not(.printing-dispatch) .pending-tag { display: none !important; }
-            body:not(.printing-map):not(.printing-dispatch) .angler-name { color: black !important; }
-            body:not(.printing-map):not(.printing-dispatch) .draw-pill { color: black !important; border: 1px solid #ccc; background: none !important; }
-            body:not(.printing-map):not(.printing-dispatch) .fixed-header { display: none; }
-            body:not(.printing-map):not(.printing-dispatch) .legend-item { color: black !important; border: 1px solid #ccc !important; }
-            body:not(.printing-map):not(.printing-dispatch) .horizontal-legend { display: flex !important; }
+            /* Default B&W Print logic for the Brother Laser Printer, bypassed during digital sharing */
+            body:not(.printing-map):not(.printing-dispatch):not(.full-color-share) .no-print { display: none !important; } 
+            body:not(.printing-map):not(.printing-dispatch):not(.full-color-share) { background: white !important; color: black !important; }
+            body:not(.printing-map):not(.printing-dispatch):not(.full-color-share) .bucket-grid { display: grid !important; grid-template-columns: repeat(2, 1fr) !important; gap: 10px !important; }
+            body:not(.printing-map):not(.printing-dispatch):not(.full-color-share) .zone-card { border: 1px solid #ddd !important; background: white !important; page-break-inside: avoid; opacity: 1 !important; transform: none !important; box-shadow: none !important; }
+            body:not(.printing-map):not(.printing-dispatch):not(.full-color-share) .pending-tag { display: none !important; }
+            body:not(.printing-map):not(.printing-dispatch):not(.full-color-share) .angler-name { color: black !important; }
+            body:not(.printing-map):not(.printing-dispatch):not(.full-color-share) .draw-pill { color: black !important; border: 1px solid #ccc; background: none !important; }
+            body:not(.printing-map):not(.printing-dispatch):not(.full-color-share) .fixed-header { display: none; }
+            body:not(.printing-map):not(.printing-dispatch):not(.full-color-share) .legend-item { color: black !important; border: 1px solid #ccc !important; }
+            body:not(.printing-map):not(.printing-dispatch):not(.full-color-share) .horizontal-legend { display: flex !important; }
             
-            body:not(.printing-map):not(.printing-dispatch) .check-sheet-table th { color: black !important; border-bottom: 2px solid black !important; }
-            body:not(.printing-map):not(.printing-dispatch) .check-sheet-table td { border-bottom: 1px solid #ddd !important; }
-            body:not(.printing-map):not(.printing-dispatch) .steward-input { border: none !important; background: transparent !important; color: black !important; padding: 0 !important; font-size: 14px !important; }
-            body:not(.printing-map):not(.printing-dispatch) .steward-input::placeholder { color: transparent !important; }
-            body:not(.printing-map):not(.printing-dispatch) .cb-custom { border: 2px solid black !important; background: white !important; box-shadow: none !important; }
-            body:not(.printing-map):not(.printing-dispatch) .cb-custom.active::after { color: black !important; }
+            body:not(.printing-map):not(.printing-dispatch):not(.full-color-share) .check-sheet-table th { color: black !important; border-bottom: 2px solid black !important; }
+            body:not(.printing-map):not(.printing-dispatch):not(.full-color-share) .check-sheet-table td { border-bottom: 1px solid #ddd !important; }
+            body:not(.printing-map):not(.printing-dispatch):not(.full-color-share) .steward-input { border: none !important; background: transparent !important; color: black !important; padding: 0 !important; font-size: 14px !important; }
+            body:not(.printing-map):not(.printing-dispatch):not(.full-color-share) .steward-input::placeholder { color: transparent !important; }
+            body:not(.printing-map):not(.printing-dispatch):not(.full-color-share) .cb-custom { border: 2px solid black !important; background: white !important; box-shadow: none !important; }
+            body:not(.printing-map):not(.printing-dispatch):not(.full-color-share) .cb-custom.active::after { color: black !important; }
         }
     </style>
 </head>
@@ -149,7 +150,7 @@
 <div class="fixed-header no-print">
     <div class="header-content">
         <button class="home-btn" onclick="showHub()" tabindex="-1">🏠 RETURN TO HOMEPAGE</button>
-        <div class="brand-name">ZONEDRAW <span id="vTag" class="v-tag">v10.13.0</span></div>
+        <div class="brand-name">ZONEDRAW <span id="vTag" class="v-tag">v10.14.0</span></div>
         <div style="width: 180px;"></div>
     </div>
 </div>
@@ -204,7 +205,7 @@
 <!-- RESULTS -->
 <div id="resultsSection">
     <div class="no-print" style="display:flex; gap:12px; justify-content:center; margin-bottom:30px; flex-wrap:wrap;">
-        <button onclick="window.print()" class="btn-action" style="background:#64748b;">PRINT PDF</button>
+        <button onclick="shareDraw()" class="btn-action" style="background:#64748b;">SHARE DRAW</button>
         <button onclick="generateDispatchSlips()" class="btn-action" style="background:#0ea5e9;">PRINT TEAM SLIPS</button>
         <button onclick="showZoneMap()" class="btn-action" style="background:#0ea5e9;">PRINT ZONE MAP</button>
         <button onclick="showSteward()" class="btn-action" style="background:#4f46e5;">STEWARD MODE</button>
@@ -949,6 +950,31 @@
         document.body.classList.add('printing-dispatch');
         window.print();
         document.body.classList.remove('printing-dispatch');
+    }
+
+    /* ---------------------------------------------------
+       DIGITAL COLOR SHARING LOGIC (v10.14.0)
+       --------------------------------------------------- */
+    function shareDraw() {
+        const element = document.getElementById('resultsSection');
+        const matchName = document.getElementById('matchTitle').value || "MATCH_DRAW";
+        
+        // Add the bypass class to maintain colors during the capture
+        document.body.classList.add('full-color-share');
+
+        const opt = {
+            margin:       0.5,
+            filename:     `${matchName}_Full_Color_Draw.pdf`,
+            image:        { type: 'jpeg', quality: 0.98 },
+            html2canvas:  { scale: 2, useCORS: true, backgroundColor: '#0f172a' },
+            jsPDF:        { unit: 'in', format: 'letter', orientation: 'portrait' }
+        };
+
+        // Generate the full color PDF
+        html2pdf().set(opt).from(element).save().then(() => {
+            // Remove bypass class to return to standard B&W print defaults
+            document.body.classList.remove('full-color-share');
+        });
     }
 </script>
 </body>
