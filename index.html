@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ZONEDRAW v9.2.0</title>
+    <title>ZONEDRAW v9.3.0</title>
     <link rel="manifest" href="manifest.json">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
@@ -20,13 +20,14 @@
         }
         
         body { font-family: 'Inter', system-ui, sans-serif; background: var(--bg); color: var(--text); margin: 0; padding: 0; text-transform: uppercase; line-height: 1.1; overflow-x: hidden; }
-        input, select { text-transform: uppercase; font-weight: 900 !important; color: white; background: rgba(255,255,255,0.05); border: 1px solid var(--border); border-radius: 8px; padding: 10px; outline: none; }
-        input:focus { border-color: var(--accent); box-shadow: 0 0 15px var(--accent-glow); }
+        input, select { text-transform: uppercase; font-weight: 900 !important; color: white; background: rgba(255,255,255,0.05); border: 1px solid var(--border); border-radius: 8px; padding: 10px; outline: none; transition: 0.2s; }
+        input:focus { border-color: var(--accent); box-shadow: 0 0 15px var(--accent-glow); background: rgba(255,255,255,0.1); }
 
         .fixed-header { position: fixed; top: 0; left: 0; right: 0; z-index: 5000; background: rgba(15, 23, 42, 0.95); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); padding: 8px 20px; }
         .header-content { display: flex; justify-content: space-between; align-items: center; max-width: 1400px; margin: 0 auto; }
         .brand-name { font-size: 20px; font-weight: 900; letter-spacing: -1px; color: var(--accent); }
 
+        /* Dynamic Grid Sizing */
         .zone-card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 10px; backdrop-filter: blur(10px); transition: 0.3s; opacity: 0; transform: translateY(15px); position: relative; }
         .zone-card.visible { opacity: 1; transform: translateY(0); }
         .zone-card.solo-card { height: fit-content; align-self: start; }
@@ -55,9 +56,13 @@
 
         .check-sheet-table { width: 100%; border-collapse: collapse; }
         .check-sheet-table td { padding: 10px; border-bottom: 1px solid var(--border); font-size: 14px; font-weight: 800; }
-        .cb-custom { width: 28px; height: 28px; border: 2px solid var(--accent); border-radius: 6px; cursor: pointer; display: inline-block; position: relative; vertical-align: middle; }
-        .cb-custom.active { background: var(--accent); }
+        
+        /* Modern Indigo Checkbox */
+        .cb-custom { width: 28px; height: 28px; border: 2px solid var(--accent); border-radius: 6px; cursor: pointer; display: inline-block; position: relative; vertical-align: middle; background: rgba(255,255,255,0.05); transition: 0.2s; }
+        .cb-custom.active { background: var(--accent); box-shadow: 0 0 10px var(--accent-glow); }
         .cb-custom.active::after { content: '✓'; position: absolute; left: 5px; top: -2px; color: white; font-size: 18px; }
+        
+        .merge-cb { width: 18px; height: 18px; cursor: pointer; accent-color: var(--accent); }
 
         .btn-action { background: var(--accent); border: none; color: white; font-weight: 900; padding: 14px 28px; border-radius: 10px; cursor: pointer; transition: 0.2s; font-size: 12px; box-shadow: 0 4px 0 #312e81; }
         .btn-action:active { transform: translateY(2px); box-shadow: 0 0px 0 #312e81; }
@@ -79,16 +84,16 @@
 <div id="historyDrawer">
     <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:2px solid var(--accent); padding-bottom:10px; margin-bottom:15px;">
         <h2 style="margin:0; font-weight:900;">MATCH VAULT</h2>
-        <button onclick="toggleHistory()" style="background:none; border:none; color:white; font-size:24px; cursor:pointer;">×</button>
+        <button onclick="toggleHistory()" tabindex="-1" style="background:none; border:none; color:white; font-size:24px; cursor:pointer;">×</button>
     </div>
     <div id="historyList"></div>
-    <button onclick="clearVault()" style="width:100%; margin-top:20px; background:#ef4444; border:none; color:white; padding:10px; border-radius:8px; font-weight:900; font-size:10px; cursor:pointer;">PURGE VAULT</button>
+    <button onclick="clearVault()" tabindex="-1" style="width:100%; margin-top:20px; background:#ef4444; border:none; color:white; padding:10px; border-radius:8px; font-weight:900; font-size:10px; cursor:pointer;">PURGE VAULT</button>
 </div>
 
 <div class="fixed-header no-print">
     <div class="header-content">
-        <div class="brand-name">ZONEDRAW <span id="vTag" style="font-size:10px; opacity:0.5;">v9.2.0</span></div>
-        <button onclick="toggleHistory()" style="background:transparent; border:1px solid var(--accent); color:var(--accent); font-weight:900; padding:6px 15px; border-radius:8px; font-size:10px; cursor:pointer;">OPEN VAULT</button>
+        <div class="brand-name">ZONEDRAW <span id="vTag" style="font-size:10px; opacity:0.5;">v9.3.0</span></div>
+        <button onclick="toggleHistory()" tabindex="-1" style="background:transparent; border:1px solid var(--accent); color:var(--accent); font-weight:900; padding:6px 15px; border-radius:8px; font-size:10px; cursor:pointer;">OPEN VAULT</button>
     </div>
 </div>
 
@@ -107,8 +112,6 @@
             </div>
             <div><label>TEAMS</label><input type="number" id="initTeams" value="0" style="width:70px;"></div>
             <div><label>SOLOS</label><input type="number" id="initIndivs" value="0" style="width:70px;"></div>
-            <div><label>PRIZE (£)</label><input type="number" id="prizeFee" value="10" style="width:70px;"></div>
-            <div><label>PAIRS (£)</label><input type="number" id="pairsFee" value="5" style="width:70px;"></div>
         </div>
         <button class="btn-action" style="margin-top:30px;" onclick="bulkInit()">INITIALIZE MATCH</button>
     </div>
@@ -118,10 +121,10 @@
 <div id="resultsSection" style="display:none;">
     <div class="no-print" style="display:flex; gap:8px; justify-content:center; margin-bottom:20px; flex-wrap:wrap;">
         <button onclick="window.print()" class="btn-action" style="background:#64748b;">PRINT DRAW</button>
-        <button onclick="showSteward()" class="btn-action" style="background:#4f46e5;">STEWARD MODE</button>
+        <button onclick="showSteward()" class="btn-action" style="background:#4f46e5;">STEWARD SHEET</button>
         <button onclick="exportToCSV()" class="btn-action" style="background:#10b981;">SAVE CSV</button>
         <button onclick="handleAmend()" class="btn-action" style="background:#f59e0b;">AMEND</button>
-        <button onclick="saveAndClose()" class="btn-action" style="background:#ef4444;">SAVE & CLOSE</button>
+        <button onclick="saveAndClose()" class="btn-action" style="background:#ef4444;">SAVE & FINISH</button>
     </div>
     <div id="captureArea">
         <h1 id="resTitle" style="text-align:center; font-size:2rem; margin-bottom:20px;"></h1>
@@ -152,6 +155,7 @@
     const zoneGradients = { 'RED': 'var(--red-g)', 'YELLOW': 'var(--yellow-g)', 'GREEN': 'var(--green-g)', 'BLUE': 'var(--blue-g)' };
     const rotationMap = { 'RED': 'BLUE', 'BLUE': 'RED', 'YELLOW': 'GREEN', 'GREEN': 'YELLOW' };
     let currentDrawData = [], frozenData = [], matchDays = 2;
+    let currentPrizeFee = 10, currentPairsFee = 5;
 
     function setDays(d) {
         matchDays = d;
@@ -160,7 +164,7 @@
     }
 
     function saveAndClose() {
-        if(confirm("SAVE THIS MATCH TO THE VAULT AND RETURN TO HOME SCREEN?")) {
+        if(confirm("ARCHIVE THIS MATCH AND START FRESH?")) {
             saveToVault(currentDrawData);
             resetApp();
         }
@@ -175,8 +179,7 @@
         document.getElementById('stewardSection').style.display = 'none';
         document.getElementById('entrySection').style.display = 'block';
         document.getElementById('commandBar').style.display = 'none';
-        frozenData = [];
-        currentDrawData = [];
+        frozenData = []; currentDrawData = [];
         window.scrollTo(0,0);
     }
 
@@ -197,9 +200,9 @@
         
         let html = `<div class="zone-header"><span>${type === 'TEAM' ? 'TEAM' : 'SOLO'}</span>`;
         if(data) {
-            html += `<div><button class="btn-tool" onclick="breakTeam(this)">BREAK</button></div></div>`;
+            html += `<div><button class="btn-tool" tabindex="-1" onclick="breakTeam(this)">BREAK</button></div></div>`;
         } else {
-            html += `<div><input type="checkbox" class="merge-cb" onchange="checkMerge()" style="margin-right:5px; vertical-align:middle;"> <button onclick="this.parentElement.parentElement.parentElement.remove(); updateTicker();" style="background:none; border:none; color:#ef4444; font-weight:900; cursor:pointer;">×</button></div></div>`;
+            html += `<div><input type="checkbox" class="merge-cb" tabindex="-1" onchange="checkMerge()" style="margin-right:5px; vertical-align:middle;"> <button tabindex="-1" onclick="this.parentElement.parentElement.parentElement.remove(); updateTicker();" style="background:none; border:none; color:#ef4444; font-weight:900; cursor:pointer;">×</button></div></div>`;
         }
 
         if(type === 'TEAM') {
@@ -323,12 +326,12 @@
     function saveToVault(data) {
         const title = document.getElementById('matchTitle').value || 'UNNAMED';
         const vault = JSON.parse(localStorage.getItem('zonedraw_vault_v9') || '{}');
-        vault[title] = { time: new Date().toLocaleString(), data, days: matchDays, prize: document.getElementById('prizeFee').value, pairs: document.getElementById('pairsFee').value };
+        vault[title] = { time: new Date().toLocaleString(), data, days: matchDays, prize: currentPrizeFee, pairs: currentPairsFee };
         localStorage.setItem('zonedraw_vault_v9', JSON.stringify(vault));
     }
 
     function clearVault() {
-        if(confirm("THIS WILL PERMANENTLY ERASE ALL SAVED MATCHES. PROCEED?")) {
+        if(confirm("DELETE ALL HISTORY?")) {
             localStorage.removeItem('zonedraw_vault_v9');
             toggleHistory();
         }
@@ -344,10 +347,7 @@
                 const entry = vault[title];
                 const div = document.createElement('div'); div.className = 'hist-item';
                 div.innerHTML = `<div><strong style="color:var(--accent);">${title}</strong><br><small>${entry.time}</small></div>`;
-                div.onclick = () => { 
-                    loadMatch(title, entry);
-                    toggleHistory(); 
-                };
+                div.onclick = () => { loadMatch(title, entry); toggleHistory(); };
                 list.appendChild(div);
             });
         }
@@ -356,8 +356,8 @@
     function loadMatch(title, entry) {
         document.getElementById('matchTitle').value = title;
         matchDays = entry.days;
-        document.getElementById('prizeFee').value = entry.prize;
-        document.getElementById('pairsFee').value = entry.pairs;
+        currentPrizeFee = entry.prize || 10;
+        currentPairsFee = entry.pairs || 5;
         setDays(matchDays);
         displayDraw(entry.data);
     }
@@ -377,7 +377,7 @@
                     ${matchDays == 2 ? `<div class="draw-pill" style="background:${zoneGradients[a.z2]}">${a.z2}<span class="peg-num">${a.p2}</span></div>` : ''}</div>`;
             });
             div.innerHTML = h; area.appendChild(div);
-            setTimeout(() => div.classList.add('visible'), idx * 25);
+            setTimeout(() => div.classList.add('visible'), idx * 20);
         });
         document.getElementById('entrySection').style.display = 'none';
         document.getElementById('resultsSection').style.display = 'block';
@@ -389,7 +389,15 @@
         const area = document.getElementById('stewardArea');
         let list = []; currentDrawData.forEach(g => g.anglers.forEach(a => { if(a.name) list.push({...a, team: g.tName}); }));
         list.sort((a,b) => a.name.localeCompare(b.name));
-        let h = `<div style="text-align:center; margin-bottom:20px;"><h2>STEWARD SHEET</h2><button onclick="showResults()" class="btn-action">BACK TO RESULTS</button></div><table class="check-sheet-table"><tr><th>NAME</th><th>TEAM</th><th>DRAW</th><th>FUND</th><th>PAIRS</th></tr>`;
+        let h = `<div style="text-align:center; background:rgba(255,255,255,0.05); padding:15px; border-radius:15px; margin-bottom:20px;">
+                    <h2 style="margin-bottom:15px;">STEWARD FINANCIALS</h2>
+                    <div style="display:flex; gap:20px; justify-content:center; align-items:center;">
+                        <div><label>PRIZE ENTRY (£)</label><input type="number" id="stewardPrize" value="${currentPrizeFee}" oninput="currentPrizeFee=this.value; updateCash();" style="width:70px;"></div>
+                        <div><label>PAIRS ENTRY (£)</label><input type="number" id="stewardPairs" value="${currentPairsFee}" oninput="currentPairsFee=this.value; updateCash();" style="width:70px;"></div>
+                        <button onclick="showResults()" class="btn-action">EXIT STEWARD MODE</button>
+                    </div>
+                 </div>
+                 <table class="check-sheet-table"><tr><th>NAME</th><th>TEAM</th><th>DRAW</th><th>FUND</th><th>PAIRS</th></tr>`;
         list.forEach(a => {
             h += `<tr><td>${a.name}</td><td>${a.team || '-'}</td><td>${a.z1}(${a.p1}) ${matchDays==2 ? '/ '+a.z2+'('+a.p2+')':''}</td>
             <td><div class="cb-custom" onclick="this.classList.toggle('active'); updateCash();"></div></td>
@@ -404,11 +412,10 @@
     }
 
     function updateCash() {
-        const pFee = parseFloat(document.getElementById('prizeFee').value) || 0, sFee = parseFloat(document.getElementById('pairsFee').value) || 0;
         let total = 0; document.querySelectorAll('.check-sheet-table tr').forEach((row, i) => {
             if(i === 0) return;
-            if(row.cells[3].querySelector('.cb-custom').classList.contains('active')) total += pFee;
-            if(row.cells[4].querySelector('.cb-custom').classList.contains('active')) total += sFee;
+            if(row.cells[3].querySelector('.cb-custom').classList.contains('active')) total += parseFloat(currentPrizeFee) || 0;
+            if(row.cells[4].querySelector('.cb-custom').classList.contains('active')) total += parseFloat(currentPairsFee) || 0;
         });
         document.getElementById('tkCash').innerText = '£' + total;
     }
