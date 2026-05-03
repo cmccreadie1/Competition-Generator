@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ZONEDRAW v10.9.0</title>
+    <title>ZONEDRAW v10.10.0</title>
     <link rel="manifest" href="manifest.json">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
@@ -126,7 +126,7 @@
 <div class="fixed-header no-print">
     <div class="header-content">
         <button class="home-btn" onclick="showHub()" tabindex="-1">🏠 RETURN TO HOMEPAGE</button>
-        <div class="brand-name">ZONEDRAW <span id="vTag" style="font-size:10px; opacity:0.5;">v10.9.0</span></div>
+        <div class="brand-name">ZONEDRAW <span id="vTag" style="font-size:10px; opacity:0.5;">v10.10.0</span></div>
         <div style="width: 180px;"></div>
     </div>
 </div>
@@ -257,7 +257,7 @@
     let vacantPool = []; 
     let matchDays = 2;
     let prizeFee = 10, pairsFee = 5;
-    let currentZoneSize = 0; // Universal Peg Count
+    let currentZoneSize = 0; 
 
     const genId = () => 'id_' + Math.random().toString(36).substr(2, 9);
 
@@ -489,7 +489,7 @@
         }, 35);
     }
 
-    // THE CONTINUOUS PEG ALGORITHM
+    // CONTINUOUS PEG ALGORITHM CORRECTED
     function runDraw() {
         syncScreenToState(); 
 
@@ -502,39 +502,39 @@
         let totalCompetitors = 0;
         let highestFrozenPeg = 0;
 
-        // Tally Data and identify max frozen constraints
         appState.forEach(entry => {
             totalCompetitors += entry.isTeam ? 4 : 1;
             entry.anglers.forEach(a => {
                 if (a.z1) {
                     occ1[a.z1].push(a.p1);
                     if (matchDays == 2 && a.z2) occ2[a.z2].push(a.p2);
-                    highestFrozenPeg = Math.max(highestFrozenPeg, a.p1, a.p2 || 0);
+                    highestFrozenPeg = Math.max(highestFrozenPeg, a.p1 || 0, a.p2 || 0);
                 }
             });
         });
 
-        // Universal Zone Size (Ensures Flawless Rotation)
-        let zoneSize = Math.max(Math.ceil(totalCompetitors / 4), Math.ceil(highestFrozenPeg / 4));
+        // Calculate offset (min 1)
+        let zoneSize = Math.max(Math.ceil(totalCompetitors / 4), Math.ceil(highestFrozenPeg / 4), 1);
         currentZoneSize = zoneSize;
 
-        // Build Continuous Peg Ranges
-        let zonePegs = { 'RED': [], 'YELLOW': [], 'GREEN': [], 'BLUE': [] };
-        for(let i = 1; i <= zoneSize; i++) {
-            zonePegs['RED'].push(i);
-            zonePegs['YELLOW'].push(zoneSize + i);
-            zonePegs['GREEN'].push(zoneSize * 2 + i);
-            zonePegs['BLUE'].push(zoneSize * 3 + i);
-        }
-
-        let pools1 = zones.map(z => {
-            let p = zonePegs[z].filter(peg => !occ1[z].includes(peg));
+        let pools1 = zones.map((z, idx) => {
+            let p = [];
+            for(let i = 1; i <= zoneSize; i++) {
+                let pegNum = (idx * zoneSize) + i; // Offset applied here
+                if(!occ1[z].includes(pegNum)) p.push(pegNum);
+            }
             for (let j = p.length - 1; j > 0; j--) { const k = Math.floor(Math.random() * (j + 1)); [p[j], p[k]] = [p[k], p[j]]; }
             return { z, p };
         });
 
-        let pools2 = zones.map(z => {
-            let p = zonePegs[z].filter(peg => !occ2[z].includes(peg));
+        let pools2 = zones.map((z) => {
+            const src = Object.keys(rotationMap).find(k => rotationMap[k] === z);
+            const srcIdx = zones.indexOf(src);
+            let p = [];
+            for(let i = 1; i <= zoneSize; i++) {
+                let pegNum = (srcIdx * zoneSize) + i; // Offset applied here
+                if(!occ2[z].includes(pegNum)) p.push(pegNum);
+            }
             for (let j = p.length - 1; j > 0; j--) { const k = Math.floor(Math.random() * (j + 1)); [p[j], p[k]] = [p[k], p[j]]; }
             return { z, p };
         });
@@ -639,7 +639,7 @@
                 hc += e.isTeam ? 4 : 1;
                 e.anglers.forEach(a => hp = Math.max(hp, a.p1 || 0));
             });
-            currentZoneSize = Math.max(Math.ceil(hc / 4), Math.ceil(hp / 4));
+            currentZoneSize = Math.max(Math.ceil(hc / 4), Math.ceil(hp / 4), 1);
         }
 
         const title = document.getElementById('matchTitle').value || "THE MATCH";
@@ -681,7 +681,6 @@
             });
         });
         
-        // Strict Sort: Teams Top (A-Z), Solos Bottom (A-Z)
         list.sort((a,b) => {
             if (a.isTeam && !b.isTeam) return -1;
             if (!a.isTeam && b.isTeam) return 1;
