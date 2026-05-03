@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ZONEDRAW v10.3.0</title>
+    <title>ZONEDRAW v10.5.0</title>
     <link rel="manifest" href="manifest.json">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
@@ -24,20 +24,23 @@
         input:focus { border-color: var(--accent); box-shadow: 0 0 15px var(--accent-glow); background: rgba(255,255,255,0.1); }
 
         /* Header Navigation */
-        .fixed-header { position: fixed; top: 0; left: 0; right: 0; z-index: 5000; background: rgba(15, 23, 42, 0.98); backdrop-filter: blur(15px); border-bottom: 1px solid var(--border); padding: 10px 20px; }
+        .fixed-header { position: fixed; top: 0; left: 0; right: 0; z-index: 5000; background: rgba(15, 23, 42, 0.98); backdrop-filter: blur(15px); border-bottom: 1px solid var(--border); padding: 12px 20px; }
         .header-content { display: flex; justify-content: space-between; align-items: center; max-width: 1400px; margin: 0 auto; }
         .brand-name { font-size: 18px; font-weight: 900; letter-spacing: -1px; color: var(--accent); }
-        .home-btn { background: none; border: 1px solid var(--border); color: white; padding: 6px 14px; border-radius: 6px; cursor: pointer; font-size: 10px; font-weight: 900; }
+        
+        /* Jumbo Home Button */
+        .home-btn { background: rgba(255,255,255,0.05); border: 2px solid rgba(255,255,255,0.2); color: white; padding: 10px 20px; border-radius: 10px; cursor: pointer; font-size: 14px; font-weight: 900; transition: 0.2s; box-shadow: 0 4px 10px rgba(0,0,0,0.3); }
+        .home-btn:hover { background: rgba(255,255,255,0.1); border-color: var(--accent); color: var(--accent); box-shadow: 0 4px 15px var(--accent-glow); transform: translateY(-1px); }
 
         /* Command Hub */
-        #hubSection { max-width: 1000px; margin: 100px auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 30px; padding: 20px; }
+        #hubSection { max-width: 1000px; margin: 120px auto 40px; display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 30px; padding: 20px; }
         .hub-tile { background: var(--card); border: 1px solid var(--border); padding: 50px 20px; border-radius: 24px; text-align: center; cursor: pointer; transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1); box-shadow: 0 10px 40px rgba(0,0,0,0.4); }
         .hub-tile:hover { transform: translateY(-10px); border-color: var(--accent); box-shadow: 0 20px 50px var(--accent-glow); }
         .hub-icon { font-size: 44px; margin-bottom: 20px; display: block; filter: drop-shadow(0 0 10px var(--accent-glow)); }
         .hub-title { font-size: 18px; font-weight: 900; letter-spacing: 1px; }
 
         /* Structural Layouts */
-        #entrySection, #resultsSection, #stewardSection, #historySection { max-width: 1400px; margin: 0 auto; padding: 90px 20px 140px; display: none; }
+        #entrySection, #resultsSection, #stewardSection, #historySection { max-width: 1400px; margin: 0 auto; padding: 110px 20px 140px; display: none; }
         .control-panel { background: var(--card); border-radius: 24px; padding: 30px; border: 1px solid var(--border); text-align: center; margin-bottom: 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.2); }
 
         /* Duration Toggle CSS Grid Fix */
@@ -92,9 +95,9 @@
 
 <div class="fixed-header no-print">
     <div class="header-content">
-        <button class="home-btn" onclick="showHub()" tabindex="-1">🏠 HUB</button>
-        <div class="brand-name">ZONEDRAW <span id="vTag" style="font-size:10px; opacity:0.5;">v10.3.0</span></div>
-        <div style="width: 60px;"></div>
+        <button class="home-btn" onclick="showHub()" tabindex="-1">🏠 RETURN TO HOMEPAGE</button>
+        <div class="brand-name">ZONEDRAW <span id="vTag" style="font-size:10px; opacity:0.5;">v10.5.0</span></div>
+        <div style="width: 180px;"></div>
     </div>
 </div>
 
@@ -147,7 +150,6 @@
     <h1 id="resTitle" style="text-align:center; font-size:2.5rem; margin-bottom:30px; letter-spacing:1px;"></h1>
     
     <div id="resultsArea">
-        <!-- Physical Separation Buckets -->
         <div id="teamsBucketContainer" style="display:none;">
             <div class="group-label">TEAM STANDINGS</div>
             <div id="teamsBucket" class="bucket-grid" style="display:grid; grid-template-columns:repeat(auto-fill, minmax(480px, 1fr)); gap:20px;"></div>
@@ -196,13 +198,12 @@
     const zoneGradients = { 'RED': 'var(--red-g)', 'YELLOW': 'var(--yellow-g)', 'GREEN': 'var(--green-g)', 'BLUE': 'var(--blue-g)' };
     const rotationMap = { 'RED': 'BLUE', 'BLUE': 'RED', 'YELLOW': 'GREEN', 'GREEN': 'YELLOW' };
     
-    // THE STATE-DRIVEN ID DATABASE
-    let appState = []; // Holds all active entries (Setup & Amend)
-    let vacantPool = []; // Holds pegs reclaimed from deleted anglers
+    // STATE-DRIVEN ID DATABASE
+    let appState = []; 
+    let vacantPool = []; 
     let matchDays = 2;
     let prizeFee = 10, pairsFee = 5;
 
-    // Digital Barcode Generator
     const genId = () => 'id_' + Math.random().toString(36).substr(2, 9);
 
     function showHub() {
@@ -242,9 +243,9 @@
 
     function loadMatch(title, entry) {
         document.getElementById('matchTitle').value = title;
-        matchDays = entry.days; prizeFee = entry.prize || 10; pairsFee = entry.pairs || 5;
-        setDays(matchDays); 
-        appState = JSON.parse(JSON.stringify(entry.data)); // Deep copy to State
+        prizeFee = entry.prize || 10; pairsFee = entry.pairs || 5;
+        setDays(entry.days || 2); 
+        appState = JSON.parse(JSON.stringify(entry.data)); 
         displayDraw();
     }
 
@@ -269,17 +270,21 @@
         for(let y=0; y<i; y++) appState.push({ id: genId(), isTeam: false, tName: '', anglers: [{}] });
         
         document.getElementById('commandBar').style.display = 'flex';
+        // Reveal the Jumbo buttons during initial generation phase
+        document.getElementById('amendTools').style.display = 'flex'; 
+        document.getElementById('actionBtnArea').style.display = 'flex';
+        document.getElementById('cashModule').style.display = 'none';
+
         renderStateToScreen();
     }
 
     function addNewStateItem(isTeam) {
-        syncScreenToState(); // Save current typing before wipe
+        syncScreenToState(); 
         if(isTeam) appState.push({ id: genId(), isTeam: true, tName: '', anglers: [{},{},{},{}] });
         else appState.push({ id: genId(), isTeam: false, tName: '', anglers: [{}] });
         renderStateToScreen();
     }
 
-    // THE WIPE PROTOCOL: Sync -> Erase -> Redraw
     function syncScreenToState() {
         document.querySelectorAll('.zone-card').forEach(card => {
             const id = card.dataset.id;
@@ -297,13 +302,13 @@
 
     function renderStateToScreen() {
         const list = document.getElementById('entryList');
-        list.innerHTML = ''; // Absolute wipe
+        list.innerHTML = ''; 
         
         appState.forEach(entry => {
             const isFrozen = !!entry.anglers[0].z1;
             const div = document.createElement('div');
             div.className = 'zone-card visible' + (isFrozen ? ' frozen' : '') + (!entry.isTeam ? ' solo-card' : '');
-            div.dataset.id = entry.id; // Apply Digital Barcode
+            div.dataset.id = entry.id;
             
             let h = `<div class="zone-header"><span>${entry.isTeam ? 'TEAM MODULE' : 'SOLO MODULE'}</span>`;
             h += `<div style="display:flex; align-items:center;">`;
@@ -326,22 +331,18 @@
                 h += `<label style="font-size:10px; opacity:0.6;">SOLO NAME</label><input type="text" class="a-name" value="${entry.anglers[0].name || ''}" style="width:95%; font-size:16px;">`;
             }
             div.innerHTML = h; list.appendChild(div);
-            
-            // Re-bind live ticker
             div.querySelectorAll('.a-name').forEach(inp => inp.addEventListener('input', updateTicker));
         });
         updateTicker();
         checkMerge();
     }
 
-    // STATE-DRIVEN SURGERY
     function deleteStateEntry(id) {
         syncScreenToState();
         const idx = appState.findIndex(e => e.id === id);
         if(idx === -1) return;
         const entry = appState[idx];
         
-        // Reclaim frozen pegs to vacant pool
         entry.anglers.forEach(a => {
             if(a.z1) vacantPool.push({ z1: a.z1, p1: a.p1, z2: a.z2, p2: a.p2 });
         });
@@ -355,10 +356,7 @@
         const idx = appState.findIndex(e => e.id === id);
         if(idx === -1) return;
         
-        // Extract & Delete Team Container
         const team = appState.splice(idx, 1)[0];
-        
-        // Create 4 Solo Containers with original peg data
         team.anglers.forEach(a => {
             appState.push({ id: genId(), isTeam: false, tName: '', anglers: [{...a}] });
         });
@@ -376,8 +374,8 @@
         ids.forEach(id => {
             const idx = appState.findIndex(e => e.id === id);
             if(idx > -1) {
-                const entry = appState.splice(idx, 1)[0]; // Extract & Delete Solo
-                newTeamAnglers.push(entry.anglers[0]); // Push data to new team array
+                const entry = appState.splice(idx, 1)[0]; 
+                newTeamAnglers.push(entry.anglers[0]); 
             }
         });
         
@@ -396,7 +394,7 @@
         document.getElementById('tkAnglers').innerText = `${ent} / ${tot}`;
     }
 
-    // THE INTEGRITY ENGINE
+    // VISUAL SYNC RUN DRAW
     function initiateShuffle() {
         const overlay = document.getElementById('shuffleOverlay'); const pBar = document.getElementById('pBar');
         overlay.style.display = 'flex'; let p = 0;
@@ -407,35 +405,32 @@
     }
 
     function runDraw() {
-        syncScreenToState(); // Final grab of all typed names
-        let newTeams = [], newSolos = [];
-        let occ1 = { RED:[], YELLOW:[], GREEN:[], BLUE:[] }, occ2 = { RED:[], YELLOW:[], GREEN:[], BLUE:[] };
+        syncScreenToState(); 
 
-        // Analyze State
-        appState.forEach(entry => {
-            if(entry.anglers[0].z1) { 
-                // Frozen: Register occupied pegs
-                entry.anglers.forEach(a => {
-                    occ1[a.z1].push(a.p1);
-                    if(matchDays==2) occ2[a.z2].push(a.p2);
-                });
-            } else {
-                // New: Queue for draw (if not completely blank)
-                const hasNames = entry.anglers.some(a => a.name.trim() !== '');
-                if(hasNames) {
-                    if(entry.isTeam) newTeams.push(entry); else newSolos.push(entry);
-                }
-            }
+        appState = appState.filter(e => {
+            if (e.isTeam) return e.anglers.some(a => a.name.trim() !== '' || a.z1) || e.tName.trim() !== '';
+            return e.anglers[0].name.trim() !== '' || e.anglers[0].z1;
         });
 
-        // Calculate available pools
-        const count = appState.reduce((acc, e) => acc + (e.isTeam ? 4 : 1), 0);
-        const base = Math.floor(count/4), rem = count%4;
+        let occ1 = { RED:[], YELLOW:[], GREEN:[], BLUE:[] }, occ2 = { RED:[], YELLOW:[], GREEN:[], BLUE:[] };
+        let totalCompetitors = 0;
+
+        appState.forEach(entry => {
+            totalCompetitors += entry.isTeam ? 4 : 1;
+            entry.anglers.forEach(a => {
+                if (a.z1) {
+                    occ1[a.z1].push(a.p1);
+                    if (matchDays == 2 && a.z2) occ2[a.z2].push(a.p2);
+                }
+            });
+        });
+
+        const base = Math.floor(totalCompetitors / 4), rem = totalCompetitors % 4;
 
         let pools1 = zones.map((z, i) => {
             let s = base + (i < rem ? 1 : 0), p = [];
-            for(let n=1; n<=s; n++) if(!occ1[z].includes(n)) p.push(n);
-            for (let j = p.length-1; j>0; j--) { const k = Math.floor(Math.random()*(j+1)); [p[j], p[k]]=[p[k], p[j]]; }
+            for (let n = 1; n <= s; n++) if (!occ1[z].includes(n)) p.push(n);
+            for (let j = p.length - 1; j > 0; j--) { const k = Math.floor(Math.random() * (j + 1)); [p[j], p[k]] = [p[k], p[j]]; }
             return { z, p };
         });
 
@@ -443,31 +438,46 @@
             const src = Object.keys(rotationMap).find(k => rotationMap[k] === z);
             const srcIdx = zones.indexOf(src);
             let s = base + (srcIdx < rem ? 1 : 0), p = [];
-            for(let n=1; n<=s; n++) if(!occ2[z].includes(n)) p.push(n);
-            for (let j = p.length-1; j>0; j--) { const k = Math.floor(Math.random()*(j+1)); [p[j], p[k]]=[p[k], p[j]]; }
+            for (let n = 1; n <= s; n++) if (!occ2[z].includes(n)) p.push(n);
+            for (let j = p.length - 1; j > 0; j--) { const k = Math.floor(Math.random() * (j + 1)); [p[j], p[k]] = [p[k], p[j]]; }
             return { z, p };
         });
 
-        // Apply Draw to New Entries via State Reference
-        newTeams.forEach(t => {
-            let zIndexes = [0,1,2,3]; for (let j=3; j>0; j--) { const k=Math.floor(Math.random()*(j+1)); [zIndexes[j],zIndexes[k]]=[zIndexes[k],zIndexes[j]]; }
-            t.anglers.forEach((a, i) => {
-                let pd = vacantPool.shift() || { z1: zones[zIndexes[i]], p1: pools1[zIndexes[i]].p.pop(), z2: rotationMap[zones[zIndexes[i]]], p2: pools2[zones.indexOf(rotationMap[zones[zIndexes[i]]])].p.pop() };
-                a.z1 = pd.z1; a.p1 = pd.p1; a.z2 = pd.z2; a.p2 = pd.p2;
-            });
-        });
-
-        newSolos.forEach(s => {
+        const pullRandomPeg = () => {
+            if (vacantPool.length > 0) return vacantPool.shift();
             let avZ = pools1.map((p, idx) => idx).filter(idx => pools1[idx].p.length > 0);
-            const rZ = avZ[Math.floor(Math.random()*avZ.length)];
-            let pd = vacantPool.shift() || { z1: zones[rZ], p1: pools1[rZ].p.pop(), z2: rotationMap[zones[rZ]], p2: pools2[zones.indexOf(rotationMap[zones[rZ]])].p.pop() };
-            s.anglers[0].z1 = pd.z1; s.anglers[0].p1 = pd.p1; s.anglers[0].z2 = pd.z2; s.anglers[0].p2 = pd.p2;
+            if (avZ.length === 0) return { z1: 'RED', p1: 99, z2: 'BLUE', p2: 99 }; 
+            const rZ = avZ[Math.floor(Math.random() * avZ.length)];
+            const src2 = zones.indexOf(rotationMap[zones[rZ]]);
+            return { z1: zones[rZ], p1: pools1[rZ].p.pop() || 99, z2: rotationMap[zones[rZ]], p2: pools2[src2].p.pop() || 99 };
+        };
+
+        appState.forEach(entry => {
+            let needsDraw = entry.anglers.filter(a => !a.z1);
+            if (needsDraw.length === 0) return;
+
+            if (entry.isTeam && needsDraw.length === 4) {
+                let zIndexes = [0, 1, 2, 3]; 
+                for (let j = 3; j > 0; j--) { const k = Math.floor(Math.random() * (j + 1)); [zIndexes[j], zIndexes[k]] = [zIndexes[k], zIndexes[j]]; }
+                entry.anglers.forEach((a, i) => {
+                    if (vacantPool.length > 0) {
+                        let v = vacantPool.shift();
+                        a.z1 = v.z1; a.p1 = v.p1; a.z2 = v.z2; a.p2 = v.p2;
+                    } else {
+                        const zi = zIndexes[i], src2 = zones.indexOf(rotationMap[zones[zi]]);
+                        a.z1 = zones[zi]; a.p1 = pools1[zi].p.pop() || 99;
+                        a.z2 = rotationMap[zones[zi]]; a.p2 = pools2[src2].p.pop() || 99;
+                    }
+                });
+            } else {
+                needsDraw.forEach(a => {
+                    let pd = pullRandomPeg();
+                    a.z1 = pd.z1; a.p1 = pd.p1; a.z2 = pd.z2; a.p2 = pd.p2;
+                });
+            }
         });
 
-        // Clean out totally empty arrays before saving
-        appState = appState.filter(e => e.anglers.some(a => a.name.trim() !== '' || a.z1));
-        
-        saveAndFinish(false); 
+        saveAndFinish(false);
         displayDraw();
     }
 
@@ -479,7 +489,6 @@
         if(close && confirm("ARCHIVE DATABASE AND EXIT TO HUB?")) showHub();
     }
 
-    // HARD-CODED BUCKET DISPLAY
     function displayDraw() {
         document.querySelectorAll('body > div[id$="Section"]').forEach(s => s.style.display = 'none');
         document.getElementById('resultsSection').style.display = 'block';
@@ -496,18 +505,20 @@
 
         teams.forEach(g => renderResultCard(tb, g));
         solos.forEach(g => renderResultCard(sb, g));
-        
         window.scrollTo(0,0);
     }
 
     function renderResultCard(container, g) {
         const div = document.createElement('div'); div.className = 'zone-card visible';
-        div.style.borderTop = `4px solid ${g.anglers[0].z1 === 'RED' ? '#ef4444' : g.anglers[0].z1 === 'BLUE' ? '#3b82f6' : '#10b981'}`;
+        const firstZ1 = g.anglers[0] && g.anglers[0].z1 ? g.anglers[0].z1 : 'GREEN';
+        div.style.borderTop = `4px solid ${firstZ1 === 'RED' ? '#ef4444' : firstZ1 === 'BLUE' ? '#3b82f6' : '#10b981'}`;
+        
         let h = `<div class="zone-header" style="font-size:12px;">${g.tName || 'SOLO ANGLER'}</div>`;
-        g.anglers.forEach(a => { if(!a.name) return;
+        g.anglers.forEach(a => { 
+            if(!a.name || !a.z1) return;
             h += `<div class="res-row"><span class="angler-name">${a.name}</span>
                 <div class="draw-pill" style="background:${zoneGradients[a.z1]}">${a.z1}<span class="peg-num">${a.p1}</span></div>
-                ${matchDays == 2 ? `<div class="draw-pill" style="background:${zoneGradients[a.z2]}">${a.z2}<span class="peg-num">${a.p2}</span></div>` : ''}</div>`;
+                ${matchDays == 2 && a.z2 ? `<div class="draw-pill" style="background:${zoneGradients[a.z2]}">${a.z2}<span class="peg-num">${a.p2}</span></div>` : ''}</div>`;
         });
         div.innerHTML = h; container.appendChild(div);
     }
@@ -522,14 +533,13 @@
                 <button onclick="displayDraw()" class="btn-action">BACK TO RESULTS</button></div></div>
                 <table class="check-sheet-table"><tr><th>NAME</th><th>TEAM</th><th>DRAW</th><th>FUND</th><th>PAIRS</th></tr>`;
         list.forEach(a => {
-            h += `<tr><td>${a.name}</td><td>${a.team || '-'}</td><td>${a.z1}(${a.p1}) ${matchDays==2 ? '/ '+a.z2+'('+a.p2+')':''}</td>
+            h += `<tr><td>${a.name}</td><td>${a.team || '-'}</td><td>${a.z1}(${a.p1}) ${matchDays==2 && a.z2 ? '/ '+a.z2+'('+a.p2+')':''}</td>
             <td><div class="cb-custom" onclick="this.classList.toggle('active'); updateCash();"></div></td>
             <td><div class="cb-custom" onclick="this.classList.toggle('active'); updateCash();"></div></td></tr>`;
         });
         area.innerHTML = h; document.getElementById('commandBar').style.display = 'flex';
         document.getElementById('cashModule').style.display = 'flex'; document.getElementById('actionBtnArea').style.display = 'none';
-        document.getElementById('amendTools').style.display = 'none';
-        window.scrollTo(0,0);
+        document.getElementById('amendTools').style.display = 'none'; window.scrollTo(0,0);
     }
 
     function updateCash() {
@@ -542,15 +552,11 @@
     }
 
     function handleAmend() {
-        document.getElementById('resultsSection').style.display = 'none';
-        document.getElementById('entrySection').style.display = 'block'; 
-        document.getElementById('setupPanel').style.display = 'none'; // Hide setup clutter
-        document.getElementById('commandBar').style.display = 'flex';
-        document.getElementById('amendTools').style.display = 'flex'; // Show Jumbo action buttons
-        document.getElementById('actionBtnArea').style.display = 'flex';
+        document.getElementById('resultsSection').style.display = 'none'; document.getElementById('entrySection').style.display = 'block'; 
+        document.getElementById('setupPanel').style.display = 'none'; document.getElementById('commandBar').style.display = 'flex';
+        document.getElementById('amendTools').style.display = 'flex'; document.getElementById('actionBtnArea').style.display = 'flex';
         document.getElementById('cashModule').style.display = 'none';
-        renderStateToScreen(); // Draw from State
-        window.scrollTo(0,0);
+        renderStateToScreen(); window.scrollTo(0,0);
     }
 
     function exportToCSV() {
