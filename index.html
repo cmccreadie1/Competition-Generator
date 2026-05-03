@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ZONEDRAW v10.8.0</title>
+    <title>ZONEDRAW v10.9.0</title>
     <link rel="manifest" href="manifest.json">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
@@ -75,7 +75,6 @@
         .cb-custom.active { background: var(--accent); box-shadow: 0 0 15px var(--accent-glow); }
         .cb-custom.active::after { content: '✓'; position: absolute; left: 4px; top: -3px; color: white; font-size: 20px; font-weight: 900; }
 
-        /* Steward Specific Inputs */
         .steward-input { width: 100%; max-width: 160px; font-size: 12px !important; padding: 8px 10px !important; background: rgba(0,0,0,0.2) !important; border-color: rgba(255,255,255,0.1) !important; margin: 0; }
         .steward-input:focus { background: rgba(255,255,255,0.1) !important; border-color: var(--accent) !important; }
 
@@ -87,30 +86,38 @@
         .btn-jumbo { padding: 15px 25px; font-size: 12px; background: #1e293b; border: 2px solid var(--accent); color: white; border-radius: 12px; font-weight: 900; cursor: pointer; transition: 0.2s; white-space: nowrap; }
         .btn-jumbo:hover { background: var(--accent); }
 
-        /* Command Bar */
         .command-bar { position: fixed; bottom: 0; left: 0; right: 0; z-index: 5000; background: rgba(30, 41, 59, 0.98); backdrop-filter: blur(20px); border-top: 2px solid var(--accent); padding: 15px 35px; display: none; justify-content: space-between; align-items: center; box-shadow: 0 -10px 30px rgba(0,0,0,0.5); }
         
-        /* Hard-Coded Buckets Divider */
         .group-label { grid-column: 1 / -1; font-size: 1.4rem; font-weight: 900; color: var(--accent); border-left: 5px solid var(--accent); padding-left: 15px; margin: 40px 0 20px; letter-spacing: 1px; }
         .entry-group-label { font-size: 1.1rem; font-weight: 900; color: var(--border); margin: 30px 0 15px; letter-spacing: 1px; text-align: left; }
 
+        /* Zone Map Modal */
+        #zoneMapModal { display: none; position: fixed; inset: 0; background: rgba(15,23,42,0.98); z-index: 9999; justify-content: center; align-items: center; backdrop-filter: blur(5px); }
+        .zm-box { background: white; color: black; padding: 40px; border-radius: 16px; max-width: 600px; width: 90%; box-shadow: 0 20px 60px rgba(0,0,0,0.5); }
+        .zm-row { display: flex; justify-content: space-between; padding: 15px; border-bottom: 2px solid #ddd; font-size: 18px; font-weight: 900; }
+        .zm-color { padding: 5px 15px; border-radius: 8px; color: white; text-shadow: 1px 1px 2px rgba(0,0,0,0.5); }
+
         @media print { 
-            .no-print { display: none !important; } 
-            body { background: white !important; color: black !important; }
-            .bucket-grid { display: grid !important; grid-template-columns: repeat(2, 1fr) !important; gap: 10px !important; }
-            .zone-card { border: 1px solid #ddd !important; background: white !important; page-break-inside: avoid; opacity: 1 !important; transform: none !important; box-shadow: none !important; }
-            .pending-tag { display: none !important; }
-            .angler-name { color: black !important; }
-            .draw-pill { color: black !important; border: 1px solid #ccc; background: none !important; }
-            .fixed-header { display: none; }
+            body.printing-map > :not(#zoneMapModal) { display: none !important; }
+            #zoneMapModal { display: block !important; position: static; background: white; color: black; }
+            #zoneMapModal .no-print { display: none !important; }
+            .zm-box { box-shadow: none; border: none; padding: 0; max-width: 100%; }
+
+            body:not(.printing-map) .no-print { display: none !important; } 
+            body:not(.printing-map) { background: white !important; color: black !important; }
+            body:not(.printing-map) .bucket-grid { display: grid !important; grid-template-columns: repeat(2, 1fr) !important; gap: 10px !important; }
+            body:not(.printing-map) .zone-card { border: 1px solid #ddd !important; background: white !important; page-break-inside: avoid; opacity: 1 !important; transform: none !important; box-shadow: none !important; }
+            body:not(.printing-map) .pending-tag { display: none !important; }
+            body:not(.printing-map) .angler-name { color: black !important; }
+            body:not(.printing-map) .draw-pill { color: black !important; border: 1px solid #ccc; background: none !important; }
+            body:not(.printing-map) .fixed-header { display: none; }
             
-            /* Steward Print Overrides */
-            .check-sheet-table th { color: black !important; border-bottom: 2px solid black !important; }
-            .check-sheet-table td { border-bottom: 1px solid #ddd !important; }
-            .steward-input { border: none !important; background: transparent !important; color: black !important; padding: 0 !important; font-size: 14px !important; }
-            .steward-input::placeholder { color: transparent !important; }
-            .cb-custom { border: 2px solid black !important; background: white !important; box-shadow: none !important; }
-            .cb-custom.active::after { color: black !important; }
+            body:not(.printing-map) .check-sheet-table th { color: black !important; border-bottom: 2px solid black !important; }
+            body:not(.printing-map) .check-sheet-table td { border-bottom: 1px solid #ddd !important; }
+            body:not(.printing-map) .steward-input { border: none !important; background: transparent !important; color: black !important; padding: 0 !important; font-size: 14px !important; }
+            body:not(.printing-map) .steward-input::placeholder { color: transparent !important; }
+            body:not(.printing-map) .cb-custom { border: 2px solid black !important; background: white !important; box-shadow: none !important; }
+            body:not(.printing-map) .cb-custom.active::after { color: black !important; }
         }
     </style>
 </head>
@@ -119,7 +126,7 @@
 <div class="fixed-header no-print">
     <div class="header-content">
         <button class="home-btn" onclick="showHub()" tabindex="-1">🏠 RETURN TO HOMEPAGE</button>
-        <div class="brand-name">ZONEDRAW <span id="vTag" style="font-size:10px; opacity:0.5;">v10.8.0</span></div>
+        <div class="brand-name">ZONEDRAW <span id="vTag" style="font-size:10px; opacity:0.5;">v10.9.0</span></div>
         <div style="width: 180px;"></div>
     </div>
 </div>
@@ -175,6 +182,7 @@
 <div id="resultsSection">
     <div class="no-print" style="display:flex; gap:12px; justify-content:center; margin-bottom:30px; flex-wrap:wrap;">
         <button onclick="window.print()" class="btn-action" style="background:#64748b;">PRINT PDF</button>
+        <button onclick="showZoneMap()" class="btn-action" style="background:#0ea5e9;">PRINT ZONE MAP</button>
         <button onclick="showSteward()" class="btn-action" style="background:#4f46e5;">STEWARD MODE</button>
         <button onclick="exportToCSV()" class="btn-action" style="background:#10b981;">SAVE CSV</button>
         <button onclick="handleAmend()" class="btn-action" style="background:#f59e0b;">AMEND DRAW</button>
@@ -191,6 +199,19 @@
         <div id="solosBucketContainer" style="display:none; margin-top:40px;">
             <div class="group-label">SOLO COMPETITORS</div>
             <div id="solosBucket" class="bucket-grid"></div>
+        </div>
+    </div>
+</div>
+
+<!-- ZONE MAP MODAL -->
+<div id="zoneMapModal">
+    <div class="zm-box">
+        <h2 id="zmTitle" style="text-align:center; text-transform:uppercase; margin-bottom:5px;">BEACH PEG MAP</h2>
+        <p style="text-align:center; font-weight:800; color:#666; margin-top:0; margin-bottom:30px;" id="zmSub"></p>
+        <div id="zmContent"></div>
+        <div class="no-print" style="display:flex; justify-content:space-between; margin-top:40px;">
+            <button onclick="document.getElementById('zoneMapModal').style.display='none'" class="btn-action" style="background:#ef4444;">CLOSE</button>
+            <button onclick="printZoneMap()" class="btn-action" style="background:#0ea5e9;">PRINT MAP</button>
         </div>
     </div>
 </div>
@@ -236,6 +257,7 @@
     let vacantPool = []; 
     let matchDays = 2;
     let prizeFee = 10, pairsFee = 5;
+    let currentZoneSize = 0; // Universal Peg Count
 
     const genId = () => 'id_' + Math.random().toString(36).substr(2, 9);
 
@@ -250,7 +272,7 @@
         document.getElementById('matchTitle').value = '';
         document.getElementById('initTeams').value = 0;
         document.getElementById('initIndivs').value = 0;
-        appState = []; vacantPool = [];
+        appState = []; vacantPool = []; currentZoneSize = 0;
         
         document.getElementById('hubSection').style.display = 'none';
         document.getElementById('entrySection').style.display = 'block';
@@ -294,6 +316,7 @@
         document.getElementById('matchTitle').value = title;
         prizeFee = entry.prize || 10; pairsFee = entry.pairs || 5;
         setDays(entry.days || 2); 
+        currentZoneSize = entry.zoneSize || 0;
         appState = JSON.parse(JSON.stringify(entry.data)); 
         displayDraw();
     }
@@ -466,6 +489,7 @@
         }, 35);
     }
 
+    // THE CONTINUOUS PEG ALGORITHM
     function runDraw() {
         syncScreenToState(); 
 
@@ -476,31 +500,41 @@
 
         let occ1 = { RED:[], YELLOW:[], GREEN:[], BLUE:[] }, occ2 = { RED:[], YELLOW:[], GREEN:[], BLUE:[] };
         let totalCompetitors = 0;
+        let highestFrozenPeg = 0;
 
+        // Tally Data and identify max frozen constraints
         appState.forEach(entry => {
             totalCompetitors += entry.isTeam ? 4 : 1;
             entry.anglers.forEach(a => {
                 if (a.z1) {
                     occ1[a.z1].push(a.p1);
                     if (matchDays == 2 && a.z2) occ2[a.z2].push(a.p2);
+                    highestFrozenPeg = Math.max(highestFrozenPeg, a.p1, a.p2 || 0);
                 }
             });
         });
 
-        const base = Math.floor(totalCompetitors / 4), rem = totalCompetitors % 4;
+        // Universal Zone Size (Ensures Flawless Rotation)
+        let zoneSize = Math.max(Math.ceil(totalCompetitors / 4), Math.ceil(highestFrozenPeg / 4));
+        currentZoneSize = zoneSize;
 
-        let pools1 = zones.map((z, i) => {
-            let s = base + (i < rem ? 1 : 0), p = [];
-            for (let n = 1; n <= s; n++) if (!occ1[z].includes(n)) p.push(n);
+        // Build Continuous Peg Ranges
+        let zonePegs = { 'RED': [], 'YELLOW': [], 'GREEN': [], 'BLUE': [] };
+        for(let i = 1; i <= zoneSize; i++) {
+            zonePegs['RED'].push(i);
+            zonePegs['YELLOW'].push(zoneSize + i);
+            zonePegs['GREEN'].push(zoneSize * 2 + i);
+            zonePegs['BLUE'].push(zoneSize * 3 + i);
+        }
+
+        let pools1 = zones.map(z => {
+            let p = zonePegs[z].filter(peg => !occ1[z].includes(peg));
             for (let j = p.length - 1; j > 0; j--) { const k = Math.floor(Math.random() * (j + 1)); [p[j], p[k]] = [p[k], p[j]]; }
             return { z, p };
         });
 
-        let pools2 = zones.map((z) => {
-            const src = Object.keys(rotationMap).find(k => rotationMap[k] === z);
-            const srcIdx = zones.indexOf(src);
-            let s = base + (srcIdx < rem ? 1 : 0), p = [];
-            for (let n = 1; n <= s; n++) if (!occ2[z].includes(n)) p.push(n);
+        let pools2 = zones.map(z => {
+            let p = zonePegs[z].filter(peg => !occ2[z].includes(peg));
             for (let j = p.length - 1; j > 0; j--) { const k = Math.floor(Math.random() * (j + 1)); [p[j], p[k]] = [p[k], p[j]]; }
             return { z, p };
         });
@@ -546,7 +580,7 @@
     function persistToVault() {
         const title = document.getElementById('matchTitle').value || 'UNNAMED_MATCH';
         const vault = JSON.parse(localStorage.getItem('zonedraw_vault_v10') || '{}');
-        vault[title] = { time: new Date().toLocaleString(), data: appState, days: matchDays, prize: prizeFee, pairs: pairsFee };
+        vault[title] = { time: new Date().toLocaleString(), data: appState, days: matchDays, prize: prizeFee, pairs: pairsFee, zoneSize: currentZoneSize };
         localStorage.setItem('zonedraw_vault_v10', JSON.stringify(vault));
     }
 
@@ -597,6 +631,37 @@
         div.innerHTML = h; container.appendChild(div);
     }
 
+    // PRINT ZONE MAP MODAL LOGIC
+    function showZoneMap() {
+        if(currentZoneSize === 0) {
+            let hc = 0, hp = 0;
+            appState.forEach(e => {
+                hc += e.isTeam ? 4 : 1;
+                e.anglers.forEach(a => hp = Math.max(hp, a.p1 || 0));
+            });
+            currentZoneSize = Math.max(Math.ceil(hc / 4), Math.ceil(hp / 4));
+        }
+
+        const title = document.getElementById('matchTitle').value || "THE MATCH";
+        document.getElementById('zmTitle').innerText = "BEACH PEG MAP";
+        document.getElementById('zmSub').innerText = title;
+
+        let h = `<div class="zm-row"><span class="zm-color" style="background:#ef4444;">RED ZONE</span> <span>Peg 1 to ${currentZoneSize}</span></div>`;
+        h += `<div class="zm-row"><span class="zm-color" style="background:#f59e0b;">YELLOW ZONE</span> <span>Peg ${currentZoneSize + 1} to ${currentZoneSize * 2}</span></div>`;
+        h += `<div class="zm-row"><span class="zm-color" style="background:#10b981;">GREEN ZONE</span> <span>Peg ${currentZoneSize * 2 + 1} to ${currentZoneSize * 3}</span></div>`;
+        h += `<div class="zm-row"><span class="zm-color" style="background:#3b82f6;">BLUE ZONE</span> <span>Peg ${currentZoneSize * 3 + 1} to ${currentZoneSize * 4}</span></div>`;
+        h += `<div style="text-align:center; font-size:12px; margin-top:20px; color:#666;">Total Physical Pegs Required: ${currentZoneSize * 4}</div>`;
+
+        document.getElementById('zmContent').innerHTML = h;
+        document.getElementById('zoneMapModal').style.display = 'flex';
+    }
+
+    function printZoneMap() {
+        document.body.classList.add('printing-map');
+        window.print();
+        document.body.classList.remove('printing-map');
+    }
+
     /* ---------------------------------------------------
        STEWARD MASTER SHEET LOGIC
        --------------------------------------------------- */
@@ -608,16 +673,24 @@
         const area = document.getElementById('stewardArea'); 
         let list = []; 
         
-        // Flatten list but maintain references to specific IDs
         appState.forEach(g => {
             g.anglers.forEach((a, idx) => { 
                 if(a.name || g.isTeam) { 
-                    list.push({ entryId: g.id, aIdx: idx, team: g.tName, angler: a }); 
+                    list.push({ entryId: g.id, aIdx: idx, isTeam: g.isTeam, team: g.tName, angler: a }); 
                 } 
             });
         });
         
-        list.sort((a,b) => (a.angler.name || '').localeCompare(b.angler.name || ''));
+        // Strict Sort: Teams Top (A-Z), Solos Bottom (A-Z)
+        list.sort((a,b) => {
+            if (a.isTeam && !b.isTeam) return -1;
+            if (!a.isTeam && b.isTeam) return 1;
+            if (a.isTeam && b.isTeam) {
+                const cmp = (a.team || '').localeCompare(b.team || '');
+                if (cmp !== 0) return cmp;
+            }
+            return (a.angler.name || '').localeCompare(b.angler.name || '');
+        });
         
         let h = `<div class="control-panel no-print">
                     <h2>STEWARD REGISTRATION & ACCOUNTING</h2>
@@ -706,12 +779,19 @@
 
     function exportStewardCSV() {
         let csv = "NAME,TEAM,PRESENT,CAPTAIN,PHONE,PRIZE PAID,PAIRS PAID\n";
-        appState.forEach(g => {
-            g.anglers.forEach(a => {
-                if(a.name || g.tName) {
-                    csv += `${a.name || ""},${g.tName || "-"},${a.present?"YES":"NO"},${a.captain?"YES":"NO"},${a.phone || ""},${a.prize?"YES":"NO"},${a.pairs?"YES":"NO"}\n`;
-                }
-            });
+        
+        let list = []; 
+        appState.forEach(g => g.anglers.forEach(a => { if(a.name || g.isTeam) list.push({ isTeam: g.isTeam, team: g.tName, angler: a }); }));
+        list.sort((a,b) => {
+            if (a.isTeam && !b.isTeam) return -1;
+            if (!a.isTeam && b.isTeam) return 1;
+            if (a.isTeam && b.isTeam) { const cmp = (a.team || '').localeCompare(b.team || ''); if (cmp !== 0) return cmp; }
+            return (a.angler.name || '').localeCompare(b.angler.name || '');
+        });
+
+        list.forEach(item => {
+            const a = item.angler;
+            csv += `${a.name || ""},${item.team || "-"},${a.present?"YES":"NO"},${a.captain?"YES":"NO"},${a.phone || ""},${a.prize?"YES":"NO"},${a.pairs?"YES":"NO"}\n`;
         });
         
         const blob = new Blob([csv], {type: 'text/csv'});
