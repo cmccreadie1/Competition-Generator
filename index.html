@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ZONEDRAW v10.6.0</title>
+    <title>ZONEDRAW v10.7.0</title>
     <link rel="manifest" href="manifest.json">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
@@ -35,7 +35,7 @@
 
         /* Command Hub */
         #hubSection { max-width: 1000px; margin: 120px auto 40px; display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 30px; padding: 20px; }
-        .hub-tile { background: var(--card); border: 1px solid var(--border); padding: 50px 20px; border-radius: 24px; text-align: center; cursor: pointer; transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1); box-shadow: 0 10px 40px rgba(0,0,0,0.4); }
+        .hub-tile { background: var(--card); border: 1px solid var(--border); padding: 50px 20px; border-radius: 24px; text-align: center; cursor: pointer; transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1); box-shadow: 0 10px 40px rgba(0,0,0,0.4); position: relative; }
         .hub-tile:hover { transform: translateY(-10px); border-color: var(--accent); box-shadow: 0 20px 50px var(--accent-glow); }
         .hub-icon { font-size: 44px; margin-bottom: 20px; display: block; filter: drop-shadow(0 0 10px var(--accent-glow)); }
         .hub-title { font-size: 18px; font-weight: 900; letter-spacing: 1px; }
@@ -62,11 +62,9 @@
         
         .zone-header { font-size: 10px; font-weight: 900; color: var(--accent); margin-bottom: 8px; border-bottom: 1px solid var(--border); padding-bottom: 6px; display: flex; justify-content: space-between; align-items: center; }
 
-        /* Results & Steward Visuals (D1/D2 Updates) */
+        /* Results & Steward Visuals */
         .res-row { display: grid; grid-template-columns: 1fr 100px 100px; gap: 6px; align-items: center; padding: 6px 0; border-bottom: 1px solid rgba(255,255,255,0.05); }
         .angler-name { font-size: 13px; font-weight: 900; letter-spacing: 0.5px; }
-        .pill-wrapper { display: flex; align-items: center; justify-content: flex-end; }
-        .day-badge { font-size: 8px; opacity: 0.7; font-weight: 900; background: rgba(255,255,255,0.1); padding: 3px 5px; border-radius: 4px; margin-right: 5px; }
         .draw-pill { padding: 4px 8px; border-radius: 6px; font-size: 9px; font-weight: 900; color: white; text-align: center; line-height: 1; border: 1px solid rgba(255,255,255,0.1); }
         .peg-num { font-size: 16px; font-weight: 900; margin-left: 5px; vertical-align: middle; }
 
@@ -98,7 +96,6 @@
             .zone-card { border: 1px solid #ddd !important; background: white !important; page-break-inside: avoid; opacity: 1 !important; transform: none !important; box-shadow: none !important; }
             .pending-tag { display: none !important; }
             .angler-name { color: black !important; }
-            .day-badge { color: black !important; background: none !important; opacity: 1 !important; }
             .draw-pill { color: black !important; border: 1px solid #ccc; background: none !important; }
             .fixed-header { display: none; }
         }
@@ -109,7 +106,7 @@
 <div class="fixed-header no-print">
     <div class="header-content">
         <button class="home-btn" onclick="showHub()" tabindex="-1">🏠 RETURN TO HOMEPAGE</button>
-        <div class="brand-name">ZONEDRAW <span id="vTag" style="font-size:10px; opacity:0.5;">v10.6.0</span></div>
+        <div class="brand-name">ZONEDRAW <span id="vTag" style="font-size:10px; opacity:0.5;">v10.7.0</span></div>
         <div style="width: 180px;"></div>
     </div>
 </div>
@@ -193,7 +190,7 @@
 <div id="historySection">
     <h2 style="text-align:center; letter-spacing:3px;">PREVIOUS DRAWS</h2>
     <div id="historyGrid" style="display:grid; grid-template-columns:repeat(auto-fit, minmax(320px, 1fr)); gap:30px; margin-top:40px;"></div>
-    <div style="text-align:center; margin-top:60px;"><button onclick="clearAllHistory()" class="btn-tool" style="color:#ef4444; border-color:#ef4444;" tabindex="-1">PURGE DATABASE</button></div>
+    <div style="text-align:center; margin-top:60px;"><button onclick="clearAllHistory()" class="btn-tool" style="color:#ef4444; border-color:#ef4444;" tabindex="-1">PURGE ALL DATABASE</button></div>
 </div>
 
 <!-- COMMAND BAR -->
@@ -222,7 +219,6 @@
     const zoneGradients = { 'RED': 'var(--red-g)', 'YELLOW': 'var(--yellow-g)', 'GREEN': 'var(--green-g)', 'BLUE': 'var(--blue-g)' };
     const rotationMap = { 'RED': 'BLUE', 'BLUE': 'RED', 'YELLOW': 'GREEN', 'GREEN': 'YELLOW' };
     
-    // STATE-DRIVEN ID DATABASE
     let appState = []; 
     let vacantPool = []; 
     let matchDays = 2;
@@ -260,10 +256,26 @@
         Object.keys(vault).forEach(title => {
             const e = vault[title];
             const div = document.createElement('div'); div.className = 'hub-tile';
-            div.innerHTML = `<strong style="color:var(--accent); font-size:20px;">${title}</strong><br><small style="text-transform:none; opacity:0.6; margin-top:10px; display:block;">${e.time}</small>`;
+            // Individual Delete Button added here
+            div.innerHTML = `
+                <div style="display:flex; justify-content:flex-end;">
+                    <button onclick="event.stopPropagation(); deleteHistoryItem('${title}')" style="background:none; border:none; color:#ef4444; font-size:22px; cursor:pointer; padding:0; line-height:0.5;" title="Delete Record">✖</button>
+                </div>
+                <strong style="color:var(--accent); font-size:20px; display:block; margin-top:-5px;">${title}</strong>
+                <small style="text-transform:none; opacity:0.6; margin-top:10px; display:block;">${e.time}</small>
+            `;
             div.onclick = () => loadMatch(title, e);
             grid.appendChild(div);
         });
+    }
+
+    function deleteHistoryItem(title) {
+        if(confirm(`PERMANENTLY DELETE MATCH: ${title}?`)) {
+            const vault = JSON.parse(localStorage.getItem('zonedraw_vault_v10') || '{}');
+            delete vault[title];
+            localStorage.setItem('zonedraw_vault_v10', JSON.stringify(vault));
+            showHistory(); 
+        }
     }
 
     function loadMatch(title, entry) {
@@ -331,7 +343,7 @@
         
         appState.forEach(entry => {
             const isFrozen = entry.anglers.some(a => a.z1);
-            const isPending = entry.anglers.some(a => !a.z1); // Amber Highlight Logic
+            const isPending = entry.anglers.some(a => !a.z1); 
             
             const div = document.createElement('div');
             div.className = 'zone-card visible' + (isFrozen && !isPending ? ' frozen' : '') + (!entry.isTeam ? ' solo-card' : '') + (isPending ? ' pending' : '');
@@ -550,13 +562,20 @@
         const firstZ1 = g.anglers[0] && g.anglers[0].z1 ? g.anglers[0].z1 : 'GREEN';
         div.style.borderTop = `4px solid ${firstZ1 === 'RED' ? '#ef4444' : firstZ1 === 'BLUE' ? '#3b82f6' : '#10b981'}`;
         
-        let h = `<div class="zone-header" style="font-size:12px;">${g.tName || 'SOLO ANGLER'}</div>`;
+        // Custom Header + Day 1 / Day 2 Columns
+        let h = `<div class="zone-header" style="font-size:12px; border-bottom:none; margin-bottom:0;">${g.tName || 'SOLO ANGLER'}</div>`;
+        
+        h += `<div class="res-row" style="border:none; padding-top:0; padding-bottom:4px;">
+                <span></span>
+                <span style="font-size:9px; color:var(--accent); text-align:center; letter-spacing:1px;">DAY 1</span>
+                ${matchDays == 2 ? `<span style="font-size:9px; color:var(--accent); text-align:center; letter-spacing:1px;">DAY 2</span>` : '<span></span>'}
+              </div>`;
+
         g.anglers.forEach(a => { 
             if(!a.name || !a.z1) return;
-            // D1 / D2 Micro Badges Added Here
             h += `<div class="res-row"><span class="angler-name">${a.name}</span>
-                <div class="pill-wrapper"><span class="day-badge">D1</span><div class="draw-pill" style="background:${zoneGradients[a.z1]}">${a.z1}<span class="peg-num">${a.p1}</span></div></div>
-                ${matchDays == 2 && a.z2 ? `<div class="pill-wrapper"><span class="day-badge">D2</span><div class="draw-pill" style="background:${zoneGradients[a.z2]}">${a.z2}<span class="peg-num">${a.p2}</span></div></div>` : '<div></div>'}
+                <div style="display:flex; justify-content:center;"><div class="draw-pill" style="background:${zoneGradients[a.z1]}">${a.z1}<span class="peg-num">${a.p1}</span></div></div>
+                ${matchDays == 2 && a.z2 ? `<div style="display:flex; justify-content:center;"><div class="draw-pill" style="background:${zoneGradients[a.z2]}">${a.z2}<span class="peg-num">${a.p2}</span></div></div>` : '<div></div>'}
                 </div>`;
         });
         div.innerHTML = h; container.appendChild(div);
@@ -602,7 +621,14 @@
         let csv = "NAME,TEAM,DAY 1 ZONE,DAY 2 ZONE\n";
         appState.forEach(g => g.anglers.forEach(a => { if(a.name) csv += `${a.name},${g.tName || "-"},${a.z1},${matchDays==2?a.z2:"-"}\n`; }));
         const blob = new Blob([csv], {type: 'text/csv'});
-        const lnk = document.createElement('a'); lnk.href = URL.createObjectURL(blob); lnk.download = `ZONEDRAW_EXPORT_${Date.now()}.csv`; lnk.click();
+        const lnk = document.createElement('a'); lnk.href = URL.createObjectURL(blob); 
+        
+        let matchName = document.getElementById('matchTitle').value.trim();
+        if(!matchName) matchName = "ZONEDRAW_EXPORT_" + Date.now();
+        else matchName = matchName.replace(/[^a-z0-9]/gi, '_').toUpperCase();
+        
+        lnk.download = `${matchName}.csv`; 
+        lnk.click();
     }
 
     function clearAllHistory() { if(confirm("PERMANENTLY ERASE ALL RECORDS?")) { localStorage.removeItem('zonedraw_vault_v10'); showHistory(); } }
