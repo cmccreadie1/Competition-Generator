@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ZONEDRAW v10.11.0</title>
+    <title>ZONEDRAW v10.12.0</title>
     <link rel="manifest" href="manifest.json">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
@@ -132,7 +132,7 @@
 <div class="fixed-header no-print">
     <div class="header-content">
         <button class="home-btn" onclick="showHub()" tabindex="-1">🏠 RETURN TO HOMEPAGE</button>
-        <div class="brand-name">ZONEDRAW <span id="vTag" class="v-tag">v10.11.0</span></div>
+        <div class="brand-name">ZONEDRAW <span id="vTag" class="v-tag">v10.12.0</span></div>
         <div style="width: 180px;"></div>
     </div>
 </div>
@@ -498,7 +498,7 @@
         }, 35);
     }
 
-    // CONTINUOUS PEG ALGORITHM
+    // CONTINUOUS PEG ALGORITHM CORRECTED FOR DAY 2 ANCHORING
     function runDraw() {
         syncScreenToState(); 
 
@@ -529,19 +529,18 @@
         let pools1 = zones.map((z, idx) => {
             let p = [];
             for(let i = 1; i <= zoneSize; i++) {
-                let pegNum = (idx * zoneSize) + i; // Offset applied here
+                let pegNum = (idx * zoneSize) + i; 
                 if(!occ1[z].includes(pegNum)) p.push(pegNum);
             }
             for (let j = p.length - 1; j > 0; j--) { const k = Math.floor(Math.random() * (j + 1)); [p[j], p[k]] = [p[k], p[j]]; }
             return { z, p };
         });
 
-        let pools2 = zones.map((z) => {
-            const src = Object.keys(rotationMap).find(k => rotationMap[k] === z);
-            const srcIdx = zones.indexOf(src);
+        // ANCHORED: pools2 now strictly maps destination zone 'z' to its correct physical peg block.
+        let pools2 = zones.map((z, idx) => {
             let p = [];
             for(let i = 1; i <= zoneSize; i++) {
-                let pegNum = (srcIdx * zoneSize) + i; // Offset applied here
+                let pegNum = (idx * zoneSize) + i; 
                 if(!occ2[z].includes(pegNum)) p.push(pegNum);
             }
             for (let j = p.length - 1; j > 0; j--) { const k = Math.floor(Math.random() * (j + 1)); [p[j], p[k]] = [p[k], p[j]]; }
@@ -553,8 +552,9 @@
             let avZ = pools1.map((p, idx) => idx).filter(idx => pools1[idx].p.length > 0);
             if (avZ.length === 0) return { z1: 'RED', p1: 99, z2: 'BLUE', p2: 99 }; 
             const rZ = avZ[Math.floor(Math.random() * avZ.length)];
-            const src2 = zones.indexOf(rotationMap[zones[rZ]]);
-            return { z1: zones[rZ], p1: pools1[rZ].p.pop() || 99, z2: rotationMap[zones[rZ]], p2: pools2[src2].p.pop() || 99 };
+            const destZ2 = rotationMap[zones[rZ]];
+            const destZ2Idx = zones.indexOf(destZ2);
+            return { z1: zones[rZ], p1: pools1[rZ].p.pop() || 99, z2: destZ2, p2: pools2[destZ2Idx].p.pop() || 99 };
         };
 
         appState.forEach(entry => {
@@ -569,9 +569,12 @@
                         let v = vacantPool.shift();
                         a.z1 = v.z1; a.p1 = v.p1; a.z2 = v.z2; a.p2 = v.p2;
                     } else {
-                        const zi = zIndexes[i], src2 = zones.indexOf(rotationMap[zones[zi]]);
+                        const zi = zIndexes[i];
+                        const destZ2 = rotationMap[zones[zi]];
+                        const destZ2Idx = zones.indexOf(destZ2);
+                        
                         a.z1 = zones[zi]; a.p1 = pools1[zi].p.pop() || 99;
-                        a.z2 = rotationMap[zones[zi]]; a.p2 = pools2[src2].p.pop() || 99;
+                        a.z2 = destZ2; a.p2 = pools2[destZ2Idx].p.pop() || 99;
                     }
                 });
             } else {
