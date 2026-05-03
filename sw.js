@@ -1,4 +1,4 @@
-const CACHE_NAME = 'zonedraw-v8.8.0-dashboard-v1';
+const CACHE_NAME = 'zonedraw-v8.9.0-cockpit-v1';
 const ASSETS_TO_CACHE = [
     './',
     './index.html',
