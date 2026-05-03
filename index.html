@@ -28,8 +28,9 @@
         .fixed-header { position: fixed; top: 0; left: 0; right: 0; z-index: 5000; background: rgba(15, 23, 42, 0.98); backdrop-filter: blur(15px); border-bottom: 1px solid var(--border); padding: 12px 20px; }
         .header-content { display: flex; justify-content: space-between; align-items: center; max-width: 1400px; margin: 0 auto; }
         .brand-name { font-size: 18px; font-weight: 900; letter-spacing: -1px; color: var(--text); display: flex; align-items: center; }
-        .v-tag { font-size: 14px; color: var(--accent); margin-left: 8px; font-weight: 900; }
+        .v-tag { font-size: 14px; color: var(--accent); margin-left: 8px; letter-spacing: 0.5px; }
         
+        /* Jumbo Home Button */
         .home-btn { background: rgba(255,255,255,0.05); border: 2px solid rgba(255,255,255,0.2); color: white; padding: 10px 20px; border-radius: 10px; cursor: pointer; font-size: 14px; font-weight: 900; transition: 0.2s; box-shadow: 0 4px 10px rgba(0,0,0,0.3); }
         .home-btn:hover { background: rgba(255,255,255,0.1); border-color: var(--accent); color: var(--accent); box-shadow: 0 4px 15px var(--accent-glow); transform: translateY(-1px); }
 
@@ -44,74 +45,102 @@
         #entrySection, #resultsSection, #stewardSection, #historySection, #dispatchSection { max-width: 1400px; margin: 0 auto; padding: 110px 20px 140px; display: none; }
         .control-panel { background: var(--card); border-radius: 24px; padding: 30px; border: 1px solid var(--border); text-align: center; margin-bottom: 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.2); }
         
+        /* Grid Adjustments for 3-Column Layout */
         .bucket-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(400px, 1fr)); gap: 18px; }
+
+        /* Duration Toggle CSS Grid Fix */
+        .duration-toggle { display: grid; grid-template-columns: 1fr 1fr; gap: 5px; background: rgba(0,0,0,0.3); padding: 5px; border-radius: 12px; width: 200px; margin: 0 auto; }
+        .dt-opt { padding: 12px 0; border-radius: 8px; cursor: pointer; font-weight: 900; font-size: 12px; transition: 0.2s; display: flex; align-items: center; justify-content: center; }
+        .dt-opt.active { background: var(--accent); color: white; box-shadow: 0 4px 10px var(--accent-glow); }
+
+        /* Data Cards & Pending States */
         .zone-card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 12px; backdrop-filter: blur(10px); position: relative; transition: 0.3s; }
         .zone-card.solo-card { height: fit-content; align-self: start; }
+        .zone-card.selected { border-color: var(--accent); box-shadow: 0 0 20px var(--accent-glow); }
         .zone-card.pending { border-color: var(--pending); box-shadow: 0 0 15px var(--pending-glow); }
         
-        .pending-tag { position: absolute; top: -10px; right: 15px; background: var(--pending); color: #0f172a; font-size: 9px; font-weight: 900; padding: 4px 10px; border-radius: 6px; z-index: 10; letter-spacing: 1px; }
+        .pending-tag { position: absolute; top: -10px; right: 15px; background: var(--pending); color: #0f172a; font-size: 9px; font-weight: 900; padding: 4px 10px; border-radius: 6px; box-shadow: 0 4px 10px rgba(0,0,0,0.4); z-index: 10; letter-spacing: 1px; }
+        
         .zone-header { font-size: 10px; font-weight: 900; color: var(--accent); margin-bottom: 8px; border-bottom: 1px solid var(--border); padding-bottom: 6px; display: flex; justify-content: space-between; align-items: center; }
 
-        /* Results Visuals */
+        /* Results & Steward Visuals */
         .res-row { display: grid; grid-template-columns: 1fr 100px 100px; gap: 6px; align-items: center; padding: 6px 0; border-bottom: 1px solid rgba(255,255,255,0.05); }
         .angler-name { font-size: 13px; font-weight: 900; letter-spacing: 0.5px; }
         .draw-pill { padding: 4px 8px; border-radius: 6px; font-size: 9px; font-weight: 900; color: white; text-align: center; line-height: 1; border: 1px solid rgba(255,255,255,0.1); }
         .peg-num { font-size: 16px; font-weight: 900; margin-left: 5px; vertical-align: middle; }
 
-        .horizontal-legend { display: flex; justify-content: center; gap: 20px; flex-wrap: wrap; margin: -15px 0 30px 0; font-size: 12px; font-weight: 900; letter-spacing: 1px; }
-        .legend-item { display: flex; align-items: center; gap: 8px; background: rgba(255,255,255,0.05); padding: 6px 12px; border-radius: 8px; border: 1px solid var(--border); }
-        .legend-swatch { width: 14px; height: 14px; border-radius: 4px; }
-
-        /* Buttons & Actions */
-        .btn-action { background: var(--accent); border: none; color: white; font-weight: 900; padding: 16px 32px; border-radius: 12px; cursor: pointer; transition: 0.2s; font-size: 13px; box-shadow: 0 4px 0 #312e81; }
-        .btn-action:active { transform: translateY(2px); box-shadow: 0 0px 0 #312e81; }
-        .btn-tool { background: rgba(255,255,255,0.1); border: 1px solid var(--border); color: var(--accent); font-size: 10px; font-weight: 900; padding: 6px 12px; border-radius: 6px; cursor: pointer; }
-        .btn-jumbo { padding: 15px 25px; font-size: 12px; background: #1e293b; border: 2px solid var(--accent); color: white; border-radius: 12px; font-weight: 900; cursor: pointer; transition: 0.2s; white-space: nowrap; }
-
-        /* Steward Table */
         .check-sheet-table { width: 100%; border-collapse: collapse; }
         .check-sheet-table th { padding: 14px; font-size: 12px; color: var(--accent); border-bottom: 2px solid var(--border); letter-spacing: 1px; }
         .check-sheet-table td { padding: 12px 14px; border-bottom: 1px solid var(--border); font-size: 14px; font-weight: 800; vertical-align: middle; }
         .cb-custom { width: 26px; height: 26px; border: 2px solid var(--accent); border-radius: 6px; cursor: pointer; display: inline-block; position: relative; vertical-align: middle; transition: 0.2s; margin: 0 auto; }
         .cb-custom.active { background: var(--accent); box-shadow: 0 0 15px var(--accent-glow); }
         .cb-custom.active::after { content: '✓'; position: absolute; left: 4px; top: -3px; color: white; font-size: 20px; font-weight: 900; }
-        .steward-input { width: 100%; max-width: 160px; font-size: 12px !important; padding: 8px 10px !important; background: rgba(0,0,0,0.2) !important; border-color: rgba(148, 163, 184, 0.1) !important; margin: 0; }
+
+        .steward-input { width: 100%; max-width: 160px; font-size: 12px !important; padding: 8px 10px !important; background: rgba(0,0,0,0.2) !important; border-color: rgba(255,255,255,0.1) !important; margin: 0; }
+        .steward-input:focus { background: rgba(255,255,255,0.1) !important; border-color: var(--accent) !important; }
+
+        /* Buttons & Actions */
+        .btn-action { background: var(--accent); border: none; color: white; font-weight: 900; padding: 16px 32px; border-radius: 12px; cursor: pointer; transition: 0.2s; font-size: 13px; box-shadow: 0 4px 0 #312e81; }
+        .btn-action:active { transform: translateY(2px); box-shadow: 0 0px 0 #312e81; }
+        .btn-tool { background: rgba(255,255,255,0.1); border: 1px solid var(--border); color: var(--accent); font-size: 10px; font-weight: 900; padding: 6px 12px; border-radius: 6px; cursor: pointer; transition: 0.2s; }
+        .btn-tool:hover { background: var(--accent); color: white; }
+        .btn-jumbo { padding: 15px 25px; font-size: 12px; background: #1e293b; border: 2px solid var(--accent); color: white; border-radius: 12px; font-weight: 900; cursor: pointer; transition: 0.2s; white-space: nowrap; }
+        .btn-jumbo:hover { background: var(--accent); }
 
         .command-bar { position: fixed; bottom: 0; left: 0; right: 0; z-index: 5000; background: rgba(30, 41, 59, 0.98); backdrop-filter: blur(20px); border-top: 2px solid var(--accent); padding: 15px 35px; display: none; justify-content: space-between; align-items: center; box-shadow: 0 -10px 30px rgba(0,0,0,0.5); }
         
         .group-label { grid-column: 1 / -1; font-size: 1.4rem; font-weight: 900; color: var(--accent); border-left: 5px solid var(--accent); padding-left: 15px; margin: 40px 0 20px; letter-spacing: 1px; }
         .entry-group-label { font-size: 1.1rem; font-weight: 900; color: var(--border); margin: 30px 0 15px; letter-spacing: 1px; text-align: left; }
 
-        /* Dispatch Slip Styles (B&W) */
-        .dispatch-slip { background: white; color: black; padding: 40px; border: 6px solid black; margin-bottom: 40px; text-align: left; page-break-after: always; position: relative; font-family: 'Inter', sans-serif; }
-        .dispatch-header { border-bottom: 8px solid black; padding-bottom: 20px; margin-bottom: 30px; display: flex; justify-content: space-between; align-items: flex-end; }
-        .dispatch-header h1 { font-size: 32px; margin: 0; letter-spacing: -1px; text-transform: uppercase; }
-        .dispatch-header h2 { font-size: 24px; margin: 8px 0 0 0; font-weight: 900; text-transform: uppercase; }
-        .dispatch-table { width: 100%; border-collapse: collapse; margin-top: 30px; }
-        .dispatch-table th { background: #eee; border: 4px solid black; padding: 15px; font-size: 16px; font-weight: 900; text-align: left; text-transform: uppercase; }
-        .dispatch-table td { border: 2px solid black; padding: 18px; font-size: 20px; font-weight: 800; text-transform: uppercase; }
-        .receipt-zone { margin-top: 80px; border-top: 5px dashed black; padding-top: 30px; position: relative; }
-        .receipt-zone::before { content: '✂ DETACH AND KEEP AT REGISTRATION DESK'; position: absolute; top: -16px; left: 50%; transform: translateX(-50%); background: white; padding: 0 25px; font-size: 14px; font-weight: 900; letter-spacing: 2px; }
-        .sig-line { margin-top: 50px; border-bottom: 3px solid black; width: 500px; display: flex; justify-content: space-between; align-items: flex-end; font-weight: 900; }
+        /* Zone Map Modal & Legend */
+        #zoneMapModal { display: none; position: fixed; inset: 0; background: rgba(15,23,42,0.98); z-index: 9999; justify-content: center; align-items: center; backdrop-filter: blur(5px); }
+        .zm-box { background: white; color: black; padding: 40px; border-radius: 16px; max-width: 600px; width: 90%; box-shadow: 0 20px 60px rgba(0,0,0,0.5); }
+        .zm-row { display: flex; justify-content: space-between; padding: 15px; border-bottom: 2px solid #ddd; font-size: 18px; font-weight: 900; }
+        .zm-color { padding: 5px 15px; border-radius: 8px; color: white; text-shadow: 1px 1px 2px rgba(0,0,0,0.5); }
+        
+        .horizontal-legend { display: flex; justify-content: center; gap: 20px; flex-wrap: wrap; margin: -15px 0 30px 0; font-size: 12px; font-weight: 900; letter-spacing: 1px; }
+        .legend-item { display: flex; align-items: center; gap: 8px; background: rgba(255,255,255,0.05); padding: 6px 12px; border-radius: 8px; border: 1px solid var(--border); }
+        .legend-swatch { width: 14px; height: 14px; border-radius: 4px; }
+
+        /* B&W Dispatch Slip Print Styles */
+        .dispatch-slip { background: white; color: black; padding: 40px; border: 5px solid black; margin-bottom: 40px; text-align: left; page-break-after: always; position: relative; }
+        .dispatch-header { border-bottom: 8px solid black; padding-bottom: 15px; margin-bottom: 25px; display: flex; justify-content: space-between; align-items: flex-end; }
+        .dispatch-header h1 { font-size: 28px; margin: 0; letter-spacing: -1px; }
+        .dispatch-header h2 { font-size: 22px; margin: 5px 0 0 0; font-weight: 900; }
+        .dispatch-table { width: 100%; border-collapse: collapse; margin-top: 25px; }
+        .dispatch-table th { background: #eee; border: 3px solid black; padding: 12px; font-size: 14px; font-weight: 900; text-align: left; }
+        .dispatch-table td { border: 2px solid black; padding: 15px; font-size: 18px; font-weight: 800; }
+        .receipt-zone { margin-top: 60px; border-top: 4px dashed black; padding-top: 25px; position: relative; }
+        .receipt-zone::before { content: '✂ DETACH AND KEEP AT REGISTRATION DESK'; position: absolute; top: -14px; left: 50%; transform: translateX(-50%); background: white; padding: 0 20px; font-size: 12px; font-weight: 900; letter-spacing: 1px; }
+        .sig-line { margin-top: 40px; border-bottom: 2px solid black; width: 450px; display: flex; justify-content: space-between; align-items: flex-end; }
 
         @media print { 
+            body.printing-map > :not(#zoneMapModal) { display: none !important; }
+            #zoneMapModal { display: block !important; position: static; background: white; color: black; }
+            #zoneMapModal .no-print { display: none !important; }
+            .zm-box { box-shadow: none; border: none; padding: 0; max-width: 100%; }
+
             body.printing-dispatch #dispatchSection { display: block !important; }
             body.printing-dispatch > :not(#dispatchSection) { display: none !important; }
+            .dispatch-slip { border: 5px solid black !important; }
+
+            body:not(.printing-map):not(.printing-dispatch) .no-print { display: none !important; } 
+            body:not(.printing-map):not(.printing-dispatch) { background: white !important; color: black !important; }
+            body:not(.printing-map):not(.printing-dispatch) .bucket-grid { display: grid !important; grid-template-columns: repeat(2, 1fr) !important; gap: 10px !important; }
+            body:not(.printing-map):not(.printing-dispatch) .zone-card { border: 1px solid #ddd !important; background: white !important; page-break-inside: avoid; opacity: 1 !important; transform: none !important; box-shadow: none !important; }
+            body:not(.printing-map):not(.printing-dispatch) .pending-tag { display: none !important; }
+            body:not(.printing-map):not(.printing-dispatch) .angler-name { color: black !important; }
+            body:not(.printing-map):not(.printing-dispatch) .draw-pill { color: black !important; border: 1px solid #ccc; background: none !important; }
+            body:not(.printing-map):not(.printing-dispatch) .fixed-header { display: none; }
+            body:not(.printing-map):not(.printing-dispatch) .legend-item { color: black !important; border: 1px solid #ccc !important; }
+            body:not(.printing-map):not(.printing-dispatch) .horizontal-legend { display: flex !important; }
             
-            body:not(.printing-dispatch) .no-print { display: none !important; } 
-            body:not(.printing-dispatch) { background: white !important; color: black !important; }
-            body:not(.printing-dispatch) .bucket-grid { display: grid !important; grid-template-columns: repeat(2, 1fr) !important; gap: 10px !important; }
-            body:not(.printing-dispatch) .zone-card { border: 1px solid #ddd !important; background: white !important; page-break-inside: avoid; opacity: 1 !important; transform: none !important; box-shadow: none !important; }
-            body:not(.printing-dispatch) .angler-name { color: black !important; }
-            body:not(.printing-dispatch) .draw-pill { color: black !important; border: 1px solid #ccc; background: none !important; }
-            body:not(.printing-dispatch) .fixed-header { display: none; }
-            body:not(.printing-dispatch) .horizontal-legend { display: flex !important; color: black !important; border: 1px solid #ccc !important; }
-            
-            body:not(.printing-dispatch) .check-sheet-table th { color: black !important; border-bottom: 2px solid black !important; }
-            body:not(.printing-dispatch) .check-sheet-table td { border-bottom: 1px solid #ddd !important; }
-            body:not(.printing-dispatch) .steward-input { border: none !important; background: transparent !important; color: black !important; padding: 0 !important; font-size: 14px !important; }
-            body:not(.printing-dispatch) .cb-custom { border: 2px solid black !important; background: white !important; box-shadow: none !important; }
-            body:not(.printing-dispatch) .cb-custom.active::after { color: black !important; }
+            body:not(.printing-map):not(.printing-dispatch) .check-sheet-table th { color: black !important; border-bottom: 2px solid black !important; }
+            body:not(.printing-map):not(.printing-dispatch) .check-sheet-table td { border-bottom: 1px solid #ddd !important; }
+            body:not(.printing-map):not(.printing-dispatch) .steward-input { border: none !important; background: transparent !important; color: black !important; padding: 0 !important; font-size: 14px !important; }
+            body:not(.printing-map):not(.printing-dispatch) .steward-input::placeholder { color: transparent !important; }
+            body:not(.printing-map):not(.printing-dispatch) .cb-custom { border: 2px solid black !important; background: white !important; box-shadow: none !important; }
+            body:not(.printing-map):not(.printing-dispatch) .cb-custom.active::after { color: black !important; }
         }
     </style>
 </head>
@@ -177,12 +206,15 @@
     <div class="no-print" style="display:flex; gap:12px; justify-content:center; margin-bottom:30px; flex-wrap:wrap;">
         <button onclick="window.print()" class="btn-action" style="background:#64748b;">PRINT PDF</button>
         <button onclick="generateDispatchSlips()" class="btn-action" style="background:#0ea5e9;">PRINT TEAM SLIPS</button>
+        <button onclick="showZoneMap()" class="btn-action" style="background:#0ea5e9;">PRINT ZONE MAP</button>
         <button onclick="showSteward()" class="btn-action" style="background:#4f46e5;">STEWARD MODE</button>
+        <button onclick="exportToCSV()" class="btn-action" style="background:#10b981;">SAVE CSV</button>
         <button onclick="handleAmend()" class="btn-action" style="background:#f59e0b;">AMEND DRAW</button>
         <button onclick="saveAndFinish()" class="btn-action" style="background:#ef4444;">SAVE & FINISH</button>
     </div>
     <h1 id="resTitle" style="text-align:center; font-size:2.5rem; margin-bottom:30px; letter-spacing:1px;"></h1>
     
+    <!-- Dynamic Horizontal Legend -->
     <div id="horizontalLegend" class="horizontal-legend" style="display:none;"></div>
     
     <div id="resultsArea">
@@ -190,6 +222,7 @@
             <div class="group-label">TEAM STANDINGS</div>
             <div id="teamsBucket" class="bucket-grid"></div>
         </div>
+        
         <div id="solosBucketContainer" style="display:none; margin-top:40px;">
             <div class="group-label">SOLO COMPETITORS</div>
             <div id="solosBucket" class="bucket-grid"></div>
@@ -200,6 +233,19 @@
 <!-- DISPATCH PRINT VIEW -->
 <div id="dispatchSection"></div>
 
+<!-- ZONE MAP MODAL -->
+<div id="zoneMapModal">
+    <div class="zm-box">
+        <h2 id="zmTitle" style="text-align:center; text-transform:uppercase; margin-bottom:5px;">BEACH PEG MAP</h2>
+        <p style="text-align:center; font-weight:800; color:#666; margin-top:0; margin-bottom:30px;" id="zmSub"></p>
+        <div id="zmContent"></div>
+        <div class="no-print" style="display:flex; justify-content:space-between; margin-top:40px;">
+            <button onclick="document.getElementById('zoneMapModal').style.display='none'" class="btn-action" style="background:#ef4444;">CLOSE</button>
+            <button onclick="printZoneMap()" class="btn-action" style="background:#0ea5e9;">PRINT MAP</button>
+        </div>
+    </div>
+</div>
+
 <!-- STEWARD DESK -->
 <div id="stewardSection"><div id="stewardArea"></div></div>
 
@@ -207,7 +253,7 @@
 <div id="historySection">
     <h2 style="text-align:center; letter-spacing:3px;">PREVIOUS DRAWS</h2>
     <div id="historyGrid" style="display:grid; grid-template-columns:repeat(auto-fit, minmax(320px, 1fr)); gap:30px; margin-top:40px;"></div>
-    <div style="text-align:center; margin-top:60px;"><button onclick="clearAllHistory()" class="btn-tool" style="color:#ef4444; border-color:#ef4444;">PURGE ALL DATABASE</button></div>
+    <div style="text-align:center; margin-top:60px;"><button onclick="clearAllHistory()" class="btn-tool" style="color:#ef4444; border-color:#ef4444;" tabindex="-1">PURGE ALL DATABASE</button></div>
 </div>
 
 <!-- COMMAND BAR -->
@@ -216,13 +262,13 @@
         <div style="display:flex; flex-direction:column; margin-right:20px;"><span style="font-size:10px; color:var(--accent);">ANGLERS</span><span id="tkAnglers" style="font-size:24px; font-weight:900;">0 / 0</span></div>
         <div id="cashModule" style="display:none; flex-direction:column;"><span style="font-size:10px; color:#10b981;">LIVE CASH TOTAL</span><span id="tkCash" style="font-size:24px; font-weight:900; color:#10b981;">£0</span></div>
         <div id="amendTools" style="display:none; gap:10px;">
-            <button class="btn-jumbo" onclick="addNewStateItem(true)">+ TEAM</button>
-            <button class="btn-jumbo" onclick="addNewStateItem(false)">+ SOLO</button>
+            <button class="btn-jumbo" onclick="addNewStateItem(true)" tabindex="-1">+ TEAM</button>
+            <button class="btn-jumbo" onclick="addNewStateItem(false)" tabindex="-1">+ SOLO</button>
         </div>
     </div>
     <div id="actionBtnArea" style="display:flex; gap:10px;">
-        <button class="btn-jumbo" id="mergeBtn" style="display:none; border-color:#10b981; color:#10b981;" onclick="mergeSelected()">CONSTRUCT TEAM (4)</button>
-        <button class="btn-action" id="mainActionBtn" onclick="initiateShuffle()">PROCESS RANDOM DRAW</button>
+        <button class="btn-jumbo" id="mergeBtn" style="display:none; border-color:#10b981; color:#10b981;" onclick="mergeSelected()" tabindex="-1">CONSTRUCT TEAM (4)</button>
+        <button class="btn-action" id="mainActionBtn" onclick="initiateShuffle()" tabindex="-1">PROCESS RANDOM DRAW</button>
     </div>
 </div>
 
@@ -236,6 +282,7 @@
     const zoneGradients = { 'RED': 'var(--red-g)', 'YELLOW': 'var(--yellow-g)', 'GREEN': 'var(--green-g)', 'BLUE': 'var(--blue-g)' };
     const rotationMap = { 'RED': 'BLUE', 'BLUE': 'RED', 'YELLOW': 'GREEN', 'GREEN': 'YELLOW' };
     
+    // STATE-DRIVEN ID DATABASE
     let appState = []; 
     let vacantPool = []; 
     let matchDays = 2;
@@ -257,6 +304,7 @@
         document.getElementById('initTeams').value = 0;
         document.getElementById('initIndivs').value = 0;
         appState = []; vacantPool = []; currentZoneSize = 0;
+        
         document.getElementById('hubSection').style.display = 'none';
         document.getElementById('entrySection').style.display = 'block';
         document.getElementById('setupPanel').style.display = 'block';
@@ -276,7 +324,7 @@
             const div = document.createElement('div'); div.className = 'hub-tile';
             div.innerHTML = `
                 <div style="display:flex; justify-content:flex-end;">
-                    <button onclick="event.stopPropagation(); deleteHistoryItem('${title}')" style="background:none; border:none; color:#ef4444; font-size:22px; cursor:pointer;">✖</button>
+                    <button onclick="event.stopPropagation(); deleteHistoryItem('${title}')" style="background:none; border:none; color:#ef4444; font-size:22px; cursor:pointer; padding:0; line-height:0.5;" title="Delete Record">✖</button>
                 </div>
                 <strong style="color:var(--accent); font-size:20px; display:block; margin-top:-5px;">${title}</strong>
                 <small style="text-transform:none; opacity:0.6; margin-top:10px; display:block;">${e.time}</small>
@@ -307,7 +355,7 @@
     function goToActiveSteward() {
         const vault = JSON.parse(localStorage.getItem('zonedraw_vault_v10') || '{}');
         const keys = Object.keys(vault);
-        if(keys.length === 0) return alert("NO ACTIVE RECORDS FOUND.");
+        if(keys.length === 0) return alert("NO ACTIVE DATABASE FOUND.");
         loadMatch(keys[0], vault[keys[0]]); showSteward();
     }
 
@@ -322,16 +370,20 @@
         const t = parseInt(document.getElementById('initTeams').value) || 0;
         const i = parseInt(document.getElementById('initIndivs').value) || 0;
         for(let x=0; x<t; x++) appState.push({ id: genId(), isTeam: true, tName: '', anglers: [{},{},{},{}] });
-        for(let y=0; y<i; y++) appState.push({ id: genId(), isTeam: false, anglers: [{}] });
+        for(let y=0; y<i; y++) appState.push({ id: genId(), isTeam: false, tName: '', anglers: [{}] });
+        
         document.getElementById('commandBar').style.display = 'flex';
         document.getElementById('amendTools').style.display = 'flex'; 
+        document.getElementById('actionBtnArea').style.display = 'flex';
+        document.getElementById('cashModule').style.display = 'none';
+
         renderStateToScreen();
     }
 
     function addNewStateItem(isTeam) {
         syncScreenToState(); 
         if(isTeam) appState.push({ id: genId(), isTeam: true, tName: '', anglers: [{},{},{},{}] });
-        else appState.push({ id: genId(), isTeam: false, anglers: [{}] });
+        else appState.push({ id: genId(), isTeam: false, tName: '', anglers: [{}] });
         renderStateToScreen();
     }
 
@@ -357,37 +409,94 @@
         let hasTeams = false, hasSolos = false;
         
         appState.forEach(entry => {
+            const isFrozen = entry.anglers.some(a => a.z1);
             const isPending = entry.anglers.some(a => !a.z1); 
+            
             const div = document.createElement('div');
-            div.className = 'zone-card' + (isPending ? ' pending' : '') + (!entry.isTeam ? ' solo-card' : '');
+            div.className = 'zone-card visible' + (isFrozen && !isPending ? ' frozen' : '') + (!entry.isTeam ? ' solo-card' : '') + (isPending ? ' pending' : '');
             div.dataset.id = entry.id;
             
-            let h = isPending ? `<div class="pending-tag">PENDING</div>` : '';
-            h += `<div class="zone-header"><span>${entry.isTeam ? 'TEAM' : 'SOLO'}</span>`;
+            let h = '';
+            if(isPending) h += `<div class="pending-tag">PENDING DRAW</div>`;
+            
+            h += `<div class="zone-header"><span>${entry.isTeam ? 'TEAM MODULE' : 'SOLO MODULE'}</span>`;
             h += `<div style="display:flex; align-items:center;">`;
-            if(!entry.isTeam) h += `<input type="checkbox" class="merge-cb" onchange="checkMerge()" style="margin-right:10px;">`;
-            h += `<button onclick="deleteStateEntry('${entry.id}')" style="color:#ef4444; border:none; background:none; font-size:24px; cursor:pointer;">×</button></div></div>`;
+            
+            if(!entry.isTeam) {
+                h += `<input type="checkbox" class="merge-cb" onchange="checkMerge()" tabindex="-1" style="width:18px; height:18px; cursor:pointer; accent-color:var(--accent);">`;
+            }
+
+            if(entry.isTeam && isFrozen) {
+                h += `<button class="btn-tool" onclick="breakStateTeam('${entry.id}')" style="margin-left:8px;" tabindex="-1">🔗 UNLINK</button>`;
+            } else {
+                h += `<button onclick="deleteStateEntry('${entry.id}')" style="background:none; border:none; color:#ef4444; font-weight:900; font-size:22px; cursor:pointer; margin-left:8px; line-height:1;" tabindex="-1">×</button>`;
+            }
+            h += `</div></div>`;
 
             if(entry.isTeam) {
-                h += `<input type="text" class="t-name" value="${entry.tName}" placeholder="TEAM NAME" style="width:95%; margin-bottom:12px;">`;
-                for(let i=0; i<4; i++) h += `<input type="text" class="a-name" value="${entry.anglers[i].name || ''}" placeholder="ANGLER ${i+1}" style="width:95%; margin-bottom:6px;">`;
+                h += `<label style="font-size:10px; opacity:0.6;">TEAM NAME</label><input type="text" class="t-name" value="${entry.tName}" style="width:95%; margin-bottom:12px; font-size:14px;">`;
+                for(let i=0; i<4; i++) h += `<input type="text" class="a-name" value="${entry.anglers[i].name || ''}" placeholder="ANGLER ${i+1}" style="width:95%; margin-bottom:6px; font-size:13px;">`;
             } else {
-                h += `<input type="text" class="a-name" value="${entry.anglers[0].name || ''}" placeholder="SOLO NAME" style="width:95%;">`;
+                h += `<label style="font-size:10px; opacity:0.6;">SOLO NAME</label><input type="text" class="a-name" value="${entry.anglers[0].name || ''}" style="width:95%; font-size:14px;">`;
             }
             div.innerHTML = h; 
+            
             if (entry.isTeam) { tb.appendChild(div); hasTeams = true; }
             else { sb.appendChild(div); hasSolos = true; }
+            
+            div.querySelectorAll('.a-name').forEach(inp => inp.addEventListener('input', updateTicker));
         });
         
         document.getElementById('entryTeamsContainer').style.display = hasTeams ? 'block' : 'none';
         document.getElementById('entrySolosContainer').style.display = hasSolos ? 'block' : 'none';
+        
         updateTicker();
         checkMerge();
     }
 
     function deleteStateEntry(id) {
         syncScreenToState();
-        appState = appState.filter(e => e.id !== id);
+        const idx = appState.findIndex(e => e.id === id);
+        if(idx === -1) return;
+        const entry = appState[idx];
+        
+        entry.anglers.forEach(a => {
+            if(a.z1) vacantPool.push({ z1: a.z1, p1: a.p1, z2: a.z2, p2: a.p2 });
+        });
+        
+        appState.splice(idx, 1);
+        renderStateToScreen();
+    }
+
+    function breakStateTeam(id) {
+        syncScreenToState();
+        const idx = appState.findIndex(e => e.id === id);
+        if(idx === -1) return;
+        
+        const team = appState.splice(idx, 1)[0];
+        team.anglers.forEach(a => {
+            appState.push({ id: genId(), isTeam: false, tName: '', anglers: [{...a}] });
+        });
+        
+        renderStateToScreen();
+    }
+
+    function mergeSelected() {
+        syncScreenToState();
+        const sel = document.querySelectorAll('.merge-cb:checked');
+        if(sel.length !== 4) return;
+        const ids = Array.from(sel).map(cb => cb.closest('.zone-card').dataset.id);
+        
+        const newTeamAnglers = [];
+        ids.forEach(id => {
+            const idx = appState.findIndex(e => e.id === id);
+            if(idx > -1) {
+                const entry = appState.splice(idx, 1)[0]; 
+                newTeamAnglers.push(entry.anglers[0]); 
+            }
+        });
+        
+        appState.push({ id: genId(), isTeam: true, tName: '', anglers: newTeamAnglers });
         renderStateToScreen();
     }
 
@@ -396,22 +505,9 @@
         document.getElementById('mergeBtn').style.display = (count === 4) ? 'inline-block' : 'none';
     }
 
-    function mergeSelected() {
-        syncScreenToState();
-        const sel = document.querySelectorAll('.merge-cb:checked');
-        const ids = Array.from(sel).map(cb => cb.closest('.zone-card').dataset.id);
-        const newAnglers = [];
-        ids.forEach(id => {
-            const idx = appState.findIndex(e => e.id === id);
-            newAnglers.push(appState.splice(idx, 1)[0].anglers[0]);
-        });
-        appState.push({ id: genId(), isTeam: true, tName: '', anglers: newAnglers });
-        renderStateToScreen();
-    }
-
     function updateTicker() {
         let ent = 0, tot = 0;
-        appState.forEach(e => e.anglers.forEach(a => { tot++; if(a.name) ent++; }));
+        document.querySelectorAll('.a-name').forEach(i => { tot++; if(i.value.trim()) ent++; });
         document.getElementById('tkAnglers').innerText = `${ent} / ${tot}`;
     }
 
@@ -421,58 +517,110 @@
         const inv = setInterval(() => {
             p += 4; pBar.style.width = p + '%';
             if(p >= 100) { clearInterval(inv); overlay.style.display = 'none'; runDraw(); }
-        }, 25);
+        }, 35);
     }
 
+    // CONTINUOUS PEG ALGORITHM CORRECTED FOR DAY 2 ANCHORING
     function runDraw() {
         syncScreenToState(); 
-        appState = appState.filter(e => e.isTeam ? (e.tName || e.anglers.some(a => a.name)) : e.anglers[0].name);
 
-        let totalAnglers = 0, highestPeg = 0;
-        appState.forEach(e => {
-            totalAnglers += e.anglers.length;
-            e.anglers.forEach(a => { if(a.z1) highestPeg = Math.max(highestPeg, a.p1 || 0, a.p2 || 0); });
+        appState = appState.filter(e => {
+            if (e.isTeam) return e.anglers.some(a => a.name.trim() !== '' || a.z1) || e.tName.trim() !== '';
+            return e.anglers[0].name.trim() !== '' || e.anglers[0].z1;
         });
 
-        currentZoneSize = Math.max(Math.ceil(totalAnglers / 4), Math.ceil(highestPeg / 4), 1);
+        let occ1 = { RED:[], YELLOW:[], GREEN:[], BLUE:[] }, occ2 = { RED:[], YELLOW:[], GREEN:[], BLUE:[] };
+        let totalCompetitors = 0;
+        let highestFrozenPeg = 0;
+
+        appState.forEach(entry => {
+            totalCompetitors += entry.isTeam ? 4 : 1;
+            entry.anglers.forEach(a => {
+                if (a.z1) {
+                    occ1[a.z1].push(a.p1);
+                    if (matchDays == 2 && a.z2) occ2[a.z2].push(a.p2);
+                    highestFrozenPeg = Math.max(highestFrozenPeg, a.p1 || 0, a.p2 || 0);
+                }
+            });
+        });
+
+        // Calculate offset (min 1)
+        let zoneSize = Math.max(Math.ceil(totalCompetitors / 4), Math.ceil(highestFrozenPeg / 4), 1);
+        currentZoneSize = zoneSize;
 
         let pools1 = zones.map((z, idx) => {
-            let p = []; for(let i=1; i<=currentZoneSize; i++) {
-                let num = (idx * currentZoneSize) + i;
-                let occ = false; appState.forEach(e => e.anglers.forEach(a => { if(a.z1 === z && a.p1 === num) occ = true; }));
-                if(!occ) p.push(num);
+            let p = [];
+            for(let i = 1; i <= zoneSize; i++) {
+                let pegNum = (idx * zoneSize) + i; 
+                if(!occ1[z].includes(pegNum)) p.push(pegNum);
             }
-            return p.sort(() => Math.random() - 0.5);
+            for (let j = p.length - 1; j > 0; j--) { const k = Math.floor(Math.random() * (j + 1)); [p[j], p[k]] = [p[k], p[j]]; }
+            return { z, p };
         });
 
+        // ANCHORED: pools2 now strictly maps destination zone 'z' to its correct physical peg block.
         let pools2 = zones.map((z, idx) => {
-            let p = []; for(let i=1; i<=currentZoneSize; i++) {
-                let num = (idx * currentZoneSize) + i;
-                let occ = false; appState.forEach(e => e.anglers.forEach(a => { if(a.z2 === z && a.p2 === num) occ = true; }));
-                if(!occ) p.push(num);
+            let p = [];
+            for(let i = 1; i <= zoneSize; i++) {
+                let pegNum = (idx * zoneSize) + i; 
+                if(!occ2[z].includes(pegNum)) p.push(pegNum);
             }
-            return p.sort(() => Math.random() - 0.5);
+            for (let j = p.length - 1; j > 0; j--) { const k = Math.floor(Math.random() * (j + 1)); [p[j], p[k]] = [p[k], p[j]]; }
+            return { z, p };
         });
 
-        appState.forEach(e => {
-            let needs = e.anglers.filter(a => !a.z1);
-            if(needs.length === 0) return;
-            if(e.isTeam && needs.length === 4) {
-                let zIdx = [0,1,2,3].sort(() => Math.random() - 0.5);
-                e.anglers.forEach((a, i) => {
-                    let z1 = zones[zIdx[i]]; a.z1 = z1; a.p1 = pools1[zIdx[i]].pop();
-                    let z2 = rotationMap[z1]; a.z2 = z2; a.p2 = pools2[zones.indexOf(z2)].pop();
+        const pullRandomPeg = () => {
+            if (vacantPool.length > 0) return vacantPool.shift();
+            let avZ = pools1.map((p, idx) => idx).filter(idx => pools1[idx].p.length > 0);
+            if (avZ.length === 0) return { z1: 'RED', p1: 99, z2: 'BLUE', p2: 99 }; 
+            const rZ = avZ[Math.floor(Math.random() * avZ.length)];
+            const destZ2 = rotationMap[zones[rZ]];
+            const destZ2Idx = zones.indexOf(destZ2);
+            return { z1: zones[rZ], p1: pools1[rZ].p.pop() || 99, z2: destZ2, p2: pools2[destZ2Idx].p.pop() || 99 };
+        };
+
+        appState.forEach(entry => {
+            let needsDraw = entry.anglers.filter(a => !a.z1);
+            if (needsDraw.length === 0) return;
+
+            if (entry.isTeam && needsDraw.length === 4) {
+                let zIndexes = [0, 1, 2, 3]; 
+                for (let j = 3; j > 0; j--) { const k = Math.floor(Math.random() * (j + 1)); [zIndexes[j], zIndexes[k]] = [zIndexes[k], zIndexes[j]]; }
+                entry.anglers.forEach((a, i) => {
+                    if (vacantPool.length > 0) {
+                        let v = vacantPool.shift();
+                        a.z1 = v.z1; a.p1 = v.p1; a.z2 = v.z2; a.p2 = v.p2;
+                    } else {
+                        const zi = zIndexes[i];
+                        const destZ2 = rotationMap[zones[zi]];
+                        const destZ2Idx = zones.indexOf(destZ2);
+                        
+                        a.z1 = zones[zi]; a.p1 = pools1[zi].p.pop() || 99;
+                        a.z2 = destZ2; a.p2 = pools2[destZ2Idx].p.pop() || 99;
+                    }
                 });
             } else {
-                needs.forEach(a => {
-                    let av = pools1.map((p, i) => ({i, len: p.length})).filter(x => x.len > 0);
-                    let sel = av[Math.floor(Math.random() * av.length)].i;
-                    let z1 = zones[sel]; a.z1 = z1; a.p1 = pools1[sel].pop();
-                    let z2 = rotationMap[z1]; a.z2 = z2; a.p2 = pools2[zones.indexOf(z2)].pop();
+                needsDraw.forEach(a => {
+                    let pd = pullRandomPeg();
+                    a.z1 = pd.z1; a.p1 = pd.p1; a.z2 = pd.z2; a.p2 = pd.p2;
                 });
             }
         });
+
+        saveAndFinish(false);
         displayDraw();
+    }
+
+    function persistToVault() {
+        const title = document.getElementById('matchTitle').value || 'UNNAMED_MATCH';
+        const vault = JSON.parse(localStorage.getItem('zonedraw_vault_v10') || '{}');
+        vault[title] = { time: new Date().toLocaleString(), data: appState, days: matchDays, prize: prizeFee, pairs: pairsFee, zoneSize: currentZoneSize };
+        localStorage.setItem('zonedraw_vault_v10', JSON.stringify(vault));
+    }
+
+    function saveAndFinish(close = true) {
+        persistToVault();
+        if(close && confirm("ARCHIVE DATABASE AND EXIT TO HUB?")) showHub();
     }
 
     function displayDraw() {
@@ -480,12 +628,19 @@
         document.getElementById('resultsSection').style.display = 'block';
         document.getElementById('resTitle').innerText = document.getElementById('matchTitle').value || "MATCH RESULTS";
         
+        // Populate the Horizontal Legend dynamically
         const legend = document.getElementById('horizontalLegend');
         if(currentZoneSize > 0) {
-            legend.innerHTML = zones.map((z, i) => `<div class="legend-item"><div class="legend-swatch" style="background:${zoneGradients[z]}"></div> ${z}: ${(i*currentZoneSize)+1}-${(i+1)*currentZoneSize}</div>`).join('');
+            let lh = `<div class="legend-item"><div class="legend-swatch" style="background:var(--red-g);"></div> RED: 1 - ${currentZoneSize}</div>`;
+            lh += `<div class="legend-item"><div class="legend-swatch" style="background:var(--yellow-g);"></div> YELLOW: ${currentZoneSize + 1} - ${currentZoneSize * 2}</div>`;
+            lh += `<div class="legend-item"><div class="legend-swatch" style="background:var(--green-g);"></div> GREEN: ${currentZoneSize * 2 + 1} - ${currentZoneSize * 3}</div>`;
+            lh += `<div class="legend-item"><div class="legend-swatch" style="background:var(--blue-g);"></div> BLUE: ${currentZoneSize * 3 + 1} - ${currentZoneSize * 4}</div>`;
+            legend.innerHTML = lh;
             legend.style.display = 'flex';
+        } else {
+            legend.style.display = 'none';
         }
-
+        
         const tb = document.getElementById('teamsBucket'); tb.innerHTML = '';
         const sb = document.getElementById('solosBucket'); sb.innerHTML = '';
         
@@ -495,91 +650,306 @@
         document.getElementById('teamsBucketContainer').style.display = teams.length > 0 ? 'block' : 'none';
         document.getElementById('solosBucketContainer').style.display = solos.length > 0 ? 'block' : 'none';
 
-        appState.forEach(e => {
-            const div = document.createElement('div'); div.className = 'zone-card';
-            div.style.borderTop = `4px solid ${zoneGradients[e.anglers[0].z1 || 'RED']}`;
-            let h = `<div class="zone-header" style="color:white; font-size:12px;">${e.isTeam ? e.tName : 'SOLO ANGLER'}</div>`;
-            h += `<div class="res-row" style="border:none;"><span></span><span style="font-size:9px; text-align:center;">DAY 1</span><span style="font-size:9px; text-align:center;">DAY 2</span></div>`;
-            e.anglers.forEach(a => {
-                h += `<div class="res-row"><span class="angler-name">${a.name}</span>
-                    <div style="display:flex; justify-content:center;"><div class="draw-pill" style="background:${zoneGradients[a.z1]}">${a.z1} <span class="peg-num">${a.p1}</span></div></div>
-                    <div style="display:flex; justify-content:center;"><div class="draw-pill" style="background:${zoneGradients[a.z2]}">${a.z2} <span class="peg-num">${a.p2}</span></div></div>
-                </div>`;
-            });
-            div.innerHTML = h;
-            if(e.isTeam) tb.appendChild(div); else sb.appendChild(div);
-        });
+        teams.forEach(g => renderResultCard(tb, g));
+        solos.forEach(g => renderResultCard(sb, g));
         window.scrollTo(0,0);
     }
 
+    function renderResultCard(container, g) {
+        const div = document.createElement('div'); div.className = 'zone-card visible';
+        const firstZ1 = g.anglers[0] && g.anglers[0].z1 ? g.anglers[0].z1 : 'GREEN';
+        div.style.borderTop = `4px solid ${firstZ1 === 'RED' ? '#ef4444' : firstZ1 === 'BLUE' ? '#3b82f6' : '#10b981'}`;
+        
+        let h = `<div class="zone-header" style="font-size:12px; border-bottom:none; margin-bottom:0;">${g.tName || 'SOLO ANGLER'}</div>`;
+        
+        h += `<div class="res-row" style="border:none; padding-top:0; padding-bottom:4px;">
+                <span></span>
+                <span style="font-size:9px; color:var(--accent); text-align:center; letter-spacing:1px;">DAY 1</span>
+                ${matchDays == 2 ? `<span style="font-size:9px; color:var(--accent); text-align:center; letter-spacing:1px;">DAY 2</span>` : '<span></span>'}
+              </div>`;
+
+        g.anglers.forEach(a => { 
+            if(!a.name || !a.z1) return;
+            h += `<div class="res-row"><span class="angler-name">${a.name}</span>
+                <div style="display:flex; justify-content:center;"><div class="draw-pill" style="background:${zoneGradients[a.z1]}">${a.z1}<span class="peg-num">${a.p1}</span></div></div>
+                ${matchDays == 2 && a.z2 ? `<div style="display:flex; justify-content:center;"><div class="draw-pill" style="background:${zoneGradients[a.z2]}">${a.z2}<span class="peg-num">${a.p2}</span></div></div>` : '<div></div>'}
+                </div>`;
+        });
+        div.innerHTML = h; container.appendChild(div);
+    }
+
+    // PRINT ZONE MAP MODAL LOGIC
+    function showZoneMap() {
+        if(currentZoneSize === 0) {
+            let hc = 0, hp = 0;
+            appState.forEach(e => {
+                hc += e.isTeam ? 4 : 1;
+                e.anglers.forEach(a => hp = Math.max(hp, a.p1 || 0));
+            });
+            currentZoneSize = Math.max(Math.ceil(hc / 4), Math.ceil(hp / 4), 1);
+        }
+
+        const title = document.getElementById('matchTitle').value || "THE MATCH";
+        document.getElementById('zmTitle').innerText = "BEACH PEG MAP";
+        document.getElementById('zmSub').innerText = title;
+
+        let h = `<div class="zm-row"><span class="zm-color" style="background:#ef4444;">RED ZONE</span> <span>Peg 1 to ${currentZoneSize}</span></div>`;
+        h += `<div class="zm-row"><span class="zm-color" style="background:#f59e0b;">YELLOW ZONE</span> <span>Peg ${currentZoneSize + 1} to ${currentZoneSize * 2}</span></div>`;
+        h += `<div class="zm-row"><span class="zm-color" style="background:#10b981;">GREEN ZONE</span> <span>Peg ${currentZoneSize * 2 + 1} to ${currentZoneSize * 3}</span></div>`;
+        h += `<div class="zm-row"><span class="zm-color" style="background:#3b82f6;">BLUE ZONE</span> <span>Peg ${currentZoneSize * 3 + 1} to ${currentZoneSize * 4}</span></div>`;
+        h += `<div style="text-align:center; font-size:12px; margin-top:20px; color:#666;">Total Physical Pegs Required: ${currentZoneSize * 4}</div>`;
+
+        document.getElementById('zmContent').innerHTML = h;
+        document.getElementById('zoneMapModal').style.display = 'flex';
+    }
+
+    function printZoneMap() {
+        document.body.classList.add('printing-map');
+        window.print();
+        document.body.classList.remove('printing-map');
+    }
+
+    /* ---------------------------------------------------
+       STEWARD MASTER SHEET LOGIC
+       --------------------------------------------------- */
+
+    function showSteward() {
+        document.querySelectorAll('body > div[id$="Section"]').forEach(s => s.style.display = 'none');
+        document.getElementById('stewardSection').style.display = 'block';
+        
+        const area = document.getElementById('stewardArea'); 
+        let list = []; 
+        
+        appState.forEach(g => {
+            g.anglers.forEach((a, idx) => { 
+                if(a.name || g.isTeam) { 
+                    list.push({ entryId: g.id, aIdx: idx, isTeam: g.isTeam, team: g.tName, angler: a }); 
+                } 
+            });
+        });
+        
+        list.sort((a,b) => {
+            if (a.isTeam && !b.isTeam) return -1;
+            if (!a.isTeam && b.isTeam) return 1;
+            if (a.isTeam && b.isTeam) {
+                const cmp = (a.team || '').localeCompare(b.team || '');
+                if (cmp !== 0) return cmp;
+            }
+            return (a.angler.name || '').localeCompare(b.angler.name || '');
+        });
+        
+        let h = `<div class="control-panel no-print">
+                    <h2>STEWARD REGISTRATION & ACCOUNTING</h2>
+                    <div style="display:flex; gap:25px; justify-content:center; align-items:center; flex-wrap:wrap; margin-bottom:25px;">
+                        <div style="display:flex; align-items:center; gap:10px;"><label>PRIZE (£)</label><input type="number" id="sPrize" value="${prizeFee}" oninput="prizeFee=this.value; updateCash(); persistToVault();" style="width:75px;"></div>
+                        <div style="display:flex; align-items:center; gap:10px;"><label>PAIRS (£)</label><input type="number" id="sPairs" value="${pairsFee}" oninput="pairsFee=this.value; updateCash(); persistToVault();" style="width:75px;"></div>
+                    </div>
+                    <div style="display:flex; gap:15px; justify-content:center; flex-wrap:wrap;">
+                        <button onclick="window.print()" class="btn-action" style="background:#64748b;">PRINT SIGN-IN</button>
+                        <button onclick="exportStewardCSV()" class="btn-action" style="background:#10b981;">SAVE ACCOUNTING CSV</button>
+                        <button onclick="displayDraw()" class="btn-action">BACK TO RESULTS</button>
+                    </div>
+                 </div>
+                 <table class="check-sheet-table">
+                    <tr>
+                        <th style="text-align:left;">NAME</th>
+                        <th style="text-align:left;">TEAM</th>
+                        <th>PRESENT</th>
+                        <th>CAPTAIN</th>
+                        <th style="text-align:left;">CONTACT #</th>
+                        <th>FUND</th>
+                        <th>PAIRS</th>
+                    </tr>`;
+                    
+        list.forEach(item => {
+            const a = item.angler;
+            const eId = item.entryId;
+            const i = item.aIdx;
+            
+            h += `<tr>
+                <td><input type="text" class="steward-input" value="${a.name || ''}" oninput="updateStewardField('${eId}', ${i}, 'name', this.value)" placeholder="NAME..."></td>
+                <td style="font-size:12px;">${item.team || '-'}</td>
+                <td style="text-align:center;"><div class="cb-custom ${a.present ? 'active' : ''}" onclick="toggleStewardCB('${eId}', ${i}, 'present', this)"></div></td>
+                <td style="text-align:center;"><div class="cb-custom ${a.captain ? 'active' : ''}" onclick="toggleStewardCB('${eId}', ${i}, 'captain', this)"></div></td>
+                <td><input type="text" class="steward-input" id="contact_${eId}_${i}" value="${a.phone || ''}" oninput="updateStewardField('${eId}', ${i}, 'phone', this.value)" placeholder="PHONE..." style="display:${a.captain ? 'block' : 'none'};"></td>
+                <td style="text-align:center;"><div class="cb-custom ${a.prize ? 'active' : ''}" onclick="toggleStewardCB('${eId}', ${i}, 'prize', this)"></div></td>
+                <td style="text-align:center;"><div class="cb-custom ${a.pairs ? 'active' : ''}" onclick="toggleStewardCB('${eId}', ${i}, 'pairs', this)"></div></td>
+            </tr>`;
+        });
+        
+        area.innerHTML = h + `</table>`; 
+        
+        document.getElementById('commandBar').style.display = 'flex';
+        document.getElementById('cashModule').style.display = 'flex'; 
+        document.getElementById('actionBtnArea').style.display = 'none';
+        document.getElementById('amendTools').style.display = 'none'; 
+        
+        updateCash();
+        window.scrollTo(0,0);
+    }
+
+    function toggleStewardCB(eId, aIdx, prop, el) {
+        const entry = appState.find(e => e.id === eId);
+        if(entry) {
+            entry.anglers[aIdx][prop] = !entry.anglers[aIdx][prop];
+            el.classList.toggle('active', entry.anglers[aIdx][prop]);
+            
+            if(prop === 'captain') {
+                const phoneInput = document.getElementById(`contact_${eId}_${aIdx}`);
+                phoneInput.style.display = entry.anglers[aIdx][prop] ? 'block' : 'none';
+            }
+            
+            if(prop === 'prize' || prop === 'pairs') updateCash();
+            persistToVault();
+        }
+    }
+
+    function updateStewardField(eId, aIdx, prop, value) {
+        const entry = appState.find(e => e.id === eId);
+        if(entry) {
+            entry.anglers[aIdx][prop] = value.toUpperCase();
+            persistToVault();
+        }
+    }
+
+    function updateCash() {
+        let total = 0; 
+        appState.forEach(e => {
+            e.anglers.forEach(a => {
+                if(a.prize) total += parseFloat(prizeFee) || 0;
+                if(a.pairs) total += parseFloat(pairsFee) || 0;
+            });
+        });
+        document.getElementById('tkCash').innerText = '£' + total;
+    }
+
+    function exportStewardCSV() {
+        let csv = "NAME,TEAM,PRESENT,CAPTAIN,PHONE,PRIZE PAID,PAIRS PAID\n";
+        
+        let list = []; 
+        appState.forEach(g => g.anglers.forEach(a => { if(a.name || g.isTeam) list.push({ isTeam: g.isTeam, team: g.tName, angler: a }); }));
+        list.sort((a,b) => {
+            if (a.isTeam && !b.isTeam) return -1;
+            if (!a.isTeam && b.isTeam) return 1;
+            if (a.isTeam && b.isTeam) { const cmp = (a.team || '').localeCompare(b.team || ''); if (cmp !== 0) return cmp; }
+            return (a.angler.name || '').localeCompare(b.angler.name || '');
+        });
+
+        list.forEach(item => {
+            const a = item.angler;
+            csv += `${a.name || ""},${item.team || "-"},${a.present?"YES":"NO"},${a.captain?"YES":"NO"},${a.phone || ""},${a.prize?"YES":"NO"},${a.pairs?"YES":"NO"}\n`;
+        });
+        
+        const blob = new Blob([csv], {type: 'text/csv'});
+        const lnk = document.createElement('a'); lnk.href = URL.createObjectURL(blob); 
+        
+        let matchName = document.getElementById('matchTitle').value.trim();
+        if(!matchName) matchName = "REGISTRATION_" + Date.now();
+        else matchName = matchName.replace(/[^a-z0-9]/gi, '_').toUpperCase() + "_REGISTRATION";
+        
+        lnk.download = `${matchName}.csv`; 
+        lnk.click();
+    }
+
+    function handleAmend() {
+        document.getElementById('resultsSection').style.display = 'none'; document.getElementById('entrySection').style.display = 'block'; 
+        document.getElementById('setupPanel').style.display = 'none'; document.getElementById('commandBar').style.display = 'flex';
+        document.getElementById('amendTools').style.display = 'flex'; document.getElementById('actionBtnArea').style.display = 'flex';
+        document.getElementById('cashModule').style.display = 'none';
+        renderStateToScreen(); window.scrollTo(0,0);
+    }
+
+    function exportToCSV() {
+        let csv = "NAME,TEAM,DAY 1 ZONE,DAY 2 ZONE\n";
+        appState.forEach(g => g.anglers.forEach(a => { if(a.name) csv += `${a.name},${g.tName || "-"},${a.z1},${matchDays==2?a.z2:"-"}\n`; }));
+        const blob = new Blob([csv], {type: 'text/csv'});
+        const lnk = document.createElement('a'); lnk.href = URL.createObjectURL(blob); 
+        
+        let matchName = document.getElementById('matchTitle').value.trim();
+        if(!matchName) matchName = "ZONEDRAW_EXPORT_" + Date.now();
+        else matchName = matchName.replace(/[^a-z0-9]/gi, '_').toUpperCase();
+        
+        lnk.download = `${matchName}.csv`; 
+        lnk.click();
+    }
+
+    function clearAllHistory() { if(confirm("PERMANENTLY ERASE ALL RECORDS?")) { localStorage.removeItem('zonedraw_vault_v10'); showHistory(); } }
+
+    /* ---------------------------------------------------
+       B&W DISPATCH SLIP LOGIC (v10.13.0)
+       --------------------------------------------------- */
     function generateDispatchSlips() {
-        const container = document.getElementById('dispatchSection'); container.innerHTML = '';
+        const container = document.getElementById('dispatchSection');
+        container.innerHTML = '';
         const title = (document.getElementById('matchTitle').value || "MATCH RESULTS").toUpperCase();
         const stamp = new Date().toLocaleString();
 
-        appState.forEach(e => {
-            const slip = document.createElement('div'); slip.className = 'dispatch-slip';
+        // 1. Process Teams (One A4 Page per Team)
+        appState.filter(e => e.isTeam).forEach(e => {
+            const slip = document.createElement('div');
+            slip.className = 'dispatch-slip';
             slip.innerHTML = `
                 <div class="dispatch-header">
-                    <div><h1>${title}</h1><h2>${e.isTeam ? 'TEAM: ' + e.tName : 'SOLO COMPETITOR'}</h2></div>
+                    <div><h1>${title}</h1><h2>TEAM: ${e.tName}</h2></div>
                     <div style="text-align:right; font-size:12px; font-weight:900;">${stamp}</div>
                 </div>
-                <p style="font-size:16px; font-weight:800;"><b>INSTRUCTIONS:</b> POPULATE YOUR SCORESHEETS USING THE BOLD DATA BELOW. ENSURE PEG NUMBERS MATCH THE ASSIGNED ZONE COLOR.</p>
+                <p style="font-size:16px; font-weight:800;"><b>INSTRUCTIONS:</b> POPULATE YOUR 8 SCORESHEETS (4 PER DAY) USING THE DATA BELOW. ENSURE PEG NUMBERS MATCH THE ASSIGNED ZONE COLOR.</p>
                 <table class="dispatch-table">
                     <tr><th>ANGLER NAME</th><th>DAY 1 (ZONE & PEG)</th><th>DAY 2 (ZONE & PEG)</th></tr>
                     ${e.anglers.map(a => `
                         <tr>
-                            <td>${a.name}</td>
+                            <td>${a.name || '---'}</td>
                             <td><b>[${a.z1} ZONE]</b> PEG ${a.p1}</td>
                             <td><b>[${a.z2} ZONE]</b> PEG ${a.p2}</td>
                         </tr>
                     `).join('')}
                 </table>
                 <div class="receipt-zone">
-                    <p><b>CAPTAIN'S ACKNOWLEDGMENT:</b> I CONFIRM I HAVE RECEIVED THE SCORESHEETS AND VERIFIED THE PEGS LISTED ABOVE.</p>
+                    <p><b>CAPTAIN'S ACKNOWLEDGMENT:</b> I CONFIRM I HAVE RECEIVED THE SCORESHEETS AND VERIFIED THE DATA ABOVE.</p>
                     <div class="sig-line"><span>SIGNATURE:</span><span>DATE:</span></div>
                 </div>
             `;
             container.appendChild(slip);
         });
-        document.body.classList.add('printing-dispatch'); window.print();
+
+        // 2. Process Solos (Grouped 4 per page to save paper)
+        const solos = appState.filter(e => !e.isTeam);
+        for (let i = 0; i < solos.length; i += 4) {
+            const batch = solos.slice(i, i + 4);
+            const page = document.createElement('div');
+            page.style.pageBreakAfter = 'always';
+            
+            batch.forEach(e => {
+                const a = e.anglers[0];
+                const slip = document.createElement('div');
+                slip.className = 'dispatch-slip';
+                slip.style.minHeight = '200px';
+                slip.style.pageBreakAfter = 'auto';
+                slip.style.marginBottom = '20px';
+                slip.innerHTML = `
+                    <div class="dispatch-header" style="padding-bottom:10px; margin-bottom:15px; border-bottom-width:4px;">
+                        <div><h1 style="font-size:20px;">${title}</h1><h2 style="font-size:16px;">SOLO COMPETITOR: ${a.name}</h2></div>
+                    </div>
+                    <table class="dispatch-table" style="margin-top:10px; font-size:14px;">
+                        <tr><th>DAY 1 (ZONE & PEG)</th><th>DAY 2 (ZONE & PEG)</th></tr>
+                        <tr>
+                            <td><b>[${a.z1} ZONE]</b> PEG ${a.p1}</td>
+                            <td><b>[${a.z2} ZONE]</b> PEG ${a.p2}</td>
+                        </tr>
+                    </table>
+                    <div class="receipt-zone" style="margin-top:20px; padding-top:15px;">
+                        <div class="sig-line" style="width:300px; margin-top:20px; font-size:10px;">SIGNATURE:</div>
+                    </div>
+                `;
+                page.appendChild(slip);
+            });
+            container.appendChild(page);
+        }
+
+        document.body.classList.add('printing-dispatch');
+        window.print();
+        document.body.classList.remove('printing-dispatch');
     }
-
-    function persistToVault() {
-        const title = document.getElementById('matchTitle').value || 'UNNAMED';
-        const vault = JSON.parse(localStorage.getItem('zonedraw_vault_v10') || '{}');
-        vault[title] = { time: new Date().toLocaleString(), data: appState, zoneSize: currentZoneSize, prize: prizeFee, pairs: pairsFee };
-        localStorage.setItem('zonedraw_vault_v10', JSON.stringify(vault));
-    }
-
-    function saveAndFinish() { persistToVault(); if(confirm("ARCHIVE AND RETURN TO HUB?")) showHub(); }
-
-    function showSteward() {
-        document.querySelectorAll('body > div[id$="Section"]').forEach(s => s.style.display = 'none');
-        document.getElementById('stewardSection').style.display = 'block';
-        const area = document.getElementById('stewardArea');
-        let list = []; appState.forEach(e => e.anglers.forEach((a, idx) => list.push({e, a, idx})));
-        list.sort((a,b) => (a.e.tName || a.a.name).localeCompare(b.e.tName || b.a.name));
-
-        let h = `<div class="control-panel no-print"><h2>STEWARD ACCOUNTING</h2><button class="btn-action" onclick="displayDraw()">BACK TO RESULTS</button></div>`;
-        h += `<table class="check-sheet-table"><tr><th>NAME</th><th>TEAM</th><th>PRESENT</th><th>PAID</th></tr>`;
-        list.forEach(item => {
-            h += `<tr><td>${item.a.name}</td><td>${item.e.tName || '-'}</td>
-                <td><div class="cb-custom" onclick="this.classList.toggle('active')"></div></td>
-                <td><div class="cb-custom" onclick="this.classList.toggle('active')"></div></td></tr>`;
-        });
-        area.innerHTML = h + `</table>`;
-        window.scrollTo(0,0);
-    }
-
-    function handleAmend() {
-        document.getElementById('resultsSection').style.display = 'none';
-        document.getElementById('entrySection').style.display = 'block';
-        document.getElementById('commandBar').style.display = 'flex';
-        renderStateToScreen();
-    }
-    
-    function clearAllHistory() { if(confirm("ERASE ALL PREVIOUS DRAWS?")) { localStorage.removeItem('zonedraw_vault_v10'); showHistory(); } }
 </script>
 </body>
 </html>
