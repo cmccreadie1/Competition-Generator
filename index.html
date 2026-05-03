@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ZONEDRAW v10.1.0</title>
+    <title>ZONEDRAW v10.2.0</title>
     <link rel="manifest" href="manifest.json">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
@@ -52,6 +52,8 @@
         
         .command-bar { position: fixed; bottom: 0; left: 0; right: 0; z-index: 5000; background: rgba(30, 41, 59, 0.98); backdrop-filter: blur(20px); border-top: 2px solid var(--accent); padding: 15px 35px; display: none; justify-content: space-between; align-items: center; box-shadow: 0 -10px 30px rgba(0,0,0,0.5); }
         
+        .btn-jumbo { padding: 15px 30px; font-size: 14px; background: #1e293b; border: 2px solid var(--accent); color: white; border-radius: 12px; font-weight: 900; cursor: pointer; }
+
         .check-sheet-table { width: 100%; border-collapse: collapse; }
         .check-sheet-table td { padding: 14px; border-bottom: 1px solid var(--border); font-size: 16px; font-weight: 800; }
         .group-label { grid-column: 1 / -1; font-size: 1.4rem; font-weight: 900; color: var(--accent); border-left: 5px solid var(--accent); padding-left: 15px; margin: 40px 0 20px; }
@@ -70,7 +72,7 @@
 <div class="fixed-header no-print">
     <div class="header-content">
         <button class="home-btn" onclick="showHub()" tabindex="-1">🏠 HUB</button>
-        <div class="brand-name">ZONEDRAW <span id="vTag" style="font-size:10px; opacity:0.5;">v10.1.0</span></div>
+        <div class="brand-name">ZONEDRAW <span id="vTag" style="font-size:10px; opacity:0.5;">v10.2.0</span></div>
         <div style="width: 60px;"></div>
     </div>
 </div>
@@ -132,13 +134,13 @@
 <div id="commandBar" class="command-bar no-print">
     <div style="display:flex; gap:30px; align-items:center;">
         <div style="display:flex; flex-direction:column;"><span style="font-size:10px; color:var(--accent);">ANGLERS</span><span id="tkAnglers" style="font-size:24px; font-weight:900;">0 / 0</span></div>
-        <div id="amendTools" style="display:none; gap:10px;">
-            <button class="btn-tool" onclick="addNewItem('TEAM')" tabindex="-1">+ TEAM</button>
-            <button class="btn-tool" onclick="addNewItem('INDIV')" tabindex="-1">+ SOLO</button>
+        <div id="amendTools" style="display:none; gap:15px;">
+            <button class="btn-jumbo" onclick="addNewItem('TEAM')" tabindex="-1">+ TEAM</button>
+            <button class="btn-jumbo" onclick="addNewItem('INDIV')" tabindex="-1">+ SOLO</button>
         </div>
     </div>
     <div id="actionBtnArea">
-        <button class="btn-tool" id="mergeBtn" style="display:none; margin-right:20px; height:50px; padding:0 25px;" onclick="mergeToTeam()" tabindex="-1">CONSTRUCT TEAM (4)</button>
+        <button class="btn-jumbo" id="mergeBtn" style="display:none; margin-right:20px;" onclick="mergeToTeam()" tabindex="-1">CONSTRUCT TEAM (4)</button>
         <button class="btn-action" id="mainActionBtn" onclick="initiateShuffle()" tabindex="-1">PROCESS RANDOM DRAW</button>
     </div>
 </div>
@@ -204,9 +206,7 @@
         loadMatch(keys[0], vault[keys[0]]); showSteward();
     }
 
-    function setDays(d) {
-        matchDays = d;
-    }
+    function setDays(d) { matchDays = d; }
 
     function bulkInit() {
         const t = parseInt(document.getElementById('initTeams').value) || 0;
@@ -281,7 +281,9 @@
         const g = frozenData.find(x => x.tName.trim().toUpperCase() === tName);
         if(!g) return;
         frozenData = frozenData.filter(x => x.tName.trim().toUpperCase() !== tName);
-        g.anglers.forEach(a => frozenData.push({ tName: "", anglers: [a] }));
+        g.anglers.forEach(a => {
+            frozenData.push({ tName: "", anglers: [{...a}] });
+        });
         handleAmend();
     }
 
@@ -342,10 +344,8 @@
             let tr = { tName: t.tName, anglers: [] };
             t.anglers.forEach((name, i) => {
                 let p_data = vacantPool.shift() || { 
-                    z1: zones[zIndexes[i]], 
-                    p1: pools1[zIndexes[i]].p.pop(), 
-                    z2: rotationMap[zones[zIndexes[i]]], 
-                    p2: pools2[zones.indexOf(rotationMap[zones[zIndexes[i]]])].p.pop() 
+                    z1: zones[zIndexes[i]], p1: pools1[zIndexes[i]].p.pop(), 
+                    z2: rotationMap[zones[zIndexes[i]]], p2: pools2[zones.indexOf(rotationMap[zones[zIndexes[i]]])].p.pop() 
                 };
                 tr.anglers.push({ name, ...p_data });
             });
@@ -356,10 +356,8 @@
             let availableZones = pools1.map((p, idx) => idx).filter(idx => pools1[idx].p.length > 0);
             const randIdx = availableZones[Math.floor(Math.random()*availableZones.length)];
             let p_data = vacantPool.shift() || { 
-                z1: zones[randIdx], 
-                p1: pools1[randIdx].p.pop(), 
-                z2: rotationMap[zones[randIdx]], 
-                p2: pools2[zones.indexOf(rotationMap[zones[randIdx]])].p.pop() 
+                z1: zones[randIdx], p1: pools1[randIdx].p.pop(), 
+                z2: rotationMap[zones[randIdx]], p2: pools2[zones.indexOf(rotationMap[zones[randIdx]])].p.pop() 
             };
             final.push({ tName: "", anglers: [{ name: a.name, ...p_data }] });
         });
@@ -436,8 +434,6 @@
         const blob = new Blob([csv], {type: 'text/csv'});
         const lnk = document.createElement('a'); lnk.href = URL.createObjectURL(blob); lnk.download = `ZONEDRAW_EXPORT_${Date.now()}.csv`; lnk.click();
     }
-
-    function clearAllHistory() { if(confirm("DELETE ALL?")) { localStorage.removeItem('zonedraw_vault_v10'); showHistory(); } }
 </script>
 </body>
 </html>
