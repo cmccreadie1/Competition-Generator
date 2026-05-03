@@ -1,4 +1,4 @@
-const CACHE_NAME = 'zonedraw-v9.4.0-hub-v1';
+const CACHE_NAME = 'zonedraw-v9.5.0-gridmaster-v1';
 const ASSETS_TO_CACHE = [
     './',
     './index.html',
