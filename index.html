@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ZONEDRAW v8.6.0</title>
+    <title>ZONEDRAW v8.7.0</title>
     <link rel="manifest" href="manifest.json">
     <meta name="apple-mobile-web-app-capable" content="yes">
     
@@ -11,21 +11,20 @@
 
     <style>
         :root {
-            /* High-Vibrancy Palette */
             --bg: #f0f4ff; --card: #ffffff; --text: #1e1b4b; --subtext: #4338ca;
             --accent: #4f46e5; --accent-hover: #3730a3; --border: #c7d2fe;
             --red: #ef4444; --yellow: #f59e0b; --green: #10b981; --blue: #3b82f6;
         }
         
         body { font-family: 'Inter', system-ui, sans-serif; background: var(--bg); color: var(--text); margin: 0; padding: 0; text-transform: uppercase; line-height: 1.2; }
-        input { text-transform: uppercase; font-weight: 900 !important; font-size: 15px !important; border: 2px solid var(--border) !important; border-radius: 8px !important; }
+        input, select { text-transform: uppercase; font-weight: 900 !important; font-size: 15px !important; border: 2px solid var(--border) !important; border-radius: 8px !important; outline: none; }
+        select { background: white; padding: 10px; cursor: pointer; }
 
-        /* Sleek Modern Header */
+        /* Header & Transparency */
         .fixed-header { position: fixed; top: 0; left: 0; right: 0; z-index: 5000; background: #fff; border-bottom: 3px solid var(--accent); padding: 10px 20px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); }
         .header-content { display: flex; justify-content: space-between; align-items: center; max-width: 1400px; margin: 0 auto; }
         .brand-name { font-size: 24px; font-weight: 900; letter-spacing: -1.5px; color: var(--accent); }
 
-        /* High-Contrast Verification Bar */
         #transparencyBar { 
             position: fixed; top: 52px; left: 0; right: 0; z-index: 4999; 
             background: #1e1b4b; color: #e0e7ff; padding: 8px 20px;
@@ -33,109 +32,109 @@
             font-size: 10px; font-weight: 800; letter-spacing: 1px;
         }
 
-        #entrySection, #resultsSection { max-width: 1400px; margin: 0 auto; padding: 110px 20px 20px; }
-        #resultsSection { padding-top: 100px; }
+        #entrySection, #resultsSection, #checkSheetSection { max-width: 1400px; margin: 0 auto; padding: 110px 20px 20px; }
+        #resultsSection, #checkSheetSection { padding-top: 100px; }
 
+        /* Entry UI Symmetry */
+        .config-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; margin-top: 15px; }
+
+        .card { background: var(--card); border: 1px solid var(--border); border-radius: 16px; padding: 16px; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05); position: relative; }
+        .card.frozen { background: #f8fafc; border-style: dashed; opacity: 0.9; }
+        .frozen-badge { position: absolute; top: -10px; left: 20px; background: #1e1b4b; color: white; padding: 2px 10px; border-radius: 4px; font-size: 9px; font-weight: 900; }
+        
+        label { color: var(--subtext); font-weight: 900; font-size: 10px; margin-bottom: 6px; display: block; opacity: 0.8; }
+        .btn-main { background: var(--accent); color: white; padding: 18px; border-radius: 12px; font-weight: 900; font-size: 14px; border: none; cursor: pointer; width: 100%; box-shadow: 0 4px 0px #312e81; }
+        
+        /* Results Table */
         #resultsArea { display: grid; grid-template-columns: 1fr; gap: 16px; }
         @media (min-width: 1024px) { #resultsArea { grid-template-columns: 1fr 1fr; } }
-
-        /* Softened Cards */
-        .card { background: var(--card); border: 1px solid var(--border); border-radius: 16px; padding: 16px; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05); transition: transform 0.2s, box-shadow 0.2s; position: relative; }
-        .card:hover { transform: translateY(-2px); box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1); border-color: var(--accent); }
-        label { color: var(--subtext); font-weight: 900; font-size: 10px; margin-bottom: 6px; display: block; opacity: 0.8; }
-        
-        .btn-main { background: var(--accent); color: white; padding: 18px; border-radius: 12px; font-weight: 900; font-size: 14px; border: none; cursor: pointer; width: 100%; transition: all 0.2s; box-shadow: 0 4px 0px #312e81; }
-        .btn-main:hover { background: var(--accent-hover); transform: translateY(-1px); box-shadow: 0 6px 0px #312e81; }
-        .btn-main:active { transform: translateY(2px); box-shadow: 0 0px 0px #312e81; }
-
-        .results-nav { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 20px; max-width: 650px; margin-left: auto; margin-right: auto; }
-        .btn-nav { padding: 14px 2px; border-radius: 10px; font-size: 10px; font-weight: 900; border: none; cursor: pointer; color: white; box-shadow: 0 3px 0 rgba(0,0,0,0.2); }
-
-        /* Explicit PEG Labeling */
         .compact-table td { padding: 10px 8px; border-bottom: 1px solid #f1f5f9; }
-        .angler-name-text { font-size: 18px; font-weight: 900; color: #1e1b4b; }
-        .zone-pill { display: inline-block; padding: 6px 12px; border-radius: 8px; font-weight: 900; font-size: 11px; color: white; min-width: 75px; text-align: center; box-shadow: inset 0 -2px 0 rgba(0,0,0,0.2); }
-        
-        .peg-label { font-size: 10px; font-weight: 900; color: var(--subtext); margin-left: 10px; margin-right: 4px; }
+        .angler-name-text { font-size: 17px; font-weight: 900; }
+        .zone-pill { display: inline-block; padding: 6px 12px; border-radius: 8px; font-weight: 900; font-size: 11px; color: white; min-width: 75px; text-align: center; }
+        .peg-label { font-size: 10px; font-weight: 900; color: var(--subtext); margin-left: 10px; }
         .peg-indicator { font-weight: 900; font-size: 22px; color: var(--accent); vertical-align: middle; }
 
-        #historyDrawer { position: fixed; top: 0; right: -350px; width: 320px; height: 100%; background: white; z-index: 7000; box-shadow: -10px 0 30px rgba(0,0,0,0.1); transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1); padding: 25px; overflow-y: auto; text-transform: none; border-left: 4px solid var(--accent); }
+        /* Navigation */
+        .results-nav { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; margin-bottom: 20px; }
+        .btn-nav { padding: 14px 20px; border-radius: 10px; font-size: 11px; font-weight: 900; border: none; cursor: pointer; color: white; }
+
+        /* Check Sheet Style */
+        .check-sheet-table { width: 100%; border-collapse: collapse; background: white; text-transform: uppercase; }
+        .check-sheet-table th, .check-sheet-table td { border: 1px solid #ddd; padding: 12px; text-align: left; }
+        .check-sheet-table th { background: #f1f5f9; font-size: 11px; }
+        .check-box { width: 25px; height: 25px; border: 2px solid #333; display: inline-block; vertical-align: middle; }
+
+        #historyDrawer { position: fixed; top: 0; right: -350px; width: 320px; height: 100%; background: white; z-index: 7000; box-shadow: -10px 0 30px rgba(0,0,0,0.1); transition: 0.4s; padding: 25px; overflow-y: auto; text-transform: none; border-left: 4px solid var(--accent); }
         #historyDrawer.open { right: 0; }
+        .btn-delete { position: absolute; top: 12px; right: 12px; background: #fee2e2; color: #ef4444; border: none; width: 30px; height: 30px; border-radius: 50%; cursor: pointer; }
 
-        #algoModal { display: none; position: fixed; inset: 0; z-index: 9999; background: rgba(30, 27, 75, 0.9); align-items: center; justify-content: center; padding: 20px; backdrop-filter: blur(4px); }
-        .modal-content { background: white; padding: 35px; border-radius: 20px; max-width: 480px; text-transform: none; line-height: 1.6; border: 4px solid var(--accent); }
-        .algo-link { color: #fbbf24; text-decoration: underline; cursor: pointer; font-weight: 900; }
-        
-        .btn-delete { position: absolute; top: 12px; right: 12px; background: #fee2e2; color: #ef4444; border: none; width: 30px; height: 30px; border-radius: 50%; cursor: pointer; font-weight: 900; }
-
-        @media print { .no-print { display: none !important; } #resultsSection { padding-top: 0; } }
+        @media print { .no-print { display: none !important; } #resultsSection, #checkSheetSection { padding-top: 0; } }
     </style>
 </head>
 <body>
 
 <div id="shuffleOverlay" style="position:fixed; inset:0; background:rgba(255,255,255,0.98); z-index:6000; display:none; flex-direction:column; align-items:center; justify-content:center;">
-    <h1 style="font-weight:900; color:var(--accent); font-size:2rem; letter-spacing:2px;">SHUFFLING THE DECK...</h1>
-    <div style="width:300px; height:15px; background:#e0e7ff; border-radius:10px; overflow:hidden; border:2px solid var(--accent);">
-        <div id="pBar" style="height:100%; width:0%; background:var(--accent); transition:0.1s;"></div>
-    </div>
+    <h1 style="font-weight:900; color:var(--accent); font-size:2rem;">INCORPORATING COMPETITORS...</h1>
+    <div style="width:300px; height:15px; background:#e0e7ff; border-radius:10px; overflow:hidden; border:2px solid var(--accent);"><div id="pBar" style="height:100%; width:0%; background:var(--accent); transition:0.1s;"></div></div>
 </div>
 
 <div id="transparencyBar">
     <span id="barId"></span>
     <span id="barTime"></span>
-    <span class="algo-link" onclick="openModal()">ⓘ HOW IS THIS FAIR?</span>
+    <span style="color:#fbbf24; cursor:pointer; text-decoration:underline;" onclick="alert('Fisher-Yates Randomization ensures a 100% unbiased draw.')">ⓘ FAIRNESS PROOF</span>
 </div>
 
 <div id="historyDrawer">
-    <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:3px solid var(--accent); padding-bottom:15px; margin-bottom:20px;">
-        <h2 style="margin:0; font-weight:900; color:var(--accent);">VAULT HISTORY</h2>
-        <button onclick="toggleHistory()" style="background:none; border:none; font-size:30px; cursor:pointer;">×</button>
-    </div>
+    <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:3px solid var(--accent); padding-bottom:15px; margin-bottom:20px;"><h2 style="margin:0; font-weight:900;">HISTORY</h2><button onclick="toggleHistory()" style="background:none; border:none; font-size:30px; cursor:pointer;">×</button></div>
     <div id="historyList"></div>
-</div>
-
-<div id="algoModal">
-    <div class="modal-content">
-        <h3 style="margin-top:0; color:var(--accent); font-weight:900;">FISHER-YATES PROOF</h3>
-        <p>THIS APP USES THE MATHEMATICAL GOLD STANDARD FOR UNBIASED RANDOMIZATION. THE PROBABILITY OF DRAWING ANY SPECIFIC PEG IS:</p>
-        <div style="text-align:center; padding:20px; background:#f0f4ff; margin:15px 0; font-size:1.5rem; border-radius:12px; color:var(--accent);">
-            $$P(x) = \frac{1}{n!}$$
-        </div>
-        <p>ONCE THE SHUFFLE BEGINS, THE OUTCOME IS MATHEMATICALLY LOCKED. NO INTERFERENCE IS POSSIBLE.</p>
-        <button class="btn-main" onclick="closeModal()">CLOSE VERIFICATION</button>
-    </div>
 </div>
 
 <div class="fixed-header no-print">
     <div class="header-content">
-        <div class="brand-name">ZONEDRAW <span style="font-size:10px; opacity:0.6; color:var(--text);">v8.6.0</span></div>
+        <div class="brand-name">ZONEDRAW <span style="font-size:10px; opacity:0.6;">v8.7.0</span></div>
         <button onclick="toggleHistory()" style="background:var(--accent); color:white; border:none; font-weight:900; padding:8px 16px; border-radius:8px; font-size:11px; cursor:pointer; box-shadow: 0 3px 0 #312e81;">VAULT HISTORY</button>
     </div>
 </div>
 
 <div id="entrySection" class="no-print">
     <div class="card" style="margin-bottom:20px; border-top: 5px solid var(--accent);">
-        <div style="margin-bottom:15px;"><label>MATCH TITLE</label><input type="text" id="matchTitle" placeholder="NAME OF TOURNAMENT..."></div>
-        <div style="display:grid; grid-template-columns:1fr 1fr; gap:20px;">
-            <div><label>TEAMS</label><input type="number" id="initTeams" value="24"></div>
-            <div><label>SOLOS</label><input type="number" id="initIndivs" value="4"></div>
+        <label>MATCH TITLE</label>
+        <input type="text" id="matchTitle" style="width:100%;" placeholder="e.g. SPRA SCOTTISH 2026">
+        
+        <div class="config-grid">
+            <div>
+                <label>DURATION</label>
+                <select id="matchDays" style="width:100%;">
+                    <option value="2">2 DAYS (ROTATION)</option>
+                    <option value="1">1 DAY ONLY</option>
+                </select>
+            </div>
+            <div><label>ADD TEAMS</label><input type="number" id="initTeams" value="0"></div>
+            <div><label>ADD SOLOS</label><input type="number" id="initIndivs" value="0"></div>
         </div>
-        <button class="btn-main" style="margin-top:20px;" onclick="bulkInit()">BUILD ENTRY ROSTER</button>
+        <button class="btn-main" style="margin-top:20px;" onclick="bulkInit()">ADD TO ROSTER</button>
     </div>
     <div id="entryList" style="display:grid; grid-template-columns:repeat(auto-fill, minmax(320px, 1fr)); gap:16px;"></div>
-    <div id="drawAction" style="display:none; margin-top:30px;"><button class="btn-main" style="background:#1e1b4b; box-shadow: 0 4px 0 #000;" onclick="initiateShuffle()">PROCESS RANDOM DRAW</button></div>
+    <div id="drawAction" style="display:none; margin-top:30px;"><button class="btn-main" style="background:#1e1b4b; box-shadow: 0 4px 0 #000;" onclick="initiateShuffle()">PROCESS DRAW</button></div>
 </div>
 
 <div id="resultsSection" style="display:none;">
     <div class="results-nav no-print">
-        <button onclick="window.print()" class="btn-nav" style="background:#64748b;">PRINT</button>
-        <button onclick="exportToCSV()" class="btn-nav" style="background:#10b981;">EXPORT CSV</button>
-        <button onclick="shareFullPage()" id="shareBtn" class="btn-nav" style="background:#4f46e5;">SHARE PAGE</button>
-        <button onclick="handleAmend()" class="btn-nav" style="background:#f59e0b;">AMEND</button>
+        <button onclick="window.print()" class="btn-nav" style="background:#64748b;">PRINT DRAW</button>
+        <button onclick="showCheckSheet()" class="btn-nav" style="background:#4f46e5;">CHECK SHEET</button>
+        <button onclick="exportToCSV()" class="btn-nav" style="background:#10b981;">CSV EXPORT</button>
+        <button onclick="shareFullPage()" id="shareBtn" class="btn-nav" style="background:#3b82f6;">SHARE PDF</button>
+        <button onclick="handleAmend()" class="btn-nav" style="background:#f59e0b;">AMEND DRAW</button>
     </div>
-    <div id="captureArea">
-        <div id="resultsArea"></div>
+    <div id="captureArea"><div id="resultsArea"></div></div>
+</div>
+
+<div id="checkSheetSection" style="display:none;">
+    <div class="results-nav no-print">
+        <button onclick="window.print()" class="btn-nav" style="background:#64748b;">PRINT SHEET</button>
+        <button onclick="showResults()" class="btn-nav" style="background:#4f46e5;">BACK TO DRAW</button>
     </div>
+    <div id="checkSheetArea"></div>
 </div>
 
 <script>
@@ -143,23 +142,36 @@
     const zoneColors = { 'RED': '#ef4444', 'YELLOW': '#f59e0b', 'GREEN': '#10b981', 'BLUE': '#3b82f6' };
     const rotationMap = { 'RED': 'BLUE', 'BLUE': 'RED', 'YELLOW': 'GREEN', 'GREEN': 'YELLOW' };
     let currentDrawData = [];
+    let frozenAnglers = []; // Stores anglers already assigned
 
     document.addEventListener('input', (e) => { if(e.target.tagName === 'INPUT') e.target.value = e.target.value.toUpperCase(); });
 
     function bulkInit() {
-        const list = document.getElementById('entryList'); list.innerHTML = '';
+        const list = document.getElementById('entryList');
         const t = parseInt(document.getElementById('initTeams').value) || 0;
         const i = parseInt(document.getElementById('initIndivs').value) || 0;
         for(let x=0; x<t; x++) addNewItem('TEAM');
         for(let y=0; y<i; y++) addNewItem('INDIV');
         document.getElementById('drawAction').style.display = 'block';
+        document.getElementById('initTeams').value = 0;
+        document.getElementById('initIndivs').value = 0;
     }
 
-    function addNewItem(type) {
+    function addNewItem(type, existingData = null) {
         const list = document.getElementById('entryList');
-        const div = document.createElement('div'); div.className = 'card'; div.dataset.type = type;
-        div.innerHTML = `<button class="btn-delete" tabindex="-1" onclick="this.parentElement.remove()">×</button>` +
-            (type === 'TEAM' ? `<label>TEAM</label><input type="text" class="t-name" style="margin-bottom:10px;">` + [1,2,3,4].map(n => `<input type="text" class="a-name" placeholder="ANGLER ${n}" style="margin-bottom:8px;">`).join('') : `<label>SOLO ANGLER</label><input type="text" class="a-name">`);
+        const div = document.createElement('div'); 
+        div.className = 'card' + (existingData ? ' frozen' : '');
+        div.dataset.type = type;
+        if(existingData) div.innerHTML = `<span class="frozen-badge">LOCKED IN DRAW</span>`;
+        
+        const del = existingData ? '' : `<button class="btn-delete" tabindex="-1" onclick="this.parentElement.remove()">×</button>`;
+        
+        if(type === 'TEAM') {
+            div.innerHTML += del + `<label>TEAM</label><input type="text" class="t-name" value="${existingData ? existingData.tName : ''}" ${existingData ? 'readonly' : ''} style="margin-bottom:10px;">` + 
+                [0,1,2,3].map(n => `<input type="text" class="a-name" placeholder="ANGLER ${n+1}" value="${existingData ? existingData.anglers[n].name : ''}" ${existingData ? 'readonly' : ''} style="margin-bottom:8px;">`).join('');
+        } else {
+            div.innerHTML += del + `<label>SOLO ANGLER</label><input type="text" class="a-name" value="${existingData ? existingData.name : ''}" ${existingData ? 'readonly' : ''}>`;
+        }
         list.appendChild(div);
     }
 
@@ -171,86 +183,166 @@
         overlay.style.display = 'flex';
         let progress = 0;
         const interval = setInterval(() => {
-            progress += 2;
+            progress += 5;
             pBar.style.width = progress + '%';
             if(progress >= 100) { clearInterval(interval); overlay.style.display = 'none'; runDraw(); }
         }, 40);
     }
 
     function runDraw() {
-        let teams = [], indivs = [];
-        document.querySelectorAll('.card[data-type]').forEach(block => {
+        const isTwoDay = document.getElementById('matchDays').value === "2";
+        let newTeams = [], newIndivs = [];
+        
+        // 1. Identify Latecomers vs Frozen
+        document.querySelectorAll('.card:not(.frozen)').forEach(block => {
             const names = Array.from(block.querySelectorAll('.a-name')).map(i => i.value.trim().toUpperCase()).filter(n => n);
             const tName = (block.querySelector('.t-name')?.value || "").trim().toUpperCase();
-            if(block.dataset.type === 'TEAM' && names.length) teams.push({ tName, anglers: names });
-            else if(names[0]) indivs.push({ name: names[0], team: "" });
+            if(block.dataset.type === 'TEAM' && names.length) newTeams.push({ tName, anglers: names });
+            else if(names[0]) newIndivs.push({ name: names[0], team: "" });
         });
 
-        const total = (teams.length * 4) + indivs.length;
-        const base = Math.floor(total / 4), rem = total % 4;
+        // 2. Map existing peg assignments to prevent overlaps
+        let takenP1 = { RED:[], YELLOW:[], GREEN:[], BLUE:[] };
+        let takenP2 = { RED:[], YELLOW:[], GREEN:[], BLUE:[] };
+        frozenAnglers.forEach(group => {
+            group.anglers.forEach(a => {
+                takenP1[a.z1].push(a.p1);
+                if(isTwoDay) takenP2[a.z2].push(a.p2);
+            });
+        });
+
+        // 3. Calculate new totals and pool availability
+        const totalAnglers = frozenAnglers.reduce((acc, g) => acc + g.anglers.length, 0) + (newTeams.length * 4) + newIndivs.length;
+        const base = Math.floor(totalAnglers / 4), rem = totalAnglers % 4;
 
         let poolsD1 = zones.map((name, i) => {
-            let s = base + (i < rem ? 1 : 0), p = []; for(let n=1; n<=s; n++) p.push(n); shuffle(p);
-            return { name, pool: p };
+            let s = base + (i < rem ? 1 : 0);
+            let available = []; for(let n=1; n<=s; n++) if(!takenP1[name].includes(n)) available.push(n);
+            shuffle(available);
+            return { name, pool: available };
         });
 
         let poolsD2 = zones.map(name => {
             const src = Object.keys(rotationMap).find(k => rotationMap[k] === name);
             const srcIdx = zones.indexOf(src);
-            let s = base + (srcIdx < rem ? 1 : 0), p = []; for(let n=1; n<=s; n++) p.push(n); shuffle(p);
-            return { name, pool: p };
+            let s = base + (srcIdx < rem ? 1 : 0);
+            let available = []; for(let n=1; n<=s; n++) if(!takenP2[name].includes(n)) available.push(n);
+            shuffle(available);
+            return { name, pool: available };
         });
 
-        let res = [];
-        teams.forEach(t => {
+        // 4. Assign latecomers
+        let newRes = [];
+        newTeams.forEach(t => {
             let zIdx = [0,1,2,3]; shuffle(zIdx);
             let tr = { tName: t.tName, anglers: [] };
             t.anglers.forEach((name, i) => {
-                const z1 = zones[zIdx[i]], p1 = poolsD1[zIdx[i]].pool.pop(), z2 = rotationMap[z1], p2 = poolsD2[zones.indexOf(z2)].pool.pop();
+                const z1 = zones[zIdx[i]], p1 = poolsD1[zIdx[i]].pool.pop();
+                const z2 = rotationMap[z1], p2 = poolsD2[zones.indexOf(z2)].pool.pop();
                 tr.anglers.push({ name, team: t.tName, z1, p1, z2, p2 });
             });
-            res.push(tr);
+            newRes.push(tr);
         });
 
-        if(indivs.length) {
-            let solo = { tName: "INDIVIDUALS", anglers: [] };
-            indivs.forEach(a => {
+        if(newIndivs.length) {
+            let solo = { tName: "INDIVIDUALS (LATE)", anglers: [] };
+            newIndivs.forEach(a => {
                 let av = poolsD1.map((p, idx) => idx).filter(idx => poolsD1[idx].pool.length > 0);
                 const zIdx = av[Math.floor(Math.random() * av.length)];
-                const z1 = zones[zIdx], p1 = poolsD1[zIdx].pool.pop(), z2 = rotationMap[z1], p2 = poolsD2[zones.indexOf(z2)].pool.pop();
+                const z1 = zones[zIdx], p1 = poolsD1[zIdx].pool.pop();
+                const z2 = rotationMap[z1], p2 = poolsD2[zones.indexOf(z2)].pool.pop();
                 solo.anglers.push({ name: a.name, team: "", z1, p1, z2, p2 });
             });
-            res.push(solo);
+            newRes.push(solo);
         }
 
+        // 5. Merge and Save
+        const finalResults = [...frozenAnglers, ...newRes];
         const dId = Math.random().toString(36).substring(2, 10).toUpperCase();
         const time = new Date().toLocaleString();
-        saveDraw(dId, time, res);
-        displayDraw(dId, time, res);
+        saveDraw(dId, time, finalResults);
+        displayDraw(dId, time, finalResults);
     }
 
     function saveDraw(id, time, data) {
         const history = JSON.parse(localStorage.getItem('drawHistory') || '[]');
-        history.unshift({ id, time, title: document.getElementById('matchTitle').value || 'UNNAMED MATCH', data });
-        localStorage.setItem('drawHistory', JSON.stringify(history.slice(0, 50)));
+        history.unshift({ id, time, title: document.getElementById('matchTitle').value || 'ZONEDRAW', data, days: document.getElementById('matchDays').value });
+        localStorage.setItem('drawHistory', JSON.stringify(history.slice(0, 30)));
     }
 
     function displayDraw(id, time, data) {
         currentDrawData = data;
+        const isTwoDay = document.getElementById('matchDays').value === "2";
         const area = document.getElementById('resultsArea'); area.innerHTML = '';
         const title = document.getElementById('matchTitle').value || "OFFICIAL DRAW RESULTS";
+        
         document.getElementById('barId').innerText = `ID: ${id}`;
         document.getElementById('barTime').innerText = `TIME: ${time}`;
-        area.innerHTML = `<div style="grid-column:1/-1;"><h2 style="text-align:center; font-weight:900; margin:15px 0 30px; font-size:2.5rem; color:var(--accent);">${title}</h2></div>`;
+        
+        area.innerHTML = `<div style="grid-column:1/-1;"><h2 style="text-align:center; font-weight:900; margin-bottom:20px; font-size:2rem; color:var(--accent);">${title}</h2></div>`;
         data.forEach(group => {
-            let html = `<div class="card"><div style="border-bottom:3px solid #f0f4ff; padding-bottom:8px; margin-bottom:10px;"><h4 style="margin:0; color:var(--accent); font-size:16px;">${group.tName || 'SOLO ANGLERS'}</h4></div><table class="compact-table" style="width:100%"><thead><tr><th>ANGLER</th><th>DAY 1</th><th>DAY 2</th></tr></thead><tbody>`;
-            group.anglers.forEach(a => html += `<tr><td><span class="angler-name-text">${a.name}</span></td><td><span class="zone-pill" style="background:${zoneColors[a.z1]}">${a.z1}</span><br><span class="peg-label">PEG:</span><span class="peg-indicator">${a.p1}</span></td><td><span class="zone-pill" style="background:${zoneColors[a.z2]}">${a.z2}</span><br><span class="peg-label">PEG:</span><span class="peg-indicator">${a.p2}</span></td></tr>`);
+            let html = `<div class="card"><div style="border-bottom:3px solid #f0f4ff; padding-bottom:8px; margin-bottom:10px;"><h4 style="margin:0; color:var(--accent); font-size:14px;">${group.tName || 'INDIVIDUALS'}</h4></div><table class="compact-table" style="width:100%"><thead><tr><th>ANGLER</th><th>DAY 1</th>${isTwoDay ? '<th>DAY 2</th>' : ''}</tr></thead><tbody>`;
+            group.anglers.forEach(a => {
+                html += `<tr><td><span class="angler-name-text">${a.name}</span></td><td><span class="zone-pill" style="background:${zoneColors[a.z1]}">${a.z1}</span><br><span class="peg-label">PEG:</span><span class="peg-indicator">${a.p1}</span></td>`;
+                if(isTwoDay) html += `<td><span class="zone-pill" style="background:${zoneColors[a.z2]}">${a.z2}</span><br><span class="peg-label">PEG:</span><span class="peg-indicator">${a.p2}</span></td>`;
+                html += `</tr>`;
+            });
             area.innerHTML += html + `</tbody></table></div>`;
         });
         document.getElementById('entrySection').style.display = 'none';
         document.getElementById('resultsSection').style.display = 'block';
         document.getElementById('transparencyBar').style.display = 'flex';
         window.scrollTo(0,0);
+    }
+
+    function showCheckSheet() {
+        const area = document.getElementById('checkSheetArea');
+        const title = document.getElementById('matchTitle').value || "REGISTRATION CHECK SHEET";
+        const isTwoDay = document.getElementById('matchDays').value === "2";
+        
+        let allAnglers = [];
+        currentDrawData.forEach(g => g.anglers.forEach(a => allAnglers.push({ ...a, tName: g.tName })));
+        allAnglers.sort((a,b) => a.name.localeCompare(b.name));
+
+        let html = `<h2 style="text-align:center; font-weight:900;">${title}</h2><table class="check-sheet-table"><thead><tr><th>ANGLER NAME</th><th>TEAM</th><th>DAY 1 DRAW</th>${isTwoDay ? '<th>DAY 2 DRAW</th>' : ''}<th>SIGNED</th></tr></thead><tbody>`;
+        allAnglers.forEach(a => {
+            html += `<tr><td><strong>${a.name}</strong></td><td>${a.tName || 'SOLO'}</td><td>${a.z1} (${a.p1})</td>${isTwoDay ? `<td>${a.z2} (${a.p2})</td>` : ''}<td><div class="check-box"></div></td></tr>`;
+        });
+        area.innerHTML = html + `</tbody></table>`;
+        
+        document.getElementById('resultsSection').style.display = 'none';
+        document.getElementById('checkSheetSection').style.display = 'block';
+    }
+
+    function exportToCSV() {
+        const matchTitle = document.getElementById('matchTitle').value || "ZONEDRAW_EXPORT";
+        const isTwoDay = document.getElementById('matchDays').value === "2";
+        let csv = isTwoDay ? "ANGLER NAME,TEAM NAME,DAY 1 ZONE,DAY 2 ZONE\n" : "ANGLER NAME,TEAM NAME,ZONE\n";
+        
+        currentDrawData.forEach(g => g.anglers.forEach(a => {
+            csv += isTwoDay ? `${a.name},${g.tName || ''},${a.z1},${a.z2}\n` : `${a.name},${g.tName || ''},${a.z1}\n`;
+        }));
+        
+        const blob = new Blob([csv], { type: 'text/csv' });
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(blob);
+        link.download = `${matchTitle.replace(/\s+/g, '_')}.csv`;
+        link.click();
+    }
+
+    function handleAmend() {
+        frozenAnglers = [...currentDrawData];
+        document.getElementById('entryList').innerHTML = '';
+        frozenAnglers.forEach(group => {
+            if(group.tName === "INDIVIDUALS" || group.tName === "INDIVIDUALS (LATE)") {
+                group.anglers.forEach(a => addNewItem('INDIV', a));
+            } else {
+                addNewItem('TEAM', group);
+            }
+        });
+        document.getElementById('entrySection').style.display = 'block';
+        document.getElementById('resultsSection').style.display = 'none';
+        document.getElementById('transparencyBar').style.display = 'none';
     }
 
     function toggleHistory() {
@@ -260,36 +352,32 @@
             const list = document.getElementById('historyList'); list.innerHTML = '';
             const history = JSON.parse(localStorage.getItem('drawHistory') || '[]');
             history.forEach((item) => {
-                const div = document.createElement('div'); div.style.cssText = "padding:15px; border-bottom:1px solid #e2e8f0; cursor:pointer; transition:background 0.2s;";
-                div.innerHTML = `<strong style="color:var(--accent); display:block;">${item.title}</strong><small style="color:var(--subtext);">${item.time}</small>`;
-                div.onclick = () => { displayDraw(item.id, item.time, item.data); toggleHistory(); };
-                div.onmouseover = () => div.style.background = "#f0f4ff";
-                div.onmouseout = () => div.style.background = "none";
+                const div = document.createElement('div'); div.style.cssText = "padding:12px; border-bottom:1px solid #e2e8f0; cursor:pointer;";
+                div.innerHTML = `<strong style="color:var(--accent);">${item.title}</strong><br><small>${item.time}</small>`;
+                div.onclick = () => { 
+                    document.getElementById('matchTitle').value = item.title;
+                    document.getElementById('matchDays').value = item.days || "2";
+                    displayDraw(item.id, item.time, item.data); 
+                    toggleHistory(); 
+                };
                 list.appendChild(div);
             });
         }
     }
 
-    function openModal() { document.getElementById('algoModal').style.display = 'flex'; }
-    function closeModal() { document.getElementById('algoModal').style.display = 'none'; }
-    function exportToCSV() {
-        let csv = "ANGLER NAME,TEAM NAME,DAY 1 ZONE,DAY 2 ZONE\n";
-        currentDrawData.forEach(g => g.anglers.forEach(a => csv += `${a.name},${a.team},${a.z1},${a.z2}\n`));
-        const blob = new Blob([csv], { type: 'text/csv' });
-        const link = document.createElement('a'); link.href = URL.createObjectURL(blob); link.download = `ZONEDRAW_EXPORT.csv`; link.click();
-    }
     async function shareFullPage() {
         const btn = document.getElementById('shareBtn'); btn.innerText = "CAPTURING...";
-        const opt = { margin: 10, filename: `ZONEDRAW_RESULTS.pdf`, html2canvas: { scale: 2 }, jsPDF: { unit: 'mm', format: 'a4', orientation: 'landscape' } };
+        const title = document.getElementById('matchTitle').value || "MATCH_RESULTS";
+        const opt = { margin: 10, filename: `${title}.pdf`, html2canvas: { scale: 2 }, jsPDF: { unit: 'mm', format: 'a4', orientation: 'landscape' } };
         try {
             const pdfBlob = await html2pdf().from(document.getElementById('captureArea')).set(opt).output('blob');
-            const file = new File([pdfBlob], `ZONEDRAW_RESULTS.pdf`, { type: 'application/pdf' });
+            const file = new File([pdfBlob], `${title}.pdf`, { type: 'application/pdf' });
             if (navigator.canShare && navigator.canShare({ files: [file] })) await navigator.share({ files: [file] });
-            else { const link = document.createElement('a'); link.href = URL.createObjectURL(pdfBlob); link.download = `ZONEDRAW_RESULTS.pdf`; link.click(); }
-        } catch (err) { alert("ERROR."); } finally { btn.innerText = "SHARE PAGE"; }
+            else { const link = document.createElement('a'); link.href = URL.createObjectURL(pdfBlob); link.download = `${title}.pdf`; link.click(); }
+        } catch (err) { alert("ERROR."); } finally { btn.innerText = "SHARE PDF"; }
     }
-    function handleAmend() { document.getElementById('entrySection').style.display = 'block'; document.getElementById('resultsSection').style.display = 'none'; document.getElementById('transparencyBar').style.display = 'none'; }
+
+    function showResults() { document.getElementById('checkSheetSection').style.display = 'none'; document.getElementById('resultsSection').style.display = 'block'; }
 </script>
-<script type="text/javascript" id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 </body>
 </html>
