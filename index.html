@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ZONEDRAW v10.5.0</title>
+    <title>ZONEDRAW v10.6.0</title>
     <link rel="manifest" href="manifest.json">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
@@ -17,10 +17,11 @@
             --yellow-g: linear-gradient(135deg, #f59e0b, #78350f);
             --green-g: linear-gradient(135deg, #10b981, #064e3b);
             --blue-g: linear-gradient(135deg, #3b82f6, #1e3a8a);
+            --pending: #f59e0b; --pending-glow: rgba(245, 158, 11, 0.3);
         }
         
         body { font-family: 'Inter', system-ui, sans-serif; background: var(--bg); color: var(--text); margin: 0; padding: 0; text-transform: uppercase; line-height: 1.1; overflow-x: hidden; }
-        input { text-transform: uppercase; font-weight: 900 !important; color: white; background: rgba(255,255,255,0.05); border: 1px solid var(--border); border-radius: 8px; padding: 12px; outline: none; transition: 0.2s; }
+        input { text-transform: uppercase; font-weight: 900 !important; color: white; background: rgba(255,255,255,0.05); border: 1px solid var(--border); border-radius: 8px; padding: 10px 12px; outline: none; transition: 0.2s; }
         input:focus { border-color: var(--accent); box-shadow: 0 0 15px var(--accent-glow); background: rgba(255,255,255,0.1); }
 
         /* Header Navigation */
@@ -42,23 +43,32 @@
         /* Structural Layouts */
         #entrySection, #resultsSection, #stewardSection, #historySection { max-width: 1400px; margin: 0 auto; padding: 110px 20px 140px; display: none; }
         .control-panel { background: var(--card); border-radius: 24px; padding: 30px; border: 1px solid var(--border); text-align: center; margin-bottom: 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.2); }
+        
+        /* Grid Adjustments for 3-Column Layout */
+        .bucket-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(400px, 1fr)); gap: 18px; }
 
         /* Duration Toggle CSS Grid Fix */
         .duration-toggle { display: grid; grid-template-columns: 1fr 1fr; gap: 5px; background: rgba(0,0,0,0.3); padding: 5px; border-radius: 12px; width: 200px; margin: 0 auto; }
         .dt-opt { padding: 12px 0; border-radius: 8px; cursor: pointer; font-weight: 900; font-size: 12px; transition: 0.2s; display: flex; align-items: center; justify-content: center; }
         .dt-opt.active { background: var(--accent); color: white; box-shadow: 0 4px 10px var(--accent-glow); }
 
-        /* Data Cards */
+        /* Data Cards & Pending States */
         .zone-card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 12px; backdrop-filter: blur(10px); position: relative; transition: 0.3s; }
         .zone-card.solo-card { height: fit-content; align-self: start; }
         .zone-card.selected { border-color: var(--accent); box-shadow: 0 0 20px var(--accent-glow); }
+        .zone-card.pending { border-color: var(--pending); box-shadow: 0 0 15px var(--pending-glow); }
+        
+        .pending-tag { position: absolute; top: -10px; right: 15px; background: var(--pending); color: #0f172a; font-size: 9px; font-weight: 900; padding: 4px 10px; border-radius: 6px; box-shadow: 0 4px 10px rgba(0,0,0,0.4); z-index: 10; letter-spacing: 1px; }
+        
         .zone-header { font-size: 10px; font-weight: 900; color: var(--accent); margin-bottom: 8px; border-bottom: 1px solid var(--border); padding-bottom: 6px; display: flex; justify-content: space-between; align-items: center; }
 
-        /* Results & Steward Visuals */
-        .res-row { display: grid; grid-template-columns: 1fr 90px 90px; gap: 8px; align-items: center; padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,0.05); }
-        .angler-name { font-size: 14px; font-weight: 900; letter-spacing: 0.5px; }
-        .draw-pill { padding: 5px 10px; border-radius: 6px; font-size: 9px; font-weight: 900; color: white; text-align: center; line-height: 1; border: 1px solid rgba(255,255,255,0.1); }
-        .peg-num { font-size: 18px; font-weight: 900; margin-left: 6px; vertical-align: middle; }
+        /* Results & Steward Visuals (D1/D2 Updates) */
+        .res-row { display: grid; grid-template-columns: 1fr 100px 100px; gap: 6px; align-items: center; padding: 6px 0; border-bottom: 1px solid rgba(255,255,255,0.05); }
+        .angler-name { font-size: 13px; font-weight: 900; letter-spacing: 0.5px; }
+        .pill-wrapper { display: flex; align-items: center; justify-content: flex-end; }
+        .day-badge { font-size: 8px; opacity: 0.7; font-weight: 900; background: rgba(255,255,255,0.1); padding: 3px 5px; border-radius: 4px; margin-right: 5px; }
+        .draw-pill { padding: 4px 8px; border-radius: 6px; font-size: 9px; font-weight: 900; color: white; text-align: center; line-height: 1; border: 1px solid rgba(255,255,255,0.1); }
+        .peg-num { font-size: 16px; font-weight: 900; margin-left: 5px; vertical-align: middle; }
 
         .check-sheet-table { width: 100%; border-collapse: collapse; }
         .check-sheet-table td { padding: 14px; border-bottom: 1px solid var(--border); font-size: 16px; font-weight: 800; }
@@ -79,13 +89,16 @@
         
         /* Hard-Coded Buckets Divider */
         .group-label { grid-column: 1 / -1; font-size: 1.4rem; font-weight: 900; color: var(--accent); border-left: 5px solid var(--accent); padding-left: 15px; margin: 40px 0 20px; letter-spacing: 1px; }
+        .entry-group-label { font-size: 1.1rem; font-weight: 900; color: var(--border); margin: 30px 0 15px; letter-spacing: 1px; text-align: left; }
 
         @media print { 
             .no-print { display: none !important; } 
             body { background: white !important; color: black !important; }
             .bucket-grid { display: grid !important; grid-template-columns: repeat(2, 1fr) !important; gap: 10px !important; }
-            .zone-card { border: 1px solid #ddd !important; background: white !important; page-break-inside: avoid; opacity: 1 !important; transform: none !important; }
+            .zone-card { border: 1px solid #ddd !important; background: white !important; page-break-inside: avoid; opacity: 1 !important; transform: none !important; box-shadow: none !important; }
+            .pending-tag { display: none !important; }
             .angler-name { color: black !important; }
+            .day-badge { color: black !important; background: none !important; opacity: 1 !important; }
             .draw-pill { color: black !important; border: 1px solid #ccc; background: none !important; }
             .fixed-header { display: none; }
         }
@@ -96,7 +109,7 @@
 <div class="fixed-header no-print">
     <div class="header-content">
         <button class="home-btn" onclick="showHub()" tabindex="-1">🏠 RETURN TO HOMEPAGE</button>
-        <div class="brand-name">ZONEDRAW <span id="vTag" style="font-size:10px; opacity:0.5;">v10.5.0</span></div>
+        <div class="brand-name">ZONEDRAW <span id="vTag" style="font-size:10px; opacity:0.5;">v10.6.0</span></div>
         <div style="width: 180px;"></div>
     </div>
 </div>
@@ -135,10 +148,21 @@
         </div>
         <button class="btn-action" style="margin-top:40px;" onclick="bulkInit()">INITIALIZE MATCH</button>
     </div>
-    <div id="entryList" style="display:grid; grid-template-columns:repeat(auto-fill, minmax(340px, 1fr)); gap:20px; margin-top:40px;"></div>
+    
+    <!-- Hard-Coded Buckets for Entry/Amend -->
+    <div id="entryList">
+        <div id="entryTeamsContainer" style="display:none;">
+            <div class="entry-group-label">TEAM CONFIGURATION</div>
+            <div id="entryTeamsBucket" class="bucket-grid"></div>
+        </div>
+        <div id="entrySolosContainer" style="display:none;">
+            <div class="entry-group-label">SOLO CONFIGURATION</div>
+            <div id="entrySolosBucket" class="bucket-grid"></div>
+        </div>
+    </div>
 </div>
 
-<!-- RESULTS (WITH HARD-CODED BUCKETS) -->
+<!-- RESULTS -->
 <div id="resultsSection">
     <div class="no-print" style="display:flex; gap:12px; justify-content:center; margin-bottom:30px; flex-wrap:wrap;">
         <button onclick="window.print()" class="btn-action" style="background:#64748b;">PRINT PDF</button>
@@ -152,12 +176,12 @@
     <div id="resultsArea">
         <div id="teamsBucketContainer" style="display:none;">
             <div class="group-label">TEAM STANDINGS</div>
-            <div id="teamsBucket" class="bucket-grid" style="display:grid; grid-template-columns:repeat(auto-fill, minmax(480px, 1fr)); gap:20px;"></div>
+            <div id="teamsBucket" class="bucket-grid"></div>
         </div>
         
         <div id="solosBucketContainer" style="display:none; margin-top:40px;">
             <div class="group-label">SOLO COMPETITORS</div>
-            <div id="solosBucket" class="bucket-grid" style="display:grid; grid-template-columns:repeat(auto-fill, minmax(480px, 1fr)); gap:20px;"></div>
+            <div id="solosBucket" class="bucket-grid"></div>
         </div>
     </div>
 </div>
@@ -223,7 +247,8 @@
         document.getElementById('entrySection').style.display = 'block';
         document.getElementById('setupPanel').style.display = 'block';
         document.getElementById('amendTools').style.display = 'none';
-        document.getElementById('entryList').innerHTML = '';
+        document.getElementById('entryTeamsContainer').style.display = 'none';
+        document.getElementById('entrySolosContainer').style.display = 'none';
         document.getElementById('commandBar').style.display = 'none';
     }
 
@@ -270,7 +295,6 @@
         for(let y=0; y<i; y++) appState.push({ id: genId(), isTeam: false, tName: '', anglers: [{}] });
         
         document.getElementById('commandBar').style.display = 'flex';
-        // Reveal the Jumbo buttons during initial generation phase
         document.getElementById('amendTools').style.display = 'flex'; 
         document.getElementById('actionBtnArea').style.display = 'flex';
         document.getElementById('cashModule').style.display = 'none';
@@ -301,16 +325,22 @@
     }
 
     function renderStateToScreen() {
-        const list = document.getElementById('entryList');
-        list.innerHTML = ''; 
+        const tb = document.getElementById('entryTeamsBucket'); tb.innerHTML = '';
+        const sb = document.getElementById('entrySolosBucket'); sb.innerHTML = '';
+        let hasTeams = false, hasSolos = false;
         
         appState.forEach(entry => {
-            const isFrozen = !!entry.anglers[0].z1;
+            const isFrozen = entry.anglers.some(a => a.z1);
+            const isPending = entry.anglers.some(a => !a.z1); // Amber Highlight Logic
+            
             const div = document.createElement('div');
-            div.className = 'zone-card visible' + (isFrozen ? ' frozen' : '') + (!entry.isTeam ? ' solo-card' : '');
+            div.className = 'zone-card visible' + (isFrozen && !isPending ? ' frozen' : '') + (!entry.isTeam ? ' solo-card' : '') + (isPending ? ' pending' : '');
             div.dataset.id = entry.id;
             
-            let h = `<div class="zone-header"><span>${entry.isTeam ? 'TEAM MODULE' : 'SOLO MODULE'}</span>`;
+            let h = '';
+            if(isPending) h += `<div class="pending-tag">PENDING DRAW</div>`;
+            
+            h += `<div class="zone-header"><span>${entry.isTeam ? 'TEAM MODULE' : 'SOLO MODULE'}</span>`;
             h += `<div style="display:flex; align-items:center;">`;
             
             if(!entry.isTeam) {
@@ -325,14 +355,22 @@
             h += `</div></div>`;
 
             if(entry.isTeam) {
-                h += `<label style="font-size:10px; opacity:0.6;">TEAM NAME</label><input type="text" class="t-name" value="${entry.tName}" style="width:95%; margin-bottom:12px; font-size:16px;">`;
-                for(let i=0; i<4; i++) h += `<input type="text" class="a-name" value="${entry.anglers[i].name || ''}" placeholder="ANGLER ${i+1}" style="width:95%; margin-bottom:8px;">`;
+                h += `<label style="font-size:10px; opacity:0.6;">TEAM NAME</label><input type="text" class="t-name" value="${entry.tName}" style="width:95%; margin-bottom:12px; font-size:14px;">`;
+                for(let i=0; i<4; i++) h += `<input type="text" class="a-name" value="${entry.anglers[i].name || ''}" placeholder="ANGLER ${i+1}" style="width:95%; margin-bottom:6px; font-size:13px;">`;
             } else {
-                h += `<label style="font-size:10px; opacity:0.6;">SOLO NAME</label><input type="text" class="a-name" value="${entry.anglers[0].name || ''}" style="width:95%; font-size:16px;">`;
+                h += `<label style="font-size:10px; opacity:0.6;">SOLO NAME</label><input type="text" class="a-name" value="${entry.anglers[0].name || ''}" style="width:95%; font-size:14px;">`;
             }
-            div.innerHTML = h; list.appendChild(div);
+            div.innerHTML = h; 
+            
+            if (entry.isTeam) { tb.appendChild(div); hasTeams = true; }
+            else { sb.appendChild(div); hasSolos = true; }
+            
             div.querySelectorAll('.a-name').forEach(inp => inp.addEventListener('input', updateTicker));
         });
+        
+        document.getElementById('entryTeamsContainer').style.display = hasTeams ? 'block' : 'none';
+        document.getElementById('entrySolosContainer').style.display = hasSolos ? 'block' : 'none';
+        
         updateTicker();
         checkMerge();
     }
@@ -394,7 +432,6 @@
         document.getElementById('tkAnglers').innerText = `${ent} / ${tot}`;
     }
 
-    // VISUAL SYNC RUN DRAW
     function initiateShuffle() {
         const overlay = document.getElementById('shuffleOverlay'); const pBar = document.getElementById('pBar');
         overlay.style.display = 'flex'; let p = 0;
@@ -516,9 +553,11 @@
         let h = `<div class="zone-header" style="font-size:12px;">${g.tName || 'SOLO ANGLER'}</div>`;
         g.anglers.forEach(a => { 
             if(!a.name || !a.z1) return;
+            // D1 / D2 Micro Badges Added Here
             h += `<div class="res-row"><span class="angler-name">${a.name}</span>
-                <div class="draw-pill" style="background:${zoneGradients[a.z1]}">${a.z1}<span class="peg-num">${a.p1}</span></div>
-                ${matchDays == 2 && a.z2 ? `<div class="draw-pill" style="background:${zoneGradients[a.z2]}">${a.z2}<span class="peg-num">${a.p2}</span></div>` : ''}</div>`;
+                <div class="pill-wrapper"><span class="day-badge">D1</span><div class="draw-pill" style="background:${zoneGradients[a.z1]}">${a.z1}<span class="peg-num">${a.p1}</span></div></div>
+                ${matchDays == 2 && a.z2 ? `<div class="pill-wrapper"><span class="day-badge">D2</span><div class="draw-pill" style="background:${zoneGradients[a.z2]}">${a.z2}<span class="peg-num">${a.p2}</span></div></div>` : '<div></div>'}
+                </div>`;
         });
         div.innerHTML = h; container.appendChild(div);
     }
