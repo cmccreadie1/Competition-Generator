@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ZONEDRAW v10.14.0</title>
+    <title>ZONEDRAW v10.15.0</title>
     <link rel="manifest" href="manifest.json">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
@@ -124,11 +124,14 @@
             body.printing-dispatch > :not(#dispatchSection) { display: none !important; }
             .dispatch-slip { border: 5px solid black !important; }
 
+            /* Page Break Logic added for full-color SHARE */
+            .zone-card { break-inside: avoid; page-break-inside: avoid; }
+
             /* Default B&W Print logic for the Brother Laser Printer, bypassed during digital sharing */
             body:not(.printing-map):not(.printing-dispatch):not(.full-color-share) .no-print { display: none !important; } 
             body:not(.printing-map):not(.printing-dispatch):not(.full-color-share) { background: white !important; color: black !important; }
             body:not(.printing-map):not(.printing-dispatch):not(.full-color-share) .bucket-grid { display: grid !important; grid-template-columns: repeat(2, 1fr) !important; gap: 10px !important; }
-            body:not(.printing-map):not(.printing-dispatch):not(.full-color-share) .zone-card { border: 1px solid #ddd !important; background: white !important; page-break-inside: avoid; opacity: 1 !important; transform: none !important; box-shadow: none !important; }
+            body:not(.printing-map):not(.printing-dispatch):not(.full-color-share) .zone-card { border: 1px solid #ddd !important; background: white !important; transform: none !important; box-shadow: none !important; }
             body:not(.printing-map):not(.printing-dispatch):not(.full-color-share) .pending-tag { display: none !important; }
             body:not(.printing-map):not(.printing-dispatch):not(.full-color-share) .angler-name { color: black !important; }
             body:not(.printing-map):not(.printing-dispatch):not(.full-color-share) .draw-pill { color: black !important; border: 1px solid #ccc; background: none !important; }
@@ -150,7 +153,7 @@
 <div class="fixed-header no-print">
     <div class="header-content">
         <button class="home-btn" onclick="showHub()" tabindex="-1">🏠 RETURN TO HOMEPAGE</button>
-        <div class="brand-name">ZONEDRAW <span id="vTag" class="v-tag">v10.14.0</span></div>
+        <div class="brand-name">ZONEDRAW <span id="vTag" class="v-tag">v10.15.0</span></div>
         <div style="width: 180px;"></div>
     </div>
 </div>
@@ -769,7 +772,7 @@
             
             h += `<tr>
                 <td><input type="text" class="steward-input" value="${a.name || ''}" oninput="updateStewardField('${eId}', ${i}, 'name', this.value)" placeholder="NAME..."></td>
-                <td style="font-size:12px;">${item.team || '-'}</td>
+                <td style="font-size:12px;">${item.team || ''}</td>
                 <td style="text-align:center;"><div class="cb-custom ${a.present ? 'active' : ''}" onclick="toggleStewardCB('${eId}', ${i}, 'present', this)"></div></td>
                 <td style="text-align:center;"><div class="cb-custom ${a.captain ? 'active' : ''}" onclick="toggleStewardCB('${eId}', ${i}, 'captain', this)"></div></td>
                 <td><input type="text" class="steward-input" id="contact_${eId}_${i}" value="${a.phone || ''}" oninput="updateStewardField('${eId}', ${i}, 'phone', this.value)" placeholder="PHONE..." style="display:${a.captain ? 'block' : 'none'};"></td>
@@ -838,7 +841,8 @@
 
         list.forEach(item => {
             const a = item.angler;
-            csv += `${a.name || ""},${item.team || "-"},${a.present?"YES":"NO"},${a.captain?"YES":"NO"},${a.phone || ""},${a.prize?"YES":"NO"},${a.pairs?"YES":"NO"}\n`;
+            // Cleaned CSV: dash removed for blank teams
+            csv += `${a.name || ""},${item.team || ""},${a.present?"YES":"NO"},${a.captain?"YES":"NO"},${a.phone || ""},${a.prize?"YES":"NO"},${a.pairs?"YES":"NO"}\n`;
         });
         
         const blob = new Blob([csv], {type: 'text/csv'});
@@ -862,7 +866,8 @@
 
     function exportToCSV() {
         let csv = "NAME,TEAM,DAY 1 ZONE,DAY 2 ZONE\n";
-        appState.forEach(g => g.anglers.forEach(a => { if(a.name) csv += `${a.name},${g.tName || "-"},${a.z1},${matchDays==2?a.z2:"-"}\n`; }));
+        // Cleaned CSV: dash removed for blank teams
+        appState.forEach(g => g.anglers.forEach(a => { if(a.name) csv += `${a.name},${g.tName || ""},${a.z1},${matchDays==2?a.z2:""}\n`; }));
         const blob = new Blob([csv], {type: 'text/csv'});
         const lnk = document.createElement('a'); lnk.href = URL.createObjectURL(blob); 
         
@@ -967,7 +972,9 @@
             filename:     `${matchName}_Full_Color_Draw.pdf`,
             image:        { type: 'jpeg', quality: 0.98 },
             html2canvas:  { scale: 2, useCORS: true, backgroundColor: '#0f172a' },
-            jsPDF:        { unit: 'in', format: 'letter', orientation: 'portrait' }
+            jsPDF:        { unit: 'in', format: 'letter', orientation: 'portrait' },
+            // Explicit Page Break Logic added for v10.15.0
+            pagebreak:    { mode: ['css', 'legacy'] }
         };
 
         // Generate the full color PDF
