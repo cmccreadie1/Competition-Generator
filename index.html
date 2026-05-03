@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ZONEDRAW v10.7.0</title>
+    <title>ZONEDRAW v10.8.0</title>
     <link rel="manifest" href="manifest.json">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
@@ -69,10 +69,15 @@
         .peg-num { font-size: 16px; font-weight: 900; margin-left: 5px; vertical-align: middle; }
 
         .check-sheet-table { width: 100%; border-collapse: collapse; }
-        .check-sheet-table td { padding: 14px; border-bottom: 1px solid var(--border); font-size: 16px; font-weight: 800; }
-        .cb-custom { width: 30px; height: 30px; border: 2px solid var(--accent); border-radius: 8px; cursor: pointer; display: inline-block; position: relative; vertical-align: middle; transition: 0.2s; }
+        .check-sheet-table th { padding: 14px; font-size: 12px; color: var(--accent); border-bottom: 2px solid var(--border); letter-spacing: 1px; }
+        .check-sheet-table td { padding: 12px 14px; border-bottom: 1px solid var(--border); font-size: 14px; font-weight: 800; vertical-align: middle; }
+        .cb-custom { width: 26px; height: 26px; border: 2px solid var(--accent); border-radius: 6px; cursor: pointer; display: inline-block; position: relative; vertical-align: middle; transition: 0.2s; margin: 0 auto; }
         .cb-custom.active { background: var(--accent); box-shadow: 0 0 15px var(--accent-glow); }
-        .cb-custom.active::after { content: '✓'; position: absolute; left: 6px; top: -1px; color: white; font-size: 22px; }
+        .cb-custom.active::after { content: '✓'; position: absolute; left: 4px; top: -3px; color: white; font-size: 20px; font-weight: 900; }
+
+        /* Steward Specific Inputs */
+        .steward-input { width: 100%; max-width: 160px; font-size: 12px !important; padding: 8px 10px !important; background: rgba(0,0,0,0.2) !important; border-color: rgba(255,255,255,0.1) !important; margin: 0; }
+        .steward-input:focus { background: rgba(255,255,255,0.1) !important; border-color: var(--accent) !important; }
 
         /* Buttons & Actions */
         .btn-action { background: var(--accent); border: none; color: white; font-weight: 900; padding: 16px 32px; border-radius: 12px; cursor: pointer; transition: 0.2s; font-size: 13px; box-shadow: 0 4px 0 #312e81; }
@@ -98,6 +103,14 @@
             .angler-name { color: black !important; }
             .draw-pill { color: black !important; border: 1px solid #ccc; background: none !important; }
             .fixed-header { display: none; }
+            
+            /* Steward Print Overrides */
+            .check-sheet-table th { color: black !important; border-bottom: 2px solid black !important; }
+            .check-sheet-table td { border-bottom: 1px solid #ddd !important; }
+            .steward-input { border: none !important; background: transparent !important; color: black !important; padding: 0 !important; font-size: 14px !important; }
+            .steward-input::placeholder { color: transparent !important; }
+            .cb-custom { border: 2px solid black !important; background: white !important; box-shadow: none !important; }
+            .cb-custom.active::after { color: black !important; }
         }
     </style>
 </head>
@@ -106,7 +119,7 @@
 <div class="fixed-header no-print">
     <div class="header-content">
         <button class="home-btn" onclick="showHub()" tabindex="-1">🏠 RETURN TO HOMEPAGE</button>
-        <div class="brand-name">ZONEDRAW <span id="vTag" style="font-size:10px; opacity:0.5;">v10.7.0</span></div>
+        <div class="brand-name">ZONEDRAW <span id="vTag" style="font-size:10px; opacity:0.5;">v10.8.0</span></div>
         <div style="width: 180px;"></div>
     </div>
 </div>
@@ -146,7 +159,6 @@
         <button class="btn-action" style="margin-top:40px;" onclick="bulkInit()">INITIALIZE MATCH</button>
     </div>
     
-    <!-- Hard-Coded Buckets for Entry/Amend -->
     <div id="entryList">
         <div id="entryTeamsContainer" style="display:none;">
             <div class="entry-group-label">TEAM CONFIGURATION</div>
@@ -219,6 +231,7 @@
     const zoneGradients = { 'RED': 'var(--red-g)', 'YELLOW': 'var(--yellow-g)', 'GREEN': 'var(--green-g)', 'BLUE': 'var(--blue-g)' };
     const rotationMap = { 'RED': 'BLUE', 'BLUE': 'RED', 'YELLOW': 'GREEN', 'GREEN': 'YELLOW' };
     
+    // STATE-DRIVEN ID DATABASE
     let appState = []; 
     let vacantPool = []; 
     let matchDays = 2;
@@ -256,7 +269,6 @@
         Object.keys(vault).forEach(title => {
             const e = vault[title];
             const div = document.createElement('div'); div.className = 'hub-tile';
-            // Individual Delete Button added here
             div.innerHTML = `
                 <div style="display:flex; justify-content:flex-end;">
                     <button onclick="event.stopPropagation(); deleteHistoryItem('${title}')" style="background:none; border:none; color:#ef4444; font-size:22px; cursor:pointer; padding:0; line-height:0.5;" title="Delete Record">✖</button>
@@ -334,6 +346,7 @@
                 entry.anglers[0].name = card.querySelector('.a-name').value.trim().toUpperCase();
             }
         });
+        persistToVault();
     }
 
     function renderStateToScreen() {
@@ -530,11 +543,15 @@
         displayDraw();
     }
 
-    function saveAndFinish(close = true) {
+    function persistToVault() {
         const title = document.getElementById('matchTitle').value || 'UNNAMED_MATCH';
         const vault = JSON.parse(localStorage.getItem('zonedraw_vault_v10') || '{}');
         vault[title] = { time: new Date().toLocaleString(), data: appState, days: matchDays, prize: prizeFee, pairs: pairsFee };
         localStorage.setItem('zonedraw_vault_v10', JSON.stringify(vault));
+    }
+
+    function saveAndFinish(close = true) {
+        persistToVault();
         if(close && confirm("ARCHIVE DATABASE AND EXIT TO HUB?")) showHub();
     }
 
@@ -562,7 +579,6 @@
         const firstZ1 = g.anglers[0] && g.anglers[0].z1 ? g.anglers[0].z1 : 'GREEN';
         div.style.borderTop = `4px solid ${firstZ1 === 'RED' ? '#ef4444' : firstZ1 === 'BLUE' ? '#3b82f6' : '#10b981'}`;
         
-        // Custom Header + Day 1 / Day 2 Columns
         let h = `<div class="zone-header" style="font-size:12px; border-bottom:none; margin-bottom:0;">${g.tName || 'SOLO ANGLER'}</div>`;
         
         h += `<div class="res-row" style="border:none; padding-top:0; padding-bottom:4px;">
@@ -581,32 +597,132 @@
         div.innerHTML = h; container.appendChild(div);
     }
 
+    /* ---------------------------------------------------
+       STEWARD MASTER SHEET LOGIC
+       --------------------------------------------------- */
+
     function showSteward() {
-        document.getElementById('resultsSection').style.display = 'none'; document.getElementById('stewardSection').style.display = 'block';
-        const area = document.getElementById('stewardArea'); let list = []; appState.forEach(g => g.anglers.forEach(a => { if(a.name) list.push({...a, team: g.tName}); }));
-        list.sort((a,b) => a.name.localeCompare(b.name));
-        let h = `<div class="control-panel"><h2>STEWARD MASTER SHEET</h2><div style="display:flex; gap:25px; justify-content:center; align-items:center; flex-wrap:wrap;">
-                <div style="display:flex; align-items:center; gap:10px;"><label>PRIZE (£)</label><input type="number" id="sPrize" value="${prizeFee}" oninput="prizeFee=this.value;updateCash();" style="width:75px;"></div>
-                <div style="display:flex; align-items:center; gap:10px;"><label>PAIRS (£)</label><input type="number" id="sPairs" value="${pairsFee}" oninput="pairsFee=this.value;updateCash();" style="width:75px;"></div>
-                <button onclick="displayDraw()" class="btn-action">BACK TO RESULTS</button></div></div>
-                <table class="check-sheet-table"><tr><th>NAME</th><th>TEAM</th><th>DRAW</th><th>FUND</th><th>PAIRS</th></tr>`;
-        list.forEach(a => {
-            h += `<tr><td>${a.name}</td><td>${a.team || '-'}</td><td>${a.z1}(${a.p1}) ${matchDays==2 && a.z2 ? '/ '+a.z2+'('+a.p2+')':''}</td>
-            <td><div class="cb-custom" onclick="this.classList.toggle('active'); updateCash();"></div></td>
-            <td><div class="cb-custom" onclick="this.classList.toggle('active'); updateCash();"></div></td></tr>`;
+        document.querySelectorAll('body > div[id$="Section"]').forEach(s => s.style.display = 'none');
+        document.getElementById('stewardSection').style.display = 'block';
+        
+        const area = document.getElementById('stewardArea'); 
+        let list = []; 
+        
+        // Flatten list but maintain references to specific IDs
+        appState.forEach(g => {
+            g.anglers.forEach((a, idx) => { 
+                if(a.name || g.isTeam) { 
+                    list.push({ entryId: g.id, aIdx: idx, team: g.tName, angler: a }); 
+                } 
+            });
         });
-        area.innerHTML = h; document.getElementById('commandBar').style.display = 'flex';
-        document.getElementById('cashModule').style.display = 'flex'; document.getElementById('actionBtnArea').style.display = 'none';
-        document.getElementById('amendTools').style.display = 'none'; window.scrollTo(0,0);
+        
+        list.sort((a,b) => (a.angler.name || '').localeCompare(b.angler.name || ''));
+        
+        let h = `<div class="control-panel no-print">
+                    <h2>STEWARD REGISTRATION & ACCOUNTING</h2>
+                    <div style="display:flex; gap:25px; justify-content:center; align-items:center; flex-wrap:wrap; margin-bottom:25px;">
+                        <div style="display:flex; align-items:center; gap:10px;"><label>PRIZE (£)</label><input type="number" id="sPrize" value="${prizeFee}" oninput="prizeFee=this.value; updateCash(); persistToVault();" style="width:75px;"></div>
+                        <div style="display:flex; align-items:center; gap:10px;"><label>PAIRS (£)</label><input type="number" id="sPairs" value="${pairsFee}" oninput="pairsFee=this.value; updateCash(); persistToVault();" style="width:75px;"></div>
+                    </div>
+                    <div style="display:flex; gap:15px; justify-content:center; flex-wrap:wrap;">
+                        <button onclick="window.print()" class="btn-action" style="background:#64748b;">PRINT SIGN-IN</button>
+                        <button onclick="exportStewardCSV()" class="btn-action" style="background:#10b981;">SAVE ACCOUNTING CSV</button>
+                        <button onclick="displayDraw()" class="btn-action">BACK TO RESULTS</button>
+                    </div>
+                 </div>
+                 <table class="check-sheet-table">
+                    <tr>
+                        <th style="text-align:left;">NAME</th>
+                        <th style="text-align:left;">TEAM</th>
+                        <th>PRESENT</th>
+                        <th>CAPTAIN</th>
+                        <th style="text-align:left;">CONTACT #</th>
+                        <th>FUND</th>
+                        <th>PAIRS</th>
+                    </tr>`;
+                    
+        list.forEach(item => {
+            const a = item.angler;
+            const eId = item.entryId;
+            const i = item.aIdx;
+            
+            h += `<tr>
+                <td><input type="text" class="steward-input" value="${a.name || ''}" oninput="updateStewardField('${eId}', ${i}, 'name', this.value)" placeholder="NAME..."></td>
+                <td style="font-size:12px;">${item.team || '-'}</td>
+                <td style="text-align:center;"><div class="cb-custom ${a.present ? 'active' : ''}" onclick="toggleStewardCB('${eId}', ${i}, 'present', this)"></div></td>
+                <td style="text-align:center;"><div class="cb-custom ${a.captain ? 'active' : ''}" onclick="toggleStewardCB('${eId}', ${i}, 'captain', this)"></div></td>
+                <td><input type="text" class="steward-input" id="contact_${eId}_${i}" value="${a.phone || ''}" oninput="updateStewardField('${eId}', ${i}, 'phone', this.value)" placeholder="PHONE..." style="display:${a.captain ? 'block' : 'none'};"></td>
+                <td style="text-align:center;"><div class="cb-custom ${a.prize ? 'active' : ''}" onclick="toggleStewardCB('${eId}', ${i}, 'prize', this)"></div></td>
+                <td style="text-align:center;"><div class="cb-custom ${a.pairs ? 'active' : ''}" onclick="toggleStewardCB('${eId}', ${i}, 'pairs', this)"></div></td>
+            </tr>`;
+        });
+        
+        area.innerHTML = h + `</table>`; 
+        
+        document.getElementById('commandBar').style.display = 'flex';
+        document.getElementById('cashModule').style.display = 'flex'; 
+        document.getElementById('actionBtnArea').style.display = 'none';
+        document.getElementById('amendTools').style.display = 'none'; 
+        
+        updateCash();
+        window.scrollTo(0,0);
+    }
+
+    function toggleStewardCB(eId, aIdx, prop, el) {
+        const entry = appState.find(e => e.id === eId);
+        if(entry) {
+            entry.anglers[aIdx][prop] = !entry.anglers[aIdx][prop];
+            el.classList.toggle('active', entry.anglers[aIdx][prop]);
+            
+            if(prop === 'captain') {
+                const phoneInput = document.getElementById(`contact_${eId}_${aIdx}`);
+                phoneInput.style.display = entry.anglers[aIdx][prop] ? 'block' : 'none';
+            }
+            
+            if(prop === 'prize' || prop === 'pairs') updateCash();
+            persistToVault();
+        }
+    }
+
+    function updateStewardField(eId, aIdx, prop, value) {
+        const entry = appState.find(e => e.id === eId);
+        if(entry) {
+            entry.anglers[aIdx][prop] = value.toUpperCase();
+            persistToVault();
+        }
     }
 
     function updateCash() {
-        let total = 0; document.querySelectorAll('.check-sheet-table tr').forEach((row, i) => {
-            if(i === 0) return;
-            if(row.cells[3].querySelector('.cb-custom')?.classList.contains('active')) total += parseFloat(prizeFee) || 0;
-            if(row.cells[4].querySelector('.cb-custom')?.classList.contains('active')) total += parseFloat(pairsFee) || 0;
+        let total = 0; 
+        appState.forEach(e => {
+            e.anglers.forEach(a => {
+                if(a.prize) total += parseFloat(prizeFee) || 0;
+                if(a.pairs) total += parseFloat(pairsFee) || 0;
+            });
         });
         document.getElementById('tkCash').innerText = '£' + total;
+    }
+
+    function exportStewardCSV() {
+        let csv = "NAME,TEAM,PRESENT,CAPTAIN,PHONE,PRIZE PAID,PAIRS PAID\n";
+        appState.forEach(g => {
+            g.anglers.forEach(a => {
+                if(a.name || g.tName) {
+                    csv += `${a.name || ""},${g.tName || "-"},${a.present?"YES":"NO"},${a.captain?"YES":"NO"},${a.phone || ""},${a.prize?"YES":"NO"},${a.pairs?"YES":"NO"}\n`;
+                }
+            });
+        });
+        
+        const blob = new Blob([csv], {type: 'text/csv'});
+        const lnk = document.createElement('a'); lnk.href = URL.createObjectURL(blob); 
+        
+        let matchName = document.getElementById('matchTitle').value.trim();
+        if(!matchName) matchName = "REGISTRATION_" + Date.now();
+        else matchName = matchName.replace(/[^a-z0-9]/gi, '_').toUpperCase() + "_REGISTRATION";
+        
+        lnk.download = `${matchName}.csv`; 
+        lnk.click();
     }
 
     function handleAmend() {
