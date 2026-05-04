@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ZONEDRAW v10.21.0</title>
+    <title>ZONEDRAW v10.22.0</title>
     <link rel="manifest" href="manifest.json">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
@@ -180,7 +180,7 @@
 <div class="fixed-header no-print">
     <div class="header-content">
         <button class="home-btn" onclick="showHub()" tabindex="-1">🏠 RETURN TO HOMEPAGE</button>
-        <div class="brand-name">ZONEDRAW <span id="vTag" class="v-tag">v10.21.0</span></div>
+        <div class="brand-name">ZONEDRAW <span id="vTag" class="v-tag">v10.22.0</span></div>
         <div style="width: 180px;"></div>
     </div>
 </div>
@@ -325,6 +325,7 @@
     </div>
     <div id="actionBtnArea" style="display:flex; gap:10px;">
         <button class="btn-jumbo" id="mergeBtn" style="display:none; border-color:#10b981; color:#10b981;" onclick="mergeSelected()" tabindex="-1">CONSTRUCT TEAM (4)</button>
+        <button class="btn-action" id="testRedrawBtn" onclick="forceTestRedraw()" style="background:#ef4444;" tabindex="-1">⚠️ TEST FULL REDRAW</button>
         <button class="btn-action" id="mainActionBtn" onclick="initiateShuffle()" tabindex="-1">PROCESS RANDOM DRAW</button>
     </div>
 </div>
@@ -623,6 +624,22 @@
         document.getElementById('tkAnglers').innerText = `${ent} / ${tot}`;
     }
 
+    // TEST REDRAW FUNCTION (v10.22.0)
+    function forceTestRedraw() {
+        if(confirm("WIPE ALL PEGS AND FORCE FULL REDRAW?")) {
+            syncScreenToState();
+            appState.forEach(entry => {
+                entry.anglers.forEach(a => {
+                    a.z1 = undefined; a.p1 = undefined;
+                    a.z2 = undefined; a.p2 = undefined;
+                });
+            });
+            vacantPool = []; // Wipe available peg pool
+            renderStateToScreen();
+            initiateShuffle();
+        }
+    }
+
     function initiateShuffle() {
         const overlay = document.getElementById('shuffleOverlay'); const pBar = document.getElementById('pBar');
         overlay.style.display = 'flex'; let p = 0;
@@ -632,7 +649,7 @@
         }, 35);
     }
 
-    // CONTINUOUS PEG ALGORITHM WITH MAGNETIC MOBILITY UPDATE (v10.21.0)
+    // CONTINUOUS PEG ALGORITHM WITH MAGNETIC MOBILITY UPDATE
     function runDraw() {
         syncScreenToState(); 
 
@@ -666,6 +683,7 @@
             });
         });
 
+        // Calculate offset (min 1)
         let zoneSize = Math.max(Math.ceil(totalCompetitors / 4), Math.ceil(highestFrozenPeg / 4), 1);
         currentZoneSize = zoneSize;
 
@@ -689,7 +707,7 @@
             return { z, p };
         });
 
-        // THE SAFE PEG SHIELD (v10.21.0)
+        // THE SAFE PEG SHIELD
         // Able-bodied anglers pull from the NON-SAFE pool first.
         const pullPeg = (zone, isDay2, isMobility) => {
             const pools = isDay2 ? pools2 : pools1;
@@ -739,7 +757,7 @@
                 let zIndexes = [0, 1, 2, 3]; 
                 for (let j = 3; j > 0; j--) { const k = Math.floor(Math.random() * (j + 1)); [zIndexes[j], zIndexes[k]] = [zIndexes[k], zIndexes[j]]; }
                 
-                // THE MAGNET ENGINE (v10.21.0)
+                // THE MAGNET ENGINE
                 // Force the Mobility Angler into the zone that holds the [M] Peg
                 drawOrder.forEach((item, loopIdx) => {
                     if (item.a.mobility && safePegs.length > 0) {
@@ -958,7 +976,6 @@
             let nameClass = a.mobility ? 'angler-name m-name' : 'angler-name';
             let mIcon = a.mobility ? '<span class="m-tag">[M]</span>' : '';
             
-            // Replaced [SAFE] with [M PEG] in the UI code block
             let p1Icon = p1Safe ? '<span class="m-tag" style="font-size:10px;">[M PEG]</span>' : '';
             let p2Icon = p2Safe ? '<span class="m-tag" style="font-size:10px;">[M PEG]</span>' : '';
 
@@ -1201,7 +1218,6 @@
                         let vA2 = matchDays == 2 ? getVenueName(a.z2, 2) : '';
                         vA1 = (matchVenues == 2 && vA1) ? vA1 + ' | ' : '';
                         vA2 = (matchVenues == 2 && vA2) ? vA2 + ' | ' : '';
-                        // Replaced [SAFE PEG] with [M PEG] in physical print code block
                         let p1Safe = isPegSafe(a.p1) ? ' <b style="font-size:14px;">[M PEG]</b>' : '';
                         let p2Safe = isPegSafe(a.p2) ? ' <b style="font-size:14px;">[M PEG]</b>' : '';
                         return `
@@ -1232,7 +1248,6 @@
                 let vA2 = matchDays == 2 ? getVenueName(a.z2, 2) : '';
                 vA1 = (matchVenues == 2 && vA1) ? vA1 + ' | ' : '';
                 vA2 = (matchVenues == 2 && vA2) ? vA2 + ' | ' : '';
-                // Replaced [SAFE PEG] with [M PEG] in physical print code block
                 let p1Safe = isPegSafe(a.p1) ? ' <b style="font-size:12px;">[M PEG]</b>' : '';
                 let p2Safe = isPegSafe(a.p2) ? ' <b style="font-size:12px;">[M PEG]</b>' : '';
                 
