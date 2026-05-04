@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ZONEDRAW v10.27.0</title>
+    <title>ZONEDRAW v10.28.0</title>
     <link rel="manifest" href="manifest.json">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
@@ -118,9 +118,14 @@
         .roster-table tr:nth-child(even) { background-color: #f8fafc; }
 
         /* -----------------------------------------------------
-           DIGITAL PDF EXPORT (Dark Theme Retained)
+           DIGITAL PDF EXPORT (Dark Theme Retained & Locked)
            ----------------------------------------------------- */
-        body.full-color-share { background: var(--bg) !important; color: var(--text) !important; padding: 20px !important; }
+        body.full-color-share { background-color: #0f172a !important; color: #f8fafc !important; }
+        body.full-color-share #resultsSection { background-color: #0f172a !important; padding: 30px !important; }
+        body.full-color-share #resTitle { color: #f8fafc !important; }
+        body.full-color-share .horizontal-legend { color: #f8fafc !important; }
+        body.full-color-share .legend-item { color: #f8fafc !important; border-color: rgba(255,255,255,0.2) !important; }
+        
         body.full-color-share .no-print { display: none !important; }
         body.full-color-share .bucket-grid { display: block !important; }
         body.full-color-share .zone-card { break-inside: avoid !important; page-break-inside: avoid !important; margin-bottom: 15px !important; }
@@ -164,7 +169,7 @@
 <div class="fixed-header no-print">
     <div class="header-content">
         <button class="home-btn" onclick="showHub()" tabindex="-1">🏠 RETURN TO HOMEPAGE</button>
-        <div class="brand-name">ZONEDRAW <span id="vTag" class="v-tag">v10.27.0</span></div>
+        <div class="brand-name">ZONEDRAW <span id="vTag" class="v-tag">v10.28.0</span></div>
         <div style="width: 180px;"></div>
     </div>
 </div>
