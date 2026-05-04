@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ZONEDRAW v10.22.0</title>
+    <title>ZONEDRAW v10.24.0</title>
     <link rel="manifest" href="manifest.json">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
@@ -24,7 +24,6 @@
         input { text-transform: uppercase; font-weight: 900 !important; color: white; background: rgba(255,255,255,0.05); border: 1px solid var(--border); border-radius: 8px; padding: 10px 12px; outline: none; transition: 0.2s; }
         input:focus { border-color: var(--accent); box-shadow: 0 0 15px var(--accent-glow); background: rgba(255,255,255,0.1); }
 
-        /* Header Navigation */
         .fixed-header { position: fixed; top: 0; left: 0; right: 0; z-index: 5000; background: rgba(15, 23, 42, 0.98); backdrop-filter: blur(15px); border-bottom: 1px solid var(--border); padding: 12px 20px; }
         .header-content { display: flex; justify-content: space-between; align-items: center; max-width: 1400px; margin: 0 auto; }
         .brand-name { font-size: 18px; font-weight: 900; letter-spacing: -1px; color: var(--text); display: flex; align-items: center; }
@@ -33,14 +32,12 @@
         .home-btn { background: rgba(255,255,255,0.05); border: 2px solid rgba(255,255,255,0.2); color: white; padding: 10px 20px; border-radius: 10px; cursor: pointer; font-size: 14px; font-weight: 900; transition: 0.2s; box-shadow: 0 4px 10px rgba(0,0,0,0.3); }
         .home-btn:hover { background: rgba(255,255,255,0.1); border-color: var(--accent); color: var(--accent); box-shadow: 0 4px 15px var(--accent-glow); transform: translateY(-1px); }
 
-        /* Command Hub */
         #hubSection { max-width: 1000px; margin: 120px auto 40px; display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 30px; padding: 20px; }
         .hub-tile { background: var(--card); border: 1px solid var(--border); padding: 50px 20px; border-radius: 24px; text-align: center; cursor: pointer; transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1); box-shadow: 0 10px 40px rgba(0,0,0,0.4); position: relative; }
         .hub-tile:hover { transform: translateY(-10px); border-color: var(--accent); box-shadow: 0 20px 50px var(--accent-glow); }
         .hub-icon { font-size: 44px; margin-bottom: 20px; display: block; filter: drop-shadow(0 0 10px var(--accent-glow)); }
         .hub-title { font-size: 18px; font-weight: 900; letter-spacing: 1px; }
 
-        /* Structural Layouts */
         #entrySection, #resultsSection, #stewardSection, #historySection, #dispatchSection { max-width: 1400px; margin: 0 auto; padding: 110px 20px 140px; display: none; }
         .control-panel { background: var(--card); border-radius: 24px; padding: 30px; border: 1px solid var(--border); text-align: center; margin-bottom: 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.2); }
         
@@ -50,7 +47,6 @@
         .dt-opt { padding: 12px 0; border-radius: 8px; cursor: pointer; font-weight: 900; font-size: 12px; transition: 0.2s; display: flex; align-items: center; justify-content: center; }
         .dt-opt.active { background: var(--accent); color: white; box-shadow: 0 4px 10px var(--accent-glow); }
 
-        /* Data Cards & Pending States */
         .zone-card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 12px; backdrop-filter: blur(10px); position: relative; transition: 0.3s; break-inside: avoid; page-break-inside: avoid; }
         .zone-card.solo-card { height: fit-content; align-self: start; }
         .zone-card.selected { border-color: var(--accent); box-shadow: 0 0 20px var(--accent-glow); }
@@ -59,13 +55,11 @@
         .pending-tag { position: absolute; top: -10px; right: 15px; background: var(--pending); color: #0f172a; font-size: 9px; font-weight: 900; padding: 4px 10px; border-radius: 6px; box-shadow: 0 4px 10px rgba(0,0,0,0.4); z-index: 10; letter-spacing: 1px; }
         .zone-header { font-size: 10px; font-weight: 900; color: var(--accent); margin-bottom: 8px; border-bottom: 1px solid var(--border); padding-bottom: 6px; display: flex; justify-content: space-between; align-items: center; }
 
-        /* Results & Steward Visuals */
         .res-row { display: grid; grid-template-columns: 1fr 100px 100px; gap: 6px; align-items: center; padding: 6px 0; border-bottom: 1px solid rgba(255,255,255,0.05); }
         .angler-name { font-size: 13px; font-weight: 900; letter-spacing: 0.5px; pointer-events: none; }
         .draw-pill { padding: 4px 8px; border-radius: 6px; font-size: 9px; font-weight: 900; color: white; text-align: center; line-height: 1; border: 1px solid rgba(255,255,255,0.1); pointer-events: none; }
         .peg-num { font-size: 16px; font-weight: 900; margin-left: 5px; vertical-align: middle; }
 
-        /* Manual Swap & Mobility CSS */
         .res-row.swap-active { cursor: pointer; transition: 0.2s; border-radius: 8px; padding: 6px; pointer-events: auto; }
         .res-row.swap-active:hover { background: rgba(139, 92, 246, 0.2); box-shadow: 0 0 10px rgba(139, 92, 246, 0.4); }
         .res-row.swap-selected { background: rgba(139, 92, 246, 0.4) !important; border-left: 4px solid #8b5cf6 !important; border-radius: 8px; }
@@ -97,7 +91,6 @@
         .group-label { grid-column: 1 / -1; font-size: 1.4rem; font-weight: 900; color: var(--accent); border-left: 5px solid var(--accent); padding-left: 15px; margin: 40px 0 20px; letter-spacing: 1px; }
         .entry-group-label { font-size: 1.1rem; font-weight: 900; color: var(--border); margin: 30px 0 15px; letter-spacing: 1px; text-align: left; }
 
-        /* Zone Map Modal & Legend */
         #zoneMapModal { display: none; position: fixed; inset: 0; background: rgba(15,23,42,0.98); z-index: 9999; justify-content: center; align-items: center; backdrop-filter: blur(5px); }
         .zm-box { background: white; color: black; padding: 40px; border-radius: 16px; max-width: 600px; width: 90%; box-shadow: 0 20px 60px rgba(0,0,0,0.5); }
         .zm-row { display: flex; justify-content: space-between; padding: 15px; border-bottom: 2px solid #ddd; font-size: 18px; font-weight: 900; }
@@ -107,7 +100,6 @@
         .legend-item { display: flex; align-items: center; gap: 8px; background: rgba(255,255,255,0.05); padding: 6px 12px; border-radius: 8px; border: 1px solid var(--border); }
         .legend-swatch { width: 14px; height: 14px; border-radius: 4px; }
 
-        /* B&W Dispatch Slip Print Styles */
         .dispatch-slip { background: white; color: black; padding: 40px; border: 6px solid black; margin-bottom: 40px; text-align: left; page-break-after: always; position: relative; }
         .dispatch-header { border-bottom: 8px solid black; padding-bottom: 15px; margin-bottom: 25px; display: flex; justify-content: space-between; align-items: flex-end; }
         .dispatch-header h1 { font-size: 28px; margin: 0; letter-spacing: -1px; }
@@ -115,13 +107,10 @@
         .dispatch-table { width: 100%; border-collapse: collapse; margin-top: 25px; }
         .dispatch-table th { background: #eee; border: 3px solid black; padding: 12px; font-size: 14px; font-weight: 900; text-align: left; }
         .dispatch-table td { border: 2px solid black; padding: 15px; font-size: 18px; font-weight: 800; }
+        
         .receipt-zone { margin-top: 60px; border-top: 4px dashed black; padding-top: 25px; position: relative; }
-        .receipt-zone::before { content: '✂ DETACH AND KEEP AT REGISTRATION DESK'; position: absolute; top: -14px; left: 50%; transform: translateX(-50%); background: white; padding: 0 20px; font-size: 12px; font-weight: 900; letter-spacing: 1px; }
-        .sig-line { margin-top: 40px; border-bottom: 2px solid black; width: 450px; display: flex; justify-content: space-between; align-items: flex-end; }
+        .sig-line { margin-top: 40px; border-bottom: 2px solid black; display: flex; justify-content: space-between; align-items: flex-end; }
 
-        /* -----------------------------------------------------
-           DIGITAL PDF PREMIUM LIGHT MODE (Screen Override)
-           ----------------------------------------------------- */
         body.full-color-share, body.full-color-share #resultsSection { background: #f8fafc !important; color: #0f172a !important; }
         body.full-color-share #resTitle { color: #0f172a !important; }
         body.full-color-share .group-label { color: #3b82f6 !important; border-left-color: #3b82f6 !important; }
@@ -135,7 +124,6 @@
         body.full-color-share .legend-item { background: white !important; border: 1px solid #e2e8f0 !important; box-shadow: 0 2px 5px rgba(0,0,0,0.02) !important; color: #0f172a !important; }
         body.full-color-share .no-print { display: none !important; } 
 
-        /* Light Mode Specific Overrides for Mobility Tags */
         body.full-color-share .m-name { color: #d97706 !important; font-weight: 900; }
         body.full-color-share .m-tag { color: #d97706 !important; text-shadow: none !important; }
         body.full-color-share .m-peg { border: 2px solid #d97706 !important; box-shadow: none !important; }
@@ -150,7 +138,6 @@
             body.printing-dispatch > :not(#dispatchSection) { display: none !important; }
             .dispatch-slip { border: 5px solid black !important; }
 
-            /* Standard B&W Print logic for the Brother Laser Printer */
             body:not(.printing-map):not(.printing-dispatch):not(.full-color-share) .no-print { display: none !important; } 
             body:not(.printing-map):not(.printing-dispatch):not(.full-color-share) { background: white !important; color: black !important; }
             body:not(.printing-map):not(.printing-dispatch):not(.full-color-share) .bucket-grid { display: grid !important; grid-template-columns: repeat(2, 1fr) !important; gap: 10px !important; }
@@ -180,28 +167,30 @@
 <div class="fixed-header no-print">
     <div class="header-content">
         <button class="home-btn" onclick="showHub()" tabindex="-1">🏠 RETURN TO HOMEPAGE</button>
-        <div class="brand-name">ZONEDRAW <span id="vTag" class="v-tag">v10.22.0</span></div>
+        <div class="brand-name">ZONEDRAW <span id="vTag" class="v-tag">v10.24.0</span></div>
         <div style="width: 180px;"></div>
     </div>
 </div>
 
-<!-- HUB -->
 <div id="hubSection">
-    <div class="hub-tile" onclick="startNewDraw()">
-        <span class="hub-icon">🎯</span>
-        <span class="hub-title">GENERATE DRAW</span>
-    </div>
-    <div class="hub-tile" onclick="showHistory()">
-        <span class="hub-icon">📜</span>
-        <span class="hub-title">DRAW HISTORY</span>
+    <div class="hub-tile" onclick="resumeLatestMatch()">
+        <span class="hub-icon">▶️</span>
+        <span class="hub-title">RESUME LATEST MATCH</span>
     </div>
     <div class="hub-tile" onclick="goToActiveSteward()">
         <span class="hub-icon">📋</span>
         <span class="hub-title">STEWARD DESK</span>
     </div>
+    <div class="hub-tile" onclick="confirmStartNewDraw()">
+        <span class="hub-icon">🎯</span>
+        <span class="hub-title">GENERATE NEW DRAW</span>
+    </div>
+    <div class="hub-tile" onclick="showHistory()">
+        <span class="hub-icon">📜</span>
+        <span class="hub-title">DRAW HISTORY</span>
+    </div>
 </div>
 
-<!-- ENTRY / AMEND -->
 <div id="entrySection" class="no-print">
     <div class="control-panel" id="setupPanel">
         <label style="font-size: 11px; opacity: 0.6; letter-spacing: 1px;">COMPETITION IDENTITY</label>
@@ -253,7 +242,6 @@
     </div>
 </div>
 
-<!-- RESULTS -->
 <div id="resultsSection">
     <div class="no-print" data-html2canvas-ignore="true" style="display:flex; gap:12px; justify-content:center; margin-bottom:20px; flex-wrap:wrap;">
         <button onclick="shareDraw()" class="btn-action" style="background:#64748b;">SHARE DRAW</button>
@@ -287,10 +275,8 @@
     </div>
 </div>
 
-<!-- DISPATCH PRINT VIEW -->
 <div id="dispatchSection"></div>
 
-<!-- ZONE MAP MODAL -->
 <div id="zoneMapModal">
     <div class="zm-box">
         <h2 id="zmTitle" style="text-align:center; text-transform:uppercase; margin-bottom:5px;">BEACH PEG MAP</h2>
@@ -303,21 +289,27 @@
     </div>
 </div>
 
-<!-- STEWARD DESK -->
 <div id="stewardSection"><div id="stewardArea"></div></div>
 
-<!-- HISTORY -->
 <div id="historySection">
     <h2 style="text-align:center; letter-spacing:3px;">PREVIOUS DRAWS</h2>
     <div id="historyGrid" style="display:grid; grid-template-columns:repeat(auto-fit, minmax(320px, 1fr)); gap:30px; margin-top:40px;"></div>
     <div style="text-align:center; margin-top:60px;"><button onclick="clearAllHistory()" class="btn-tool" style="color:#ef4444; border-color:#ef4444;" tabindex="-1">PURGE ALL DATABASE</button></div>
 </div>
 
-<!-- COMMAND BAR -->
 <div id="commandBar" class="command-bar no-print">
     <div style="display:flex; gap:30px; align-items:center;">
-        <div style="display:flex; flex-direction:column; margin-right:20px;"><span style="font-size:10px; color:var(--accent);">ANGLERS</span><span id="tkAnglers" style="font-size:24px; font-weight:900;">0 / 0</span></div>
-        <div id="cashModule" style="display:none; flex-direction:column;"><span style="font-size:10px; color:#10b981;">LIVE CASH TOTAL</span><span id="tkCash" style="font-size:24px; font-weight:900; color:#10b981;">£0</span></div>
+        <div style="display:flex; flex-direction:column; margin-right:20px;"><span id="lblAnglers" style="font-size:10px; color:var(--accent);">ANGLERS</span><span id="tkAnglers" style="font-size:24px; font-weight:900;">0 / 0</span></div>
+        <div id="cashModule" style="display:none; flex-direction:row; gap:20px;">
+            <div style="display:flex; flex-direction:column;">
+                <span style="font-size:10px; color:#10b981;">PRIZE POOL</span>
+                <span id="tkPrize" style="font-size:24px; font-weight:900; color:#10b981;">£0</span>
+            </div>
+            <div style="display:flex; flex-direction:column;">
+                <span style="font-size:10px; color:#10b981;">SECRET PAIRS</span>
+                <span id="tkPairs" style="font-size:24px; font-weight:900; color:#10b981;">£0</span>
+            </div>
+        </div>
         <div id="amendTools" style="display:none; gap:10px;">
             <button class="btn-jumbo" onclick="addNewStateItem(true)" tabindex="-1">+ TEAM</button>
             <button class="btn-jumbo" onclick="addNewStateItem(false)" tabindex="-1">+ SOLO</button>
@@ -346,8 +338,8 @@
     let matchVenues = 1;
     let prizeFee = 10, pairsFee = 5;
     let currentZoneSize = 0; 
+    let isStewardMode = false;
 
-    // Swap Variables
     let isSwapMode = false;
     let swapObj1 = null;
 
@@ -359,7 +351,31 @@
         document.getElementById('commandBar').style.display = 'none';
         document.body.classList.remove('printing-dispatch', 'full-color-share');
         isSwapMode = false; swapObj1 = null;
+        isStewardMode = false;
+        updateTicker();
         window.scrollTo(0,0);
+    }
+
+    function resumeLatestMatch() {
+        const vault = JSON.parse(localStorage.getItem('zonedraw_vault_v10') || '{}');
+        const keys = Object.keys(vault);
+        if(keys.length === 0) return alert("NO ACTIVE DATABASE FOUND.");
+        
+        let latestKey = keys[0];
+        let latestTime = 0;
+        keys.forEach(k => {
+            let t = new Date(vault[k].time).getTime();
+            if(t > latestTime) { latestTime = t; latestKey = k; }
+        });
+        loadMatch(latestKey, vault[latestKey]);
+    }
+
+    function confirmStartNewDraw() {
+        const vault = JSON.parse(localStorage.getItem('zonedraw_vault_v10') || '{}');
+        if(Object.keys(vault).length > 0) {
+            if(!confirm("WARNING: This will clear the current board to start a blank template. Proceed?")) return;
+        }
+        startNewDraw();
     }
 
     function updateVenueInputs() {
@@ -396,6 +412,7 @@
         
         appState = []; vacantPool = []; currentZoneSize = 0;
         setDays(2); setVenues(1);
+        isStewardMode = false;
         
         document.getElementById('hubSection').style.display = 'none';
         document.getElementById('entrySection').style.display = 'block';
@@ -404,6 +421,7 @@
         document.getElementById('entryTeamsContainer').style.display = 'none';
         document.getElementById('entrySolosContainer').style.display = 'none';
         document.getElementById('commandBar').style.display = 'none';
+        updateTicker();
     }
 
     function showHistory() {
@@ -457,7 +475,14 @@
         const vault = JSON.parse(localStorage.getItem('zonedraw_vault_v10') || '{}');
         const keys = Object.keys(vault);
         if(keys.length === 0) return alert("NO ACTIVE DATABASE FOUND.");
-        loadMatch(keys[0], vault[keys[0]]); showSteward();
+        let latestKey = keys[0];
+        let latestTime = 0;
+        keys.forEach(k => {
+            let t = new Date(vault[k].time).getTime();
+            if(t > latestTime) { latestTime = t; latestKey = k; }
+        });
+        loadMatch(latestKey, vault[latestKey]); 
+        showSteward();
     }
 
     function bulkInit() {
@@ -619,12 +644,26 @@
     }
 
     function updateTicker() {
-        let ent = 0, tot = 0;
-        document.querySelectorAll('.a-name').forEach(i => { tot++; if(i.value.trim()) ent++; });
-        document.getElementById('tkAnglers').innerText = `${ent} / ${tot}`;
+        if(isStewardMode) {
+            document.getElementById('lblAnglers').innerText = 'ATTENDANCE';
+            let pres = 0, tot = 0;
+            appState.forEach(e => {
+                e.anglers.forEach(a => {
+                    if(a.name || e.isTeam) {
+                        tot++;
+                        if(a.present) pres++;
+                    }
+                });
+            });
+            document.getElementById('tkAnglers').innerText = `${pres} / ${tot}`;
+        } else {
+            document.getElementById('lblAnglers').innerText = 'ANGLERS';
+            let ent = 0, tot = 0;
+            document.querySelectorAll('.a-name').forEach(i => { tot++; if(i.value.trim()) ent++; });
+            document.getElementById('tkAnglers').innerText = `${ent} / ${tot}`;
+        }
     }
 
-    // TEST REDRAW FUNCTION (v10.22.0)
     function forceTestRedraw() {
         if(confirm("WIPE ALL PEGS AND FORCE FULL REDRAW?")) {
             syncScreenToState();
@@ -634,7 +673,7 @@
                     a.z2 = undefined; a.p2 = undefined;
                 });
             });
-            vacantPool = []; // Wipe available peg pool
+            vacantPool = []; 
             renderStateToScreen();
             initiateShuffle();
         }
@@ -649,7 +688,6 @@
         }, 35);
     }
 
-    // CONTINUOUS PEG ALGORITHM WITH MAGNETIC MOBILITY UPDATE
     function runDraw() {
         syncScreenToState(); 
 
@@ -658,7 +696,6 @@
             return e.anglers[0].name.trim() !== '' || e.anglers[0].z1;
         });
 
-        // Ensure teams/solos with Mobility anglers are drawn FIRST so they get access to the [M] Pegs
         appState.sort((a, b) => {
             let aMob = a.anglers.some(ang => ang.mobility) ? 1 : 0;
             let bMob = b.anglers.some(ang => ang.mobility) ? 1 : 0;
@@ -683,7 +720,6 @@
             });
         });
 
-        // Calculate offset (min 1)
         let zoneSize = Math.max(Math.ceil(totalCompetitors / 4), Math.ceil(highestFrozenPeg / 4), 1);
         currentZoneSize = zoneSize;
 
@@ -707,8 +743,6 @@
             return { z, p };
         });
 
-        // THE SAFE PEG SHIELD
-        // Able-bodied anglers pull from the NON-SAFE pool first.
         const pullPeg = (zone, isDay2, isMobility) => {
             const pools = isDay2 ? pools2 : pools1;
             const zIdx = zones.indexOf(zone);
@@ -757,8 +791,6 @@
                 let zIndexes = [0, 1, 2, 3]; 
                 for (let j = 3; j > 0; j--) { const k = Math.floor(Math.random() * (j + 1)); [zIndexes[j], zIndexes[k]] = [zIndexes[k], zIndexes[j]]; }
                 
-                // THE MAGNET ENGINE
-                // Force the Mobility Angler into the zone that holds the [M] Peg
                 drawOrder.forEach((item, loopIdx) => {
                     if (item.a.mobility && safePegs.length > 0) {
                         let targetK = -1;
@@ -800,7 +832,6 @@
         displayDraw();
     }
 
-    // Helper functions for Mobility & Venues
     function isPegSafe(p) {
         const safePegsStr = document.getElementById('accPegs').value || '';
         const safePegs = safePegsStr.split(',').map(n => parseInt(n.trim())).filter(n => !isNaN(n));
@@ -855,9 +886,6 @@
         if(close && confirm("ARCHIVE DATABASE AND EXIT TO HUB?")) showHub();
     }
 
-    /* ---------------------------------------------------
-       MANUAL SWAP TOOL LOGIC (v10.18.0)
-       --------------------------------------------------- */
     function toggleSwapMode() {
         isSwapMode = !isSwapMode;
         swapObj1 = null;
@@ -901,7 +929,7 @@
             e2.anglers[aIdx].p2 = tempP2;
             
             persistToVault();
-            toggleSwapMode(); // Turn off swap mode after successful trade
+            toggleSwapMode(); 
         }
     }
 
@@ -909,6 +937,7 @@
         document.querySelectorAll('body > div[id$="Section"]').forEach(s => s.style.display = 'none');
         document.getElementById('resultsSection').style.display = 'block';
         document.getElementById('resTitle').innerText = document.getElementById('matchTitle').value || "MATCH RESULTS";
+        isStewardMode = false; updateTicker();
         
         const legend = document.getElementById('horizontalLegend');
         if(currentZoneSize > 0) {
@@ -963,7 +992,6 @@
                 }
             }
 
-            // Visual Adjustments for Venues and Mobility
             let vA1 = (matchVenues == 2) ? `<div style="font-size:7.5px; opacity:0.8; margin-bottom:3px; letter-spacing:0.5px; font-weight:900;">${getVenueName(a.z1, 1).toUpperCase()}</div>` : '';
             let vA2 = (matchVenues == 2 && matchDays == 2 && a.z2) ? `<div style="font-size:7.5px; opacity:0.8; margin-bottom:3px; letter-spacing:0.5px; font-weight:900;">${getVenueName(a.z2, 2).toUpperCase()}</div>` : '';
 
@@ -995,7 +1023,6 @@
         div.innerHTML = h; container.appendChild(div);
     }
 
-    // PRINT ZONE MAP MODAL LOGIC
     function showZoneMap() {
         if(currentZoneSize === 0) {
             let hc = 0, hp = 0;
@@ -1026,13 +1053,10 @@
         document.body.classList.remove('printing-map');
     }
 
-    /* ---------------------------------------------------
-       STEWARD MASTER SHEET LOGIC
-       --------------------------------------------------- */
-
     function showSteward() {
         document.querySelectorAll('body > div[id$="Section"]').forEach(s => s.style.display = 'none');
         document.getElementById('stewardSection').style.display = 'block';
+        isStewardMode = true; 
         
         const area = document.getElementById('stewardArea'); 
         let list = []; 
@@ -1074,8 +1098,8 @@
                         <th>PRESENT</th>
                         <th>CAPTAIN</th>
                         <th style="text-align:left;">CONTACT #</th>
-                        <th>FUND</th>
-                        <th>PAIRS</th>
+                        <th>PRIZE POOL</th>
+                        <th>SECRET PAIRS</th>
                     </tr>`;
                     
         list.forEach(item => {
@@ -1103,6 +1127,7 @@
         document.getElementById('amendTools').style.display = 'none'; 
         
         updateCash();
+        updateTicker();
         window.scrollTo(0,0);
     }
 
@@ -1117,6 +1142,7 @@
                 phoneInput.style.display = entry.anglers[aIdx][prop] ? 'block' : 'none';
             }
             
+            if(prop === 'present') updateTicker();
             if(prop === 'prize' || prop === 'pairs') updateCash();
             persistToVault();
         }
@@ -1131,18 +1157,20 @@
     }
 
     function updateCash() {
-        let total = 0; 
+        let pTotal = 0;
+        let spTotal = 0; 
         appState.forEach(e => {
             e.anglers.forEach(a => {
-                if(a.prize) total += parseFloat(prizeFee) || 0;
-                if(a.pairs) total += parseFloat(pairsFee) || 0;
+                if(a.prize) pTotal += parseFloat(prizeFee) || 0;
+                if(a.pairs) spTotal += parseFloat(pairsFee) || 0;
             });
         });
-        document.getElementById('tkCash').innerText = '£' + total;
+        document.getElementById('tkPrize').innerText = '£' + pTotal;
+        document.getElementById('tkPairs').innerText = '£' + spTotal;
     }
 
     function exportStewardCSV() {
-        let csv = "NAME,TEAM,PRESENT,CAPTAIN,PHONE,PRIZE PAID,PAIRS PAID\n";
+        let csv = "NAME,TEAM,PRESENT,CAPTAIN,PHONE,PRIZE POOL,SECRET PAIRS\n";
         
         let list = []; 
         appState.forEach(g => g.anglers.forEach(a => { if(a.name || g.isTeam) list.push({ isTeam: g.isTeam, team: g.tName, angler: a }); }));
@@ -1174,6 +1202,7 @@
         document.getElementById('setupPanel').style.display = 'none'; document.getElementById('commandBar').style.display = 'flex';
         document.getElementById('amendTools').style.display = 'flex'; document.getElementById('actionBtnArea').style.display = 'flex';
         document.getElementById('cashModule').style.display = 'none';
+        isStewardMode = false;
         renderStateToScreen(); window.scrollTo(0,0);
     }
 
@@ -1193,9 +1222,6 @@
 
     function clearAllHistory() { if(confirm("PERMANENTLY ERASE ALL RECORDS?")) { localStorage.removeItem('zonedraw_vault_v10'); showHistory(); } }
 
-    /* ---------------------------------------------------
-       B&W DISPATCH SLIP LOGIC (v10.21.0)
-       --------------------------------------------------- */
     function generateDispatchSlips() {
         const container = document.getElementById('dispatchSection');
         container.innerHTML = '';
@@ -1207,12 +1233,18 @@
             slip.className = 'dispatch-slip';
             slip.innerHTML = `
                 <div class="dispatch-header">
-                    <div><h1>${title}</h1><h2>TEAM: ${e.tName}</h2></div>
+                    <div><h1>${title}</h1><h2>TEAM: ${e.tName} | CAPTAIN'S DECLARATION</h2></div>
                     <div style="text-align:right; font-size:12px; font-weight:900;">${stamp}</div>
                 </div>
-                <p style="font-size:16px; font-weight:800;"><b>INSTRUCTIONS:</b> POPULATE YOUR 8 SCORESHEETS (4 PER DAY) USING THE DATA BELOW. ENSURE PEG NUMBERS MATCH THE ASSIGNED ZONE COLOR.</p>
+                <p style="font-size:16px; font-weight:800;"><b>INSTRUCTIONS:</b> DECLARE FINANCIAL ENTRY FOR YOUR TEAM MEMBERS, SIGN BELOW, AND RETURN THIS SHEET TO THE STEWARD ALONG WITH THE DECLARED CASH.</p>
                 <table class="dispatch-table">
-                    <tr><th>ANGLER NAME</th><th>DAY 1 (ZONE & PEG)</th><th>DAY 2 (ZONE & PEG)</th></tr>
+                    <tr>
+                        <th>ANGLER NAME</th>
+                        <th>DAY 1 (ZONE & PEG)</th>
+                        <th>DAY 2 (ZONE & PEG)</th>
+                        <th style="text-align:center;">PRIZE POOL [£${prizeFee}]</th>
+                        <th style="text-align:center;">SECRET PAIRS [£${pairsFee}]</th>
+                    </tr>
                     ${e.anglers.map(a => {
                         let vA1 = getVenueName(a.z1, 1);
                         let vA2 = matchDays == 2 ? getVenueName(a.z2, 2) : '';
@@ -1225,12 +1257,14 @@
                             <td>${a.name || '---'} ${a.mobility ? '<b style="font-size:14px;">[M]</b>' : ''}</td>
                             <td><b>[${vA1}${a.z1} ZONE]</b> PEG ${a.p1}${p1Safe}</td>
                             <td>${matchDays == 2 ? `<b>[${vA2}${a.z2} ZONE]</b> PEG ${a.p2}${p2Safe}` : '---'}</td>
+                            <td style="text-align:center;"><div style="width:24px; height:24px; border:2px solid black; margin: 0 auto;"></div></td>
+                            <td style="text-align:center;"><div style="width:24px; height:24px; border:2px solid black; margin: 0 auto;"></div></td>
                         </tr>
                     `}).join('')}
                 </table>
                 <div class="receipt-zone">
-                    <p><b>CAPTAIN'S ACKNOWLEDGMENT:</b> I CONFIRM I HAVE RECEIVED THE SCORESHEETS AND VERIFIED THE DATA ABOVE.</p>
-                    <div class="sig-line"><span>SIGNATURE:</span><span>DATE:</span></div>
+                    <p style="font-size:18px; font-weight:900;">TOTAL CASH DECLARED: £_______</p>
+                    <div class="sig-line" style="width:100%;"><span>CAPTAIN'S SIGNATURE:</span><span>DATE:</span></div>
                 </div>
             `;
             container.appendChild(slip);
@@ -1261,14 +1295,22 @@
                         <div><h1 style="font-size:20px;">${title}</h1><h2 style="font-size:16px;">SOLO COMPETITOR: ${a.name} ${a.mobility ? '<b style="font-size:14px;">[M]</b>' : ''}</h2></div>
                     </div>
                     <table class="dispatch-table" style="margin-top:10px; font-size:14px;">
-                        <tr><th>DAY 1 (ZONE & PEG)</th><th>DAY 2 (ZONE & PEG)</th></tr>
+                        <tr>
+                            <th>DAY 1 (ZONE & PEG)</th>
+                            <th>DAY 2 (ZONE & PEG)</th>
+                            <th style="text-align:center;">PRIZE POOL [£${prizeFee}]</th>
+                            <th style="text-align:center;">SECRET PAIRS [£${pairsFee}]</th>
+                        </tr>
                         <tr>
                             <td><b>[${vA1}${a.z1} ZONE]</b> PEG ${a.p1}${p1Safe}</td>
                             <td>${matchDays == 2 ? `<b>[${vA2}${a.z2} ZONE]</b> PEG ${a.p2}${p2Safe}` : '---'}</td>
+                            <td style="text-align:center;"><div style="width:20px; height:20px; border:2px solid black; margin: 0 auto;"></div></td>
+                            <td style="text-align:center;"><div style="width:20px; height:20px; border:2px solid black; margin: 0 auto;"></div></td>
                         </tr>
                     </table>
                     <div class="receipt-zone" style="margin-top:20px; padding-top:15px;">
-                        <div class="sig-line" style="width:300px; margin-top:20px; font-size:10px;">SIGNATURE:</div>
+                        <p style="font-size:14px; font-weight:900;">TOTAL CASH DECLARED: £_______</p>
+                        <div class="sig-line" style="width:100%; margin-top:20px; font-size:10px;"><span>SIGNATURE:</span><span>DATE:</span></div>
                     </div>
                 `;
                 page.appendChild(slip);
@@ -1281,9 +1323,6 @@
         document.body.classList.remove('printing-dispatch');
     }
 
-    /* ---------------------------------------------------
-       DIGITAL COLOR SHARING LOGIC (v10.17.0)
-       --------------------------------------------------- */
     function shareDraw() {
         const element = document.getElementById('resultsSection');
         const matchName = document.getElementById('matchTitle').value || "MATCH_DRAW";
