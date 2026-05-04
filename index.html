@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ZONEDRAW v10.16.0</title>
+    <title>ZONEDRAW v10.17.0</title>
     <link rel="manifest" href="manifest.json">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
@@ -45,14 +45,18 @@
         #entrySection, #resultsSection, #stewardSection, #historySection, #dispatchSection { max-width: 1400px; margin: 0 auto; padding: 110px 20px 140px; display: none; }
         .control-panel { background: var(--card); border-radius: 24px; padding: 30px; border: 1px solid var(--border); text-align: center; margin-bottom: 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.2); }
         
+        /* Grid Adjustments for 3-Column Layout */
         .bucket-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(400px, 1fr)); gap: 18px; }
 
+        /* Duration Toggle CSS Grid Fix */
         .duration-toggle { display: grid; grid-template-columns: 1fr 1fr; gap: 5px; background: rgba(0,0,0,0.3); padding: 5px; border-radius: 12px; width: 200px; margin: 0 auto; }
         .dt-opt { padding: 12px 0; border-radius: 8px; cursor: pointer; font-weight: 900; font-size: 12px; transition: 0.2s; display: flex; align-items: center; justify-content: center; }
         .dt-opt.active { background: var(--accent); color: white; box-shadow: 0 4px 10px var(--accent-glow); }
 
+        /* Data Cards & Pending States */
         .zone-card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 12px; backdrop-filter: blur(10px); position: relative; transition: 0.3s; break-inside: avoid; page-break-inside: avoid; }
         .zone-card.solo-card { height: fit-content; align-self: start; }
+        .zone-card.selected { border-color: var(--accent); box-shadow: 0 0 20px var(--accent-glow); }
         .zone-card.pending { border-color: var(--pending); box-shadow: 0 0 15px var(--pending-glow); }
         
         .pending-tag { position: absolute; top: -10px; right: 15px; background: var(--pending); color: #0f172a; font-size: 9px; font-weight: 900; padding: 4px 10px; border-radius: 6px; box-shadow: 0 4px 10px rgba(0,0,0,0.4); z-index: 10; letter-spacing: 1px; }
@@ -79,6 +83,7 @@
         .btn-tool { background: rgba(255,255,255,0.1); border: 1px solid var(--border); color: var(--accent); font-size: 10px; font-weight: 900; padding: 6px 12px; border-radius: 6px; cursor: pointer; transition: 0.2s; }
         .btn-tool:hover { background: var(--accent); color: white; }
         .btn-jumbo { padding: 15px 25px; font-size: 12px; background: #1e293b; border: 2px solid var(--accent); color: white; border-radius: 12px; font-weight: 900; cursor: pointer; transition: 0.2s; white-space: nowrap; }
+        .btn-jumbo:hover { background: var(--accent); }
 
         .command-bar { position: fixed; bottom: 0; left: 0; right: 0; z-index: 5000; background: rgba(30, 41, 59, 0.98); backdrop-filter: blur(20px); border-top: 2px solid var(--accent); padding: 15px 35px; display: none; justify-content: space-between; align-items: center; box-shadow: 0 -10px 30px rgba(0,0,0,0.5); }
         
@@ -107,6 +112,22 @@
         .receipt-zone::before { content: '✂ DETACH AND KEEP AT REGISTRATION DESK'; position: absolute; top: -14px; left: 50%; transform: translateX(-50%); background: white; padding: 0 20px; font-size: 12px; font-weight: 900; letter-spacing: 1px; }
         .sig-line { margin-top: 40px; border-bottom: 2px solid black; width: 450px; display: flex; justify-content: space-between; align-items: flex-end; }
 
+        /* -----------------------------------------------------
+           DIGITAL PDF PREMIUM LIGHT MODE (Screen Override)
+           ----------------------------------------------------- */
+        body.full-color-share, body.full-color-share #resultsSection { background: #f8fafc !important; color: #0f172a !important; }
+        body.full-color-share #resTitle { color: #0f172a !important; }
+        body.full-color-share .group-label { color: #3b82f6 !important; border-left-color: #3b82f6 !important; }
+        body.full-color-share .bucket-grid { display: block !important; }
+        body.full-color-share .zone-card { background: white !important; border: 1px solid #e2e8f0 !important; box-shadow: 0 10px 25px rgba(0,0,0,0.05) !important; break-inside: avoid !important; page-break-inside: avoid !important; margin-bottom: 15px !important; }
+        body.full-color-share .zone-header { color: #475569 !important; border-bottom: 1px solid #e2e8f0 !important; }
+        body.full-color-share .angler-name { color: #0f172a !important; }
+        body.full-color-share .res-row { border-bottom: 1px solid #f1f5f9 !important; }
+        body.full-color-share .res-row span:nth-child(2), body.full-color-share .res-row span:nth-child(3) { color: #64748b !important; }
+        body.full-color-share .horizontal-legend { color: #0f172a !important; background: transparent !important; display: flex !important; border: none !important; }
+        body.full-color-share .legend-item { background: white !important; border: 1px solid #e2e8f0 !important; box-shadow: 0 2px 5px rgba(0,0,0,0.02) !important; color: #0f172a !important; }
+        body.full-color-share .no-print { display: none !important; } /* Hide the buttons in the snapshot */
+
         @media print { 
             body.printing-map > :not(#zoneMapModal) { display: none !important; }
             #zoneMapModal { display: block !important; position: static; background: white; color: black; }
@@ -117,37 +138,24 @@
             body.printing-dispatch > :not(#dispatchSection) { display: none !important; }
             .dispatch-slip { border: 5px solid black !important; }
 
-            /* Full Color Share Bypass - Transforms UI into a Premium Light Mode PDF */
-            body.full-color-share, body.full-color-share #resultsSection { background: #f8fafc !important; color: #0f172a !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
-            body.full-color-share #resTitle { color: #0f172a !important; }
-            body.full-color-share .group-label { color: #3b82f6 !important; border-left-color: #3b82f6 !important; }
-            body.full-color-share .bucket-grid { display: block !important; }
-            body.full-color-share .zone-card { background: white !important; border: 1px solid #e2e8f0 !important; box-shadow: 0 10px 25px rgba(0,0,0,0.05) !important; break-inside: avoid !important; page-break-inside: avoid !important; margin-bottom: 15px !important; }
-            body.full-color-share .zone-header { color: #475569 !important; border-bottom: 1px solid #e2e8f0 !important; }
-            body.full-color-share .angler-name { color: #0f172a !important; }
-            body.full-color-share .res-row { border-bottom: 1px solid #f1f5f9 !important; }
-            body.full-color-share .res-row span:nth-child(2), body.full-color-share .res-row span:nth-child(3) { color: #64748b !important; }
-            body.full-color-share .horizontal-legend { color: #0f172a !important; background: transparent !important; display: flex !important; }
-            body.full-color-share .legend-item { background: white !important; border: 1px solid #e2e8f0 !important; box-shadow: 0 2px 5px rgba(0,0,0,0.02) !important; color: #0f172a !important; }
-
-            /* Standard B&W Print logic for the Brother Laser Printer (Bypassed in digital share) */
-            body:not(.printing-map):not(.printing-dispatch):not(.full-color-share) .no-print { display: none !important; } 
-            body:not(.printing-map):not(.printing-dispatch):not(.full-color-share) { background: white !important; color: black !important; }
-            body:not(.printing-map):not(.printing-dispatch):not(.full-color-share) .bucket-grid { display: grid !important; grid-template-columns: repeat(2, 1fr) !important; gap: 10px !important; }
-            body:not(.printing-map):not(.printing-dispatch):not(.full-color-share) .zone-card { border: 1px solid #ddd !important; background: white !important; break-inside: avoid !important; page-break-inside: avoid !important; transform: none !important; box-shadow: none !important; }
-            body:not(.printing-map):not(.printing-dispatch):not(.full-color-share) .pending-tag { display: none !important; }
-            body:not(.printing-map):not(.printing-dispatch):not(.full-color-share) .angler-name { color: black !important; }
-            body:not(.printing-map):not(.printing-dispatch):not(.full-color-share) .draw-pill { color: black !important; border: 1px solid #ccc; background: none !important; }
-            body:not(.printing-map):not(.printing-dispatch):not(.full-color-share) .fixed-header { display: none; }
-            body:not(.printing-map):not(.printing-dispatch):not(.full-color-share) .legend-item { color: black !important; border: 1px solid #ccc !important; }
-            body:not(.printing-map):not(.printing-dispatch):not(.full-color-share) .horizontal-legend { display: flex !important; }
+            /* Standard B&W Print logic for the Brother Laser Printer */
+            body:not(.printing-map):not(.printing-dispatch) .no-print { display: none !important; } 
+            body:not(.printing-map):not(.printing-dispatch) { background: white !important; color: black !important; }
+            body:not(.printing-map):not(.printing-dispatch) .bucket-grid { display: grid !important; grid-template-columns: repeat(2, 1fr) !important; gap: 10px !important; }
+            body:not(.printing-map):not(.printing-dispatch) .zone-card { border: 1px solid #ddd !important; background: white !important; break-inside: avoid !important; page-break-inside: avoid !important; transform: none !important; box-shadow: none !important; }
+            body:not(.printing-map):not(.printing-dispatch) .pending-tag { display: none !important; }
+            body:not(.printing-map):not(.printing-dispatch) .angler-name { color: black !important; }
+            body:not(.printing-map):not(.printing-dispatch) .draw-pill { color: black !important; border: 1px solid #ccc; background: none !important; }
+            body:not(.printing-map):not(.printing-dispatch) .fixed-header { display: none; }
+            body:not(.printing-map):not(.printing-dispatch) .legend-item { color: black !important; border: 1px solid #ccc !important; }
+            body:not(.printing-map):not(.printing-dispatch) .horizontal-legend { display: flex !important; }
             
-            body:not(.printing-map):not(.printing-dispatch):not(.full-color-share) .check-sheet-table th { color: black !important; border-bottom: 2px solid black !important; }
-            body:not(.printing-map):not(.printing-dispatch):not(.full-color-share) .check-sheet-table td { border-bottom: 1px solid #ddd !important; }
-            body:not(.printing-map):not(.printing-dispatch):not(.full-color-share) .steward-input { border: none !important; background: transparent !important; color: black !important; padding: 0 !important; font-size: 14px !important; }
-            body:not(.printing-map):not(.printing-dispatch):not(.full-color-share) .steward-input::placeholder { color: transparent !important; }
-            body:not(.printing-map):not(.printing-dispatch):not(.full-color-share) .cb-custom { border: 2px solid black !important; background: white !important; box-shadow: none !important; }
-            body:not(.printing-map):not(.printing-dispatch):not(.full-color-share) .cb-custom.active::after { color: black !important; }
+            body:not(.printing-map):not(.printing-dispatch) .check-sheet-table th { color: black !important; border-bottom: 2px solid black !important; }
+            body:not(.printing-map):not(.printing-dispatch) .check-sheet-table td { border-bottom: 1px solid #ddd !important; }
+            body:not(.printing-map):not(.printing-dispatch) .steward-input { border: none !important; background: transparent !important; color: black !important; padding: 0 !important; font-size: 14px !important; }
+            body:not(.printing-map):not(.printing-dispatch) .steward-input::placeholder { color: transparent !important; }
+            body:not(.printing-map):not(.printing-dispatch) .cb-custom { border: 2px solid black !important; background: white !important; box-shadow: none !important; }
+            body:not(.printing-map):not(.printing-dispatch) .cb-custom.active::after { color: black !important; }
         }
     </style>
 </head>
@@ -156,7 +164,7 @@
 <div class="fixed-header no-print">
     <div class="header-content">
         <button class="home-btn" onclick="showHub()" tabindex="-1">🏠 RETURN TO HOMEPAGE</button>
-        <div class="brand-name">ZONEDRAW <span id="vTag" class="v-tag">v10.16.0</span></div>
+        <div class="brand-name">ZONEDRAW <span id="vTag" class="v-tag">v10.17.0</span></div>
         <div style="width: 180px;"></div>
     </div>
 </div>
@@ -210,8 +218,7 @@
 
 <!-- RESULTS -->
 <div id="resultsSection">
-    <!-- Notice the data-html2canvas-ignore="true" attribute. This makes the buttons perfectly invisible to the PDF generator. -->
-    <div class="no-print" data-html2canvas-ignore="true" style="display:flex; gap:12px; justify-content:center; margin-bottom:30px; flex-wrap:wrap;">
+    <div class="no-print" style="display:flex; gap:12px; justify-content:center; margin-bottom:30px; flex-wrap:wrap;">
         <button onclick="shareDraw()" class="btn-action" style="background:#64748b;">SHARE DRAW</button>
         <button onclick="generateDispatchSlips()" class="btn-action" style="background:#0ea5e9;">PRINT TEAM SLIPS</button>
         <button onclick="showZoneMap()" class="btn-action" style="background:#0ea5e9;">PRINT ZONE MAP</button>
@@ -304,7 +311,6 @@
         document.getElementById('hubSection').style.display = 'grid';
         document.getElementById('commandBar').style.display = 'none';
         document.body.classList.remove('printing-dispatch');
-        document.body.classList.remove('full-color-share');
         window.scrollTo(0,0);
     }
 
@@ -959,27 +965,32 @@
     }
 
     /* ---------------------------------------------------
-       DIGITAL COLOR SHARING LOGIC (v10.16.0)
+       DIGITAL COLOR SHARING LOGIC (v10.17.0)
        --------------------------------------------------- */
     function shareDraw() {
         const element = document.getElementById('resultsSection');
         const matchName = document.getElementById('matchTitle').value || "MATCH_DRAW";
         
+        // 1. Force the screen into Premium Light Mode
         document.body.classList.add('full-color-share');
 
-        const opt = {
-            margin:       0.2,
-            filename:     `${matchName}_Premium_Draw.pdf`,
-            image:        { type: 'jpeg', quality: 0.98 },
-            // Set the backgroundColor to match our new Premium Light Mode #f8fafc
-            html2canvas:  { scale: 2, useCORS: true, backgroundColor: '#f8fafc' },
-            jsPDF:        { unit: 'in', format: 'letter', orientation: 'portrait' },
-            pagebreak:    { mode: ['css', 'legacy'] }
-        };
+        // 2. Wait 100 milliseconds for the browser to repaint the screen colors
+        setTimeout(() => {
+            const opt = {
+                margin:       0.2,
+                filename:     `${matchName}_Premium_Draw.pdf`,
+                image:        { type: 'jpeg', quality: 0.98 },
+                html2canvas:  { scale: 2, useCORS: true, backgroundColor: '#f8fafc' },
+                jsPDF:        { unit: 'in', format: 'letter', orientation: 'portrait' },
+                pagebreak:    { mode: ['css', 'legacy'] }
+            };
 
-        html2pdf().set(opt).from(element).save().then(() => {
-            document.body.classList.remove('full-color-share');
-        });
+            // 3. Take the snapshot
+            html2pdf().set(opt).from(element).save().then(() => {
+                // 4. Revert the screen back to dark mode
+                document.body.classList.remove('full-color-share');
+            });
+        }, 100);
     }
 </script>
 </body>
