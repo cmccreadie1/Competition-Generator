@@ -28,7 +28,7 @@
         .fixed-header { position: fixed; top: 0; left: 0; right: 0; z-index: 5000; background: rgba(15, 23, 42, 0.98); backdrop-filter: blur(15px); border-bottom: 1px solid var(--border); padding: 12px 20px; }
         .header-content { display: flex; justify-content: space-between; align-items: center; max-width: 1400px; margin: 0 auto; }
         .brand-name { font-size: 18px; font-weight: 900; letter-spacing: -1px; color: var(--text); display: flex; align-items: center; }
-        .v-tag { font-size: 14px; color: var(--accent); margin-left: 8px; letter-spacing: 0.5px; }
+        .v-tag { font-size: 14px; color: var(--accent); margin-left: 8px; letter-spacing: 0.5px; font-weight: 900; }
         
         /* Jumbo Home Button */
         .home-btn { background: rgba(255,255,255,0.05); border: 2px solid rgba(255,255,255,0.2); color: white; padding: 10px 20px; border-radius: 10px; cursor: pointer; font-size: 14px; font-weight: 900; transition: 0.2s; box-shadow: 0 4px 10px rgba(0,0,0,0.3); }
@@ -45,22 +45,17 @@
         #entrySection, #resultsSection, #stewardSection, #historySection, #dispatchSection { max-width: 1400px; margin: 0 auto; padding: 110px 20px 140px; display: none; }
         .control-panel { background: var(--card); border-radius: 24px; padding: 30px; border: 1px solid var(--border); text-align: center; margin-bottom: 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.2); }
         
-        /* Grid Adjustments for 3-Column Layout */
         .bucket-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(400px, 1fr)); gap: 18px; }
 
-        /* Duration Toggle CSS Grid Fix */
         .duration-toggle { display: grid; grid-template-columns: 1fr 1fr; gap: 5px; background: rgba(0,0,0,0.3); padding: 5px; border-radius: 12px; width: 200px; margin: 0 auto; }
         .dt-opt { padding: 12px 0; border-radius: 8px; cursor: pointer; font-weight: 900; font-size: 12px; transition: 0.2s; display: flex; align-items: center; justify-content: center; }
         .dt-opt.active { background: var(--accent); color: white; box-shadow: 0 4px 10px var(--accent-glow); }
 
-        /* Data Cards & Pending States */
-        .zone-card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 12px; backdrop-filter: blur(10px); position: relative; transition: 0.3s; break-inside: avoid !important; page-break-inside: avoid !important; }
+        .zone-card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 12px; backdrop-filter: blur(10px); position: relative; transition: 0.3s; break-inside: avoid; page-break-inside: avoid; }
         .zone-card.solo-card { height: fit-content; align-self: start; }
-        .zone-card.selected { border-color: var(--accent); box-shadow: 0 0 20px var(--accent-glow); }
         .zone-card.pending { border-color: var(--pending); box-shadow: 0 0 15px var(--pending-glow); }
         
         .pending-tag { position: absolute; top: -10px; right: 15px; background: var(--pending); color: #0f172a; font-size: 9px; font-weight: 900; padding: 4px 10px; border-radius: 6px; box-shadow: 0 4px 10px rgba(0,0,0,0.4); z-index: 10; letter-spacing: 1px; }
-        
         .zone-header { font-size: 10px; font-weight: 900; color: var(--accent); margin-bottom: 8px; border-bottom: 1px solid var(--border); padding-bottom: 6px; display: flex; justify-content: space-between; align-items: center; }
 
         /* Results & Steward Visuals */
@@ -79,13 +74,11 @@
         .steward-input { width: 100%; max-width: 160px; font-size: 12px !important; padding: 8px 10px !important; background: rgba(0,0,0,0.2) !important; border-color: rgba(255,255,255,0.1) !important; margin: 0; }
         .steward-input:focus { background: rgba(255,255,255,0.1) !important; border-color: var(--accent) !important; }
 
-        /* Buttons & Actions */
         .btn-action { background: var(--accent); border: none; color: white; font-weight: 900; padding: 16px 32px; border-radius: 12px; cursor: pointer; transition: 0.2s; font-size: 13px; box-shadow: 0 4px 0 #312e81; }
         .btn-action:active { transform: translateY(2px); box-shadow: 0 0px 0 #312e81; }
         .btn-tool { background: rgba(255,255,255,0.1); border: 1px solid var(--border); color: var(--accent); font-size: 10px; font-weight: 900; padding: 6px 12px; border-radius: 6px; cursor: pointer; transition: 0.2s; }
         .btn-tool:hover { background: var(--accent); color: white; }
         .btn-jumbo { padding: 15px 25px; font-size: 12px; background: #1e293b; border: 2px solid var(--accent); color: white; border-radius: 12px; font-weight: 900; cursor: pointer; transition: 0.2s; white-space: nowrap; }
-        .btn-jumbo:hover { background: var(--accent); }
 
         .command-bar { position: fixed; bottom: 0; left: 0; right: 0; z-index: 5000; background: rgba(30, 41, 59, 0.98); backdrop-filter: blur(20px); border-top: 2px solid var(--accent); padding: 15px 35px; display: none; justify-content: space-between; align-items: center; box-shadow: 0 -10px 30px rgba(0,0,0,0.5); }
         
@@ -103,7 +96,7 @@
         .legend-swatch { width: 14px; height: 14px; border-radius: 4px; }
 
         /* B&W Dispatch Slip Print Styles */
-        .dispatch-slip { background: white; color: black; padding: 40px; border: 5px solid black; margin-bottom: 40px; text-align: left; page-break-after: always; position: relative; }
+        .dispatch-slip { background: white; color: black; padding: 40px; border: 6px solid black; margin-bottom: 40px; text-align: left; page-break-after: always; position: relative; }
         .dispatch-header { border-bottom: 8px solid black; padding-bottom: 15px; margin-bottom: 25px; display: flex; justify-content: space-between; align-items: flex-end; }
         .dispatch-header h1 { font-size: 28px; margin: 0; letter-spacing: -1px; }
         .dispatch-header h2 { font-size: 22px; margin: 5px 0 0 0; font-weight: 900; }
@@ -124,19 +117,24 @@
             body.printing-dispatch > :not(#dispatchSection) { display: none !important; }
             .dispatch-slip { border: 5px solid black !important; }
 
-            /* Full Color Share Bypass - Forces dark background and colors for digital PDF */
-            body.full-color-share { background: #0f172a !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
-            body.full-color-share #resultsSection { background: #0f172a !important; }
-            body.full-color-share .zone-card { background: rgba(30, 41, 59, 0.98) !important; border: 1px solid rgba(148, 163, 184, 0.4) !important; box-shadow: none !important; }
-            body.full-color-share .horizontal-legend { display: flex !important; }
-            body.full-color-share .no-print { display: none !important; }
-            body.full-color-share .bucket-grid { display: block !important; } /* Force cards stack for better PDF flow */
+            /* Full Color Share Bypass - Transforms UI into a Premium Light Mode PDF */
+            body.full-color-share, body.full-color-share #resultsSection { background: #f8fafc !important; color: #0f172a !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+            body.full-color-share #resTitle { color: #0f172a !important; }
+            body.full-color-share .group-label { color: #3b82f6 !important; border-left-color: #3b82f6 !important; }
+            body.full-color-share .bucket-grid { display: block !important; }
+            body.full-color-share .zone-card { background: white !important; border: 1px solid #e2e8f0 !important; box-shadow: 0 10px 25px rgba(0,0,0,0.05) !important; break-inside: avoid !important; page-break-inside: avoid !important; margin-bottom: 15px !important; }
+            body.full-color-share .zone-header { color: #475569 !important; border-bottom: 1px solid #e2e8f0 !important; }
+            body.full-color-share .angler-name { color: #0f172a !important; }
+            body.full-color-share .res-row { border-bottom: 1px solid #f1f5f9 !important; }
+            body.full-color-share .res-row span:nth-child(2), body.full-color-share .res-row span:nth-child(3) { color: #64748b !important; }
+            body.full-color-share .horizontal-legend { color: #0f172a !important; background: transparent !important; display: flex !important; }
+            body.full-color-share .legend-item { background: white !important; border: 1px solid #e2e8f0 !important; box-shadow: 0 2px 5px rgba(0,0,0,0.02) !important; color: #0f172a !important; }
 
-            /* Standard B&W Print logic for the Brother Laser Printer */
+            /* Standard B&W Print logic for the Brother Laser Printer (Bypassed in digital share) */
             body:not(.printing-map):not(.printing-dispatch):not(.full-color-share) .no-print { display: none !important; } 
             body:not(.printing-map):not(.printing-dispatch):not(.full-color-share) { background: white !important; color: black !important; }
             body:not(.printing-map):not(.printing-dispatch):not(.full-color-share) .bucket-grid { display: grid !important; grid-template-columns: repeat(2, 1fr) !important; gap: 10px !important; }
-            body:not(.printing-map):not(.printing-dispatch):not(.full-color-share) .zone-card { border: 1px solid #ddd !important; background: white !important; page-break-inside: avoid !important; }
+            body:not(.printing-map):not(.printing-dispatch):not(.full-color-share) .zone-card { border: 1px solid #ddd !important; background: white !important; break-inside: avoid !important; page-break-inside: avoid !important; transform: none !important; box-shadow: none !important; }
             body:not(.printing-map):not(.printing-dispatch):not(.full-color-share) .pending-tag { display: none !important; }
             body:not(.printing-map):not(.printing-dispatch):not(.full-color-share) .angler-name { color: black !important; }
             body:not(.printing-map):not(.printing-dispatch):not(.full-color-share) .draw-pill { color: black !important; border: 1px solid #ccc; background: none !important; }
@@ -212,7 +210,8 @@
 
 <!-- RESULTS -->
 <div id="resultsSection">
-    <div class="no-print" style="display:flex; gap:12px; justify-content:center; margin-bottom:30px; flex-wrap:wrap;">
+    <!-- Notice the data-html2canvas-ignore="true" attribute. This makes the buttons perfectly invisible to the PDF generator. -->
+    <div class="no-print" data-html2canvas-ignore="true" style="display:flex; gap:12px; justify-content:center; margin-bottom:30px; flex-wrap:wrap;">
         <button onclick="shareDraw()" class="btn-action" style="background:#64748b;">SHARE DRAW</button>
         <button onclick="generateDispatchSlips()" class="btn-action" style="background:#0ea5e9;">PRINT TEAM SLIPS</button>
         <button onclick="showZoneMap()" class="btn-action" style="background:#0ea5e9;">PRINT ZONE MAP</button>
@@ -847,7 +846,6 @@
 
         list.forEach(item => {
             const a = item.angler;
-            // Removed dash for individual collation
             csv += `${a.name || ""},${item.team || ""},${a.present?"YES":"NO"},${a.captain?"YES":"NO"},${a.phone || ""},${a.prize?"YES":"NO"},${a.pairs?"YES":"NO"}\n`;
         });
         
@@ -872,7 +870,6 @@
 
     function exportToCSV() {
         let csv = "NAME,TEAM,DAY 1 ZONE,DAY 2 ZONE\n";
-        // Removed dash for individual collation
         appState.forEach(g => g.anglers.forEach(a => { if(a.name) csv += `${a.name},${g.tName || ""},${a.z1},${matchDays==2?a.z2:""}\n`; }));
         const blob = new Blob([csv], {type: 'text/csv'});
         const lnk = document.createElement('a'); lnk.href = URL.createObjectURL(blob); 
@@ -972,9 +969,10 @@
 
         const opt = {
             margin:       0.2,
-            filename:     `${matchName}_Full_Color_Draw.pdf`,
+            filename:     `${matchName}_Premium_Draw.pdf`,
             image:        { type: 'jpeg', quality: 0.98 },
-            html2canvas:  { scale: 2, useCORS: true, backgroundColor: '#0f172a' },
+            // Set the backgroundColor to match our new Premium Light Mode #f8fafc
+            html2canvas:  { scale: 2, useCORS: true, backgroundColor: '#f8fafc' },
             jsPDF:        { unit: 'in', format: 'letter', orientation: 'portrait' },
             pagebreak:    { mode: ['css', 'legacy'] }
         };
