@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ZONEDRAW v10.25.0</title>
+    <title>ZONEDRAW v10.26.0</title>
     <link rel="manifest" href="manifest.json">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
@@ -38,7 +38,7 @@
         .hub-icon { font-size: 44px; margin-bottom: 20px; display: block; filter: drop-shadow(0 0 10px var(--accent-glow)); }
         .hub-title { font-size: 18px; font-weight: 900; letter-spacing: 1px; }
 
-        #entrySection, #resultsSection, #stewardSection, #historySection, #dispatchSection { max-width: 1400px; margin: 0 auto; padding: 110px 20px 140px; display: none; }
+        #entrySection, #resultsSection, #stewardSection, #historySection, #dispatchSection, #rosterSection { max-width: 1400px; margin: 0 auto; padding: 110px 20px 140px; display: none; }
         .control-panel { background: var(--card); border-radius: 24px; padding: 30px; border: 1px solid var(--border); text-align: center; margin-bottom: 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.2); }
         
         .bucket-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(400px, 1fr)); gap: 18px; }
@@ -90,16 +90,12 @@
         
         .group-label { grid-column: 1 / -1; font-size: 1.4rem; font-weight: 900; color: var(--accent); border-left: 5px solid var(--accent); padding-left: 15px; margin: 40px 0 20px; letter-spacing: 1px; }
         .entry-group-label { font-size: 1.1rem; font-weight: 900; color: var(--border); margin: 30px 0 15px; letter-spacing: 1px; text-align: left; }
-
-        #zoneMapModal { display: none; position: fixed; inset: 0; background: rgba(15,23,42,0.98); z-index: 9999; justify-content: center; align-items: center; backdrop-filter: blur(5px); }
-        .zm-box { background: white; color: black; padding: 40px; border-radius: 16px; max-width: 600px; width: 90%; box-shadow: 0 20px 60px rgba(0,0,0,0.5); }
-        .zm-row { display: flex; justify-content: space-between; padding: 15px; border-bottom: 2px solid #ddd; font-size: 18px; font-weight: 900; }
-        .zm-color { padding: 5px 15px; border-radius: 8px; color: white; text-shadow: 1px 1px 2px rgba(0,0,0,0.5); }
         
         .horizontal-legend { display: flex; justify-content: center; gap: 20px; flex-wrap: wrap; margin: -15px 0 30px 0; font-size: 12px; font-weight: 900; letter-spacing: 1px; }
         .legend-item { display: flex; align-items: center; gap: 8px; background: rgba(255,255,255,0.05); padding: 6px 12px; border-radius: 8px; border: 1px solid var(--border); }
         .legend-swatch { width: 14px; height: 14px; border-radius: 4px; }
 
+        /* Dispatch Slip Print Styles */
         .dispatch-slip { background: white; color: black; padding: 40px; border: 6px solid black; margin-bottom: 40px; text-align: left; page-break-after: always; position: relative; }
         .dispatch-header { border-bottom: 8px solid black; padding-bottom: 15px; margin-bottom: 25px; display: flex; justify-content: space-between; align-items: flex-end; }
         .dispatch-header h1 { font-size: 28px; margin: 0; letter-spacing: -1px; }
@@ -107,21 +103,34 @@
         .dispatch-table { width: 100%; border-collapse: collapse; margin-top: 25px; }
         .dispatch-table th { background: #eee; border: 3px solid black; padding: 12px; font-size: 14px; font-weight: 900; text-align: left; }
         .dispatch-table td { border: 2px solid black; padding: 15px; font-size: 18px; font-weight: 800; }
-        
         .receipt-zone { margin-top: 60px; border-top: 4px dashed black; padding-top: 25px; position: relative; }
         .sig-line { margin-top: 40px; border-bottom: 2px solid black; display: flex; justify-content: space-between; align-items: flex-end; }
 
-        body.full-color-share, body.full-color-share #resultsSection { background: #f8fafc !important; color: #0f172a !important; }
-        body.full-color-share #resTitle { color: #0f172a !important; }
+        /* Zone Roster Print Styles (Battle Sheets) */
+        .roster-page { page-break-after: always; background: linear-gradient(180deg, #f8fafc 0%, #e2e8f0 100%); min-height: 100vh; padding: 40px; box-sizing: border-box; font-family: 'Inter', sans-serif; color: #0f172a; }
+        .roster-header { background: #0f172a; color: white; padding: 30px; border-radius: 12px 12px 0 0; text-align: center; margin-bottom: 0; box-shadow: 0 10px 20px rgba(0,0,0,0.1); }
+        .roster-header h1 { font-size: 24px; margin: 0 0 10px 0; color: #94a3b8; letter-spacing: 2px;}
+        .roster-header h2 { font-size: 32px; margin: 0; font-weight: 900; letter-spacing: 1px;}
+        .roster-body { background: white; border-radius: 0 0 12px 12px; padding: 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); }
+        .roster-table { width: 100%; border-collapse: collapse; text-transform: uppercase; }
+        .roster-table th { padding: 15px; font-size: 18px; letter-spacing: 1px; text-align:left; border-bottom: 4px solid #cbd5e1; color:#0f172a; font-weight:900; }
+        .roster-table td { padding: 15px; border-bottom: 1px solid #e2e8f0; vertical-align: middle; }
+        .roster-table tr:nth-child(even) { background-color: #f8fafc; }
+
+        /* -----------------------------------------------------
+           DIGITAL PDF PREMIUM LIGHT MODE (Screen Override)
+           ----------------------------------------------------- */
+        body.full-color-share { background: linear-gradient(180deg, #f8fafc 0%, #e2e8f0 100%) !important; color: #0f172a !important; padding: 40px !important; }
+        body.full-color-share #resTitle { background: #0f172a !important; color: white !important; padding: 30px !important; border-radius: 12px !important; margin-bottom: 40px !important; box-shadow: 0 10px 20px rgba(0,0,0,0.1) !important; border-bottom: 8px solid var(--accent) !important; text-transform: uppercase; }
         body.full-color-share .group-label { color: #3b82f6 !important; border-left-color: #3b82f6 !important; }
         body.full-color-share .bucket-grid { display: block !important; }
-        body.full-color-share .zone-card { background: white !important; border: 1px solid #e2e8f0 !important; box-shadow: 0 10px 25px rgba(0,0,0,0.05) !important; break-inside: avoid !important; page-break-inside: avoid !important; margin-bottom: 15px !important; }
-        body.full-color-share .zone-header { color: #475569 !important; border-bottom: 1px solid #e2e8f0 !important; }
-        body.full-color-share .angler-name { color: #0f172a !important; }
-        body.full-color-share .res-row { border-bottom: 1px solid #f1f5f9 !important; }
+        body.full-color-share .zone-card { background: white !important; border: 1px solid #cbd5e1 !important; box-shadow: 0 10px 25px rgba(0,0,0,0.05) !important; break-inside: avoid !important; page-break-inside: avoid !important; margin-bottom: 15px !important; border-top-width: 6px !important; }
+        body.full-color-share .zone-header { color: #475569 !important; border-bottom: 1px solid #e2e8f0 !important; font-size:14px !important; }
+        body.full-color-share .angler-name { color: #0f172a !important; font-size:15px !important; }
+        body.full-color-share .res-row { border-bottom: 1px solid #f1f5f9 !important; padding: 10px 0 !important; }
         body.full-color-share .res-row span:nth-child(2), body.full-color-share .res-row span:nth-child(3) { color: #64748b !important; }
         body.full-color-share .horizontal-legend { color: #0f172a !important; background: transparent !important; display: flex !important; border: none !important; }
-        body.full-color-share .legend-item { background: white !important; border: 1px solid #e2e8f0 !important; box-shadow: 0 2px 5px rgba(0,0,0,0.02) !important; color: #0f172a !important; }
+        body.full-color-share .legend-item { background: white !important; border: 1px solid #cbd5e1 !important; box-shadow: 0 4px 10px rgba(0,0,0,0.05) !important; color: #0f172a !important; padding: 10px 20px !important; font-size: 14px !important; }
         body.full-color-share .no-print { display: none !important; } 
 
         body.full-color-share .m-name { color: #d97706 !important; font-weight: 900; }
@@ -129,36 +138,36 @@
         body.full-color-share .m-peg { border: 2px solid #d97706 !important; box-shadow: none !important; }
 
         @media print { 
-            body.printing-map > :not(#zoneMapModal) { display: none !important; }
-            #zoneMapModal { display: block !important; position: static; background: white; color: black; }
-            #zoneMapModal .no-print { display: none !important; }
-            .zm-box { box-shadow: none; border: none; padding: 0; max-width: 100%; }
-
+            body.printing-rosters > :not(#rosterSection) { display: none !important; }
+            #rosterSection { display: block !important; }
+            body.printing-rosters { background: white; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; margin: 0; }
+            
             body.printing-dispatch #dispatchSection { display: block !important; }
             body.printing-dispatch > :not(#dispatchSection) { display: none !important; }
             .dispatch-slip { border: 5px solid black !important; }
 
-            body:not(.printing-map):not(.printing-dispatch):not(.full-color-share) .no-print { display: none !important; } 
-            body:not(.printing-map):not(.printing-dispatch):not(.full-color-share) { background: white !important; color: black !important; }
-            body:not(.printing-map):not(.printing-dispatch):not(.full-color-share) .bucket-grid { display: grid !important; grid-template-columns: repeat(2, 1fr) !important; gap: 10px !important; }
-            body:not(.printing-map):not(.printing-dispatch):not(.full-color-share) .zone-card { border: 1px solid #ddd !important; background: white !important; break-inside: avoid !important; page-break-inside: avoid !important; transform: none !important; box-shadow: none !important; }
-            body:not(.printing-map):not(.printing-dispatch):not(.full-color-share) .pending-tag { display: none !important; }
-            body:not(.printing-map):not(.printing-dispatch):not(.full-color-share) .angler-name { color: black !important; }
-            body:not(.printing-map):not(.printing-dispatch):not(.full-color-share) .draw-pill { color: black !important; border: 1px solid #ccc; background: none !important; }
-            body:not(.printing-map):not(.printing-dispatch):not(.full-color-share) .fixed-header { display: none; }
-            body:not(.printing-map):not(.printing-dispatch):not(.full-color-share) .legend-item { color: black !important; border: 1px solid #ccc !important; }
-            body:not(.printing-map):not(.printing-dispatch):not(.full-color-share) .horizontal-legend { display: flex !important; }
+            /* Standard B&W Print logic for legacy screens */
+            body:not(.printing-rosters):not(.printing-dispatch):not(.full-color-share) .no-print { display: none !important; } 
+            body:not(.printing-rosters):not(.printing-dispatch):not(.full-color-share) { background: white !important; color: black !important; }
+            body:not(.printing-rosters):not(.printing-dispatch):not(.full-color-share) .bucket-grid { display: grid !important; grid-template-columns: repeat(2, 1fr) !important; gap: 10px !important; }
+            body:not(.printing-rosters):not(.printing-dispatch):not(.full-color-share) .zone-card { border: 1px solid #ddd !important; background: white !important; break-inside: avoid !important; page-break-inside: avoid !important; transform: none !important; box-shadow: none !important; }
+            body:not(.printing-rosters):not(.printing-dispatch):not(.full-color-share) .pending-tag { display: none !important; }
+            body:not(.printing-rosters):not(.printing-dispatch):not(.full-color-share) .angler-name { color: black !important; }
+            body:not(.printing-rosters):not(.printing-dispatch):not(.full-color-share) .draw-pill { color: black !important; border: 1px solid #ccc; background: none !important; }
+            body:not(.printing-rosters):not(.printing-dispatch):not(.full-color-share) .fixed-header { display: none; }
+            body:not(.printing-rosters):not(.printing-dispatch):not(.full-color-share) .legend-item { color: black !important; border: 1px solid #ccc !important; }
+            body:not(.printing-rosters):not(.printing-dispatch):not(.full-color-share) .horizontal-legend { display: flex !important; }
             
-            body:not(.printing-map):not(.printing-dispatch):not(.full-color-share) .check-sheet-table th { color: black !important; border-bottom: 2px solid black !important; }
-            body:not(.printing-map):not(.printing-dispatch):not(.full-color-share) .check-sheet-table td { border-bottom: 1px solid #ddd !important; }
-            body:not(.printing-map):not(.printing-dispatch):not(.full-color-share) .steward-input { border: none !important; background: transparent !important; color: black !important; padding: 0 !important; font-size: 14px !important; }
-            body:not(.printing-map):not(.printing-dispatch):not(.full-color-share) .steward-input::placeholder { color: transparent !important; }
-            body:not(.printing-map):not(.printing-dispatch):not(.full-color-share) .cb-custom { border: 2px solid black !important; background: white !important; box-shadow: none !important; }
-            body:not(.printing-map):not(.printing-dispatch):not(.full-color-share) .cb-custom.active::after { color: black !important; }
+            body:not(.printing-rosters):not(.printing-dispatch):not(.full-color-share) .check-sheet-table th { color: black !important; border-bottom: 2px solid black !important; }
+            body:not(.printing-rosters):not(.printing-dispatch):not(.full-color-share) .check-sheet-table td { border-bottom: 1px solid #ddd !important; }
+            body:not(.printing-rosters):not(.printing-dispatch):not(.full-color-share) .steward-input { border: none !important; background: transparent !important; color: black !important; padding: 0 !important; font-size: 14px !important; }
+            body:not(.printing-rosters):not(.printing-dispatch):not(.full-color-share) .steward-input::placeholder { color: transparent !important; }
+            body:not(.printing-rosters):not(.printing-dispatch):not(.full-color-share) .cb-custom { border: 2px solid black !important; background: white !important; box-shadow: none !important; }
+            body:not(.printing-rosters):not(.printing-dispatch):not(.full-color-share) .cb-custom.active::after { color: black !important; }
             
-            body:not(.printing-map):not(.printing-dispatch):not(.full-color-share) .m-name { color: black !important; }
-            body:not(.printing-map):not(.printing-dispatch):not(.full-color-share) .m-tag { color: black !important; text-shadow: none !important; }
-            body:not(.printing-map):not(.printing-dispatch):not(.full-color-share) .m-peg { border: 2px solid black !important; box-shadow: none !important; }
+            body:not(.printing-rosters):not(.printing-dispatch):not(.full-color-share) .m-name { color: black !important; }
+            body:not(.printing-rosters):not(.printing-dispatch):not(.full-color-share) .m-tag { color: black !important; text-shadow: none !important; }
+            body:not(.printing-rosters):not(.printing-dispatch):not(.full-color-share) .m-peg { border: 2px solid black !important; box-shadow: none !important; }
         }
     </style>
 </head>
@@ -167,7 +176,7 @@
 <div class="fixed-header no-print">
     <div class="header-content">
         <button class="home-btn" onclick="showHub()" tabindex="-1">🏠 RETURN TO HOMEPAGE</button>
-        <div class="brand-name">ZONEDRAW <span id="vTag" class="v-tag">v10.25.0</span></div>
+        <div class="brand-name">ZONEDRAW <span id="vTag" class="v-tag">v10.26.0</span></div>
         <div style="width: 180px;"></div>
     </div>
 </div>
@@ -243,18 +252,16 @@
 </div>
 
 <div id="resultsSection">
-    <!-- REVISED UI ACTION BAR -->
     <div class="no-print" data-html2canvas-ignore="true" style="display:flex; gap:12px; justify-content:center; margin-bottom:15px; flex-wrap:wrap;">
         <button onclick="handleAmend()" class="btn-action" style="background:#f59e0b;">AMEND DRAW</button>
         <button onclick="toggleSwapMode()" id="swapBtn" class="btn-action" style="background:#8b5cf6;">SWAP PEGS</button>
         <button onclick="toggleExportMenu()" id="exportToggleBtn" class="btn-action" style="background:#0ea5e9;">🖨️ OUTPUT & PRINT MENU</button>
     </div>
     
-    <!-- NEW ACCORDION MENU FOR EXPORTING -->
     <div id="exportMenu" class="no-print" data-html2canvas-ignore="true" style="display:none; gap:12px; justify-content:center; margin-bottom:20px; padding:15px; background:rgba(255,255,255,0.05); border-radius:12px; flex-wrap:wrap;">
         <button onclick="shareDraw()" class="btn-action" style="background:#64748b; font-size:11px; padding: 12px 20px;">SHARE DRAW (PDF)</button>
         <button onclick="generateDispatchSlips()" class="btn-action" style="background:#0ea5e9; font-size:11px; padding: 12px 20px;">PRINT TEAM SLIPS</button>
-        <button onclick="showZoneMap()" class="btn-action" style="background:#0ea5e9; font-size:11px; padding: 12px 20px;">PRINT ZONE MAP</button>
+        <button onclick="printZoneRosters()" class="btn-action" style="background:#0ea5e9; font-size:11px; padding: 12px 20px;">PRINT ZONE ROSTERS</button>
         <button onclick="exportToCSV()" class="btn-action" style="background:#10b981; font-size:11px; padding: 12px 20px;">CREATE EXCEL COMPETITOR LIST</button>
     </div>
     
@@ -281,17 +288,8 @@
 
 <div id="dispatchSection"></div>
 
-<div id="zoneMapModal">
-    <div class="zm-box">
-        <h2 id="zmTitle" style="text-align:center; text-transform:uppercase; margin-bottom:5px;">BEACH PEG MAP</h2>
-        <p style="text-align:center; font-weight:800; color:#666; margin-top:0; margin-bottom:30px;" id="zmSub"></p>
-        <div id="zmContent"></div>
-        <div class="no-print" style="display:flex; justify-content:space-between; margin-top:40px;">
-            <button onclick="document.getElementById('zoneMapModal').style.display='none'" class="btn-action" style="background:#ef4444;">CLOSE</button>
-            <button onclick="printZoneMap()" class="btn-action" style="background:#0ea5e9;">PRINT MAP</button>
-        </div>
-    </div>
-</div>
+<!-- NEW ROSTER SECTION (BATTLE SHEETS) -->
+<div id="rosterSection"></div>
 
 <div id="stewardSection"><div id="stewardArea"></div></div>
 
@@ -353,7 +351,7 @@
         document.querySelectorAll('body > div[id$="Section"]').forEach(s => s.style.display = 'none');
         document.getElementById('hubSection').style.display = 'grid';
         document.getElementById('commandBar').style.display = 'none';
-        document.body.classList.remove('printing-dispatch', 'full-color-share');
+        document.body.classList.remove('printing-dispatch', 'full-color-share', 'printing-rosters');
         isSwapMode = false; swapObj1 = null;
         isStewardMode = false;
         document.getElementById('exportMenu').style.display = 'none';
@@ -1028,34 +1026,74 @@
         div.innerHTML = h; container.appendChild(div);
     }
 
-    function showZoneMap() {
-        if(currentZoneSize === 0) {
-            let hc = 0, hp = 0;
-            appState.forEach(e => {
-                hc += e.isTeam ? 4 : 1;
-                e.anglers.forEach(a => hp = Math.max(hp, a.p1 || 0));
+    // NEW ZONE BATTLE SHEETS (v10.26.0)
+    function printZoneRosters() {
+        const container = document.getElementById('rosterSection');
+        container.innerHTML = '';
+        const title = (document.getElementById('matchTitle').value || "THE MATCH").toUpperCase();
+        
+        let daysToPrint = matchDays == 2 ? [1, 2] : [1];
+        
+        daysToPrint.forEach(day => {
+            zones.forEach(zone => {
+                let zoneAnglers = [];
+                appState.forEach(team => {
+                    team.anglers.forEach(a => {
+                        if (a.name) {
+                            if (day === 1 && a.z1 === zone) {
+                                zoneAnglers.push({ name: a.name, team: team.tName || 'SOLO', peg: a.p1, mobility: a.mobility });
+                            } else if (day === 2 && a.z2 === zone) {
+                                zoneAnglers.push({ name: a.name, team: team.tName || 'SOLO', peg: a.p2, mobility: a.mobility });
+                            }
+                        }
+                    });
+                });
+                
+                if(zoneAnglers.length === 0) return; 
+                
+                zoneAnglers.sort((a, b) => a.peg - b.peg);
+                
+                const venueName = getVenueName(zone, day);
+                const vText = venueName ? ` (${venueName})` : '';
+                
+                const zGradients = { 'RED': '#ef4444', 'YELLOW': '#f59e0b', 'GREEN': '#10b981', 'BLUE': '#3b82f6' };
+                const zColor = zGradients[zone];
+
+                const page = document.createElement('div');
+                page.className = 'roster-page';
+                page.innerHTML = `
+                    <div class="roster-header" style="border-bottom: 6px solid ${zColor};">
+                        <h1>${title}</h1>
+                        <h2>DAY ${day} - ${zone} ZONE${vText}</h2>
+                    </div>
+                    <div class="roster-body">
+                        <table class="roster-table">
+                            <thead>
+                                <tr>
+                                    <th style="width: 100px; background:${zColor}; color:white; text-align:center;">PEG</th>
+                                    <th>ANGLER NAME</th>
+                                    <th>TEAM</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${zoneAnglers.map(ang => `
+                                    <tr>
+                                        <td style="font-size: 26px; font-weight: 900; text-align: center; color: ${zColor}; border-right: 2px solid #e2e8f0;">${ang.peg}</td>
+                                        <td style="font-size: 20px; font-weight: 800;">${ang.name} ${ang.mobility ? '<span style="color:#d97706; font-size:16px;">[M]</span>' : ''}</td>
+                                        <td style="font-size: 16px; font-weight: 700; color: #475569;">${ang.team}</td>
+                                    </tr>
+                                `).join('')}
+                            </tbody>
+                        </table>
+                    </div>
+                `;
+                container.appendChild(page);
             });
-            currentZoneSize = Math.max(Math.ceil(hc / 4), Math.ceil(hp / 4), 1);
-        }
-
-        const title = document.getElementById('matchTitle').value || "THE MATCH";
-        document.getElementById('zmTitle').innerText = "BEACH PEG MAP";
-        document.getElementById('zmSub').innerText = title;
-
-        let h = `<div class="zm-row"><span class="zm-color" style="background:#ef4444;">RED ZONE${formatZoneName('RED')}</span> <span>Peg 1 to ${currentZoneSize}</span></div>`;
-        h += `<div class="zm-row"><span class="zm-color" style="background:#f59e0b;">YELLOW ZONE${formatZoneName('YELLOW')}</span> <span>Peg ${currentZoneSize + 1} to ${currentZoneSize * 2}</span></div>`;
-        h += `<div class="zm-row"><span class="zm-color" style="background:#10b981;">GREEN ZONE${formatZoneName('GREEN')}</span> <span>Peg ${currentZoneSize * 2 + 1} to ${currentZoneSize * 3}</span></div>`;
-        h += `<div class="zm-row"><span class="zm-color" style="background:#3b82f6;">BLUE ZONE${formatZoneName('BLUE')}</span> <span>Peg ${currentZoneSize * 3 + 1} to ${currentZoneSize * 4}</span></div>`;
-        h += `<div style="text-align:center; font-size:12px; margin-top:20px; color:#666;">Total Physical Pegs Required: ${currentZoneSize * 4}</div>`;
-
-        document.getElementById('zmContent').innerHTML = h;
-        document.getElementById('zoneMapModal').style.display = 'flex';
-    }
-
-    function printZoneMap() {
-        document.body.classList.add('printing-map');
+        });
+        
+        document.body.classList.add('printing-rosters');
         window.print();
-        document.body.classList.remove('printing-map');
+        document.body.classList.remove('printing-rosters');
     }
 
     function showSteward() {
