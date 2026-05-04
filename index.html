@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ZONEDRAW v10.24.0</title>
+    <title>ZONEDRAW v10.25.0</title>
     <link rel="manifest" href="manifest.json">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
@@ -167,7 +167,7 @@
 <div class="fixed-header no-print">
     <div class="header-content">
         <button class="home-btn" onclick="showHub()" tabindex="-1">🏠 RETURN TO HOMEPAGE</button>
-        <div class="brand-name">ZONEDRAW <span id="vTag" class="v-tag">v10.24.0</span></div>
+        <div class="brand-name">ZONEDRAW <span id="vTag" class="v-tag">v10.25.0</span></div>
         <div style="width: 180px;"></div>
     </div>
 </div>
@@ -243,15 +243,19 @@
 </div>
 
 <div id="resultsSection">
-    <div class="no-print" data-html2canvas-ignore="true" style="display:flex; gap:12px; justify-content:center; margin-bottom:20px; flex-wrap:wrap;">
-        <button onclick="shareDraw()" class="btn-action" style="background:#64748b;">SHARE DRAW</button>
-        <button onclick="toggleSwapMode()" id="swapBtn" class="btn-action" style="background:#8b5cf6;">SWAP PEGS</button>
-        <button onclick="generateDispatchSlips()" class="btn-action" style="background:#0ea5e9;">PRINT TEAM SLIPS</button>
-        <button onclick="showZoneMap()" class="btn-action" style="background:#0ea5e9;">PRINT ZONE MAP</button>
-        <button onclick="showSteward()" class="btn-action" style="background:#4f46e5;">STEWARD MODE</button>
-        <button onclick="exportToCSV()" class="btn-action" style="background:#10b981;">SAVE CSV</button>
+    <!-- REVISED UI ACTION BAR -->
+    <div class="no-print" data-html2canvas-ignore="true" style="display:flex; gap:12px; justify-content:center; margin-bottom:15px; flex-wrap:wrap;">
         <button onclick="handleAmend()" class="btn-action" style="background:#f59e0b;">AMEND DRAW</button>
-        <button onclick="saveAndFinish()" class="btn-action" style="background:#ef4444;">SAVE & FINISH</button>
+        <button onclick="toggleSwapMode()" id="swapBtn" class="btn-action" style="background:#8b5cf6;">SWAP PEGS</button>
+        <button onclick="toggleExportMenu()" id="exportToggleBtn" class="btn-action" style="background:#0ea5e9;">🖨️ OUTPUT & PRINT MENU</button>
+    </div>
+    
+    <!-- NEW ACCORDION MENU FOR EXPORTING -->
+    <div id="exportMenu" class="no-print" data-html2canvas-ignore="true" style="display:none; gap:12px; justify-content:center; margin-bottom:20px; padding:15px; background:rgba(255,255,255,0.05); border-radius:12px; flex-wrap:wrap;">
+        <button onclick="shareDraw()" class="btn-action" style="background:#64748b; font-size:11px; padding: 12px 20px;">SHARE DRAW (PDF)</button>
+        <button onclick="generateDispatchSlips()" class="btn-action" style="background:#0ea5e9; font-size:11px; padding: 12px 20px;">PRINT TEAM SLIPS</button>
+        <button onclick="showZoneMap()" class="btn-action" style="background:#0ea5e9; font-size:11px; padding: 12px 20px;">PRINT ZONE MAP</button>
+        <button onclick="exportToCSV()" class="btn-action" style="background:#10b981; font-size:11px; padding: 12px 20px;">CREATE EXCEL COMPETITOR LIST</button>
     </div>
     
     <div id="swapPrompt" class="no-print" data-html2canvas-ignore="true" style="display:none; text-align:center; background:#8b5cf6; color:white; padding:15px; font-weight:900; letter-spacing:2px; margin-bottom:20px; border-radius:12px; animation: pulse 2s infinite;">
@@ -352,6 +356,7 @@
         document.body.classList.remove('printing-dispatch', 'full-color-share');
         isSwapMode = false; swapObj1 = null;
         isStewardMode = false;
+        document.getElementById('exportMenu').style.display = 'none';
         updateTicker();
         window.scrollTo(0,0);
     }
@@ -828,7 +833,7 @@
             }
         });
 
-        saveAndFinish(false);
+        persistToVault();
         displayDraw();
     }
 
@@ -881,9 +886,9 @@
         localStorage.setItem('zonedraw_vault_v10', JSON.stringify(vault));
     }
 
-    function saveAndFinish(close = true) {
-        persistToVault();
-        if(close && confirm("ARCHIVE DATABASE AND EXIT TO HUB?")) showHub();
+    function toggleExportMenu() {
+        const menu = document.getElementById('exportMenu');
+        menu.style.display = menu.style.display === 'none' ? 'flex' : 'none';
     }
 
     function toggleSwapMode() {
@@ -1219,8 +1224,6 @@
         lnk.download = `${matchName}.csv`; 
         lnk.click();
     }
-
-    function clearAllHistory() { if(confirm("PERMANENTLY ERASE ALL RECORDS?")) { localStorage.removeItem('zonedraw_vault_v10'); showHistory(); } }
 
     function generateDispatchSlips() {
         const container = document.getElementById('dispatchSection');
