@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ZONEDRAW v10.20.0</title>
+    <title>ZONEDRAW v10.21.0</title>
     <link rel="manifest" href="manifest.json">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
@@ -180,7 +180,7 @@
 <div class="fixed-header no-print">
     <div class="header-content">
         <button class="home-btn" onclick="showHub()" tabindex="-1">🏠 RETURN TO HOMEPAGE</button>
-        <div class="brand-name">ZONEDRAW <span id="vTag" class="v-tag">v10.20.0</span></div>
+        <div class="brand-name">ZONEDRAW <span id="vTag" class="v-tag">v10.21.0</span></div>
         <div style="width: 180px;"></div>
     </div>
 </div>
@@ -632,13 +632,20 @@
         }, 35);
     }
 
-    // CONTINUOUS PEG ALGORITHM WITH MOBILITY PRIORITY AND ANCHORING
+    // CONTINUOUS PEG ALGORITHM WITH MAGNETIC MOBILITY UPDATE (v10.21.0)
     function runDraw() {
         syncScreenToState(); 
 
         appState = appState.filter(e => {
             if (e.isTeam) return e.anglers.some(a => a.name.trim() !== '' || a.z1) || e.tName.trim() !== '';
             return e.anglers[0].name.trim() !== '' || e.anglers[0].z1;
+        });
+
+        // Ensure teams/solos with Mobility anglers are drawn FIRST so they get access to the [M] Pegs
+        appState.sort((a, b) => {
+            let aMob = a.anglers.some(ang => ang.mobility) ? 1 : 0;
+            let bMob = b.anglers.some(ang => ang.mobility) ? 1 : 0;
+            return bMob - aMob;
         });
 
         const safePegsStr = document.getElementById('accPegs').value || '';
@@ -659,7 +666,6 @@
             });
         });
 
-        // Calculate offset (min 1)
         let zoneSize = Math.max(Math.ceil(totalCompetitors / 4), Math.ceil(highestFrozenPeg / 4), 1);
         currentZoneSize = zoneSize;
 
@@ -683,13 +689,22 @@
             return { z, p };
         });
 
+        // THE SAFE PEG SHIELD (v10.21.0)
+        // Able-bodied anglers pull from the NON-SAFE pool first.
         const pullPeg = (zone, isDay2, isMobility) => {
             const pools = isDay2 ? pools2 : pools1;
             const zIdx = zones.indexOf(zone);
+            
             if (isMobility && safePegs.length > 0) {
                 const sIdx = pools[zIdx].p.findIndex(peg => safePegs.includes(peg));
                 if (sIdx !== -1) return pools[zIdx].p.splice(sIdx, 1)[0];
             }
+
+            if (!isMobility && safePegs.length > 0) {
+                const nonSafeIdx = pools[zIdx].p.findIndex(peg => !safePegs.includes(peg));
+                if (nonSafeIdx !== -1) return pools[zIdx].p.splice(nonSafeIdx, 1)[0];
+            }
+            
             return pools[zIdx].p.pop() || 99;
         };
 
@@ -697,7 +712,16 @@
             if (vacantPool.length > 0) return vacantPool.shift();
             let avZ = pools1.map((p, idx) => idx).filter(idx => pools1[idx].p.length > 0);
             if (avZ.length === 0) return { z1: 'RED', p1: 99, z2: 'BLUE', p2: 99 }; 
-            const rZ = avZ[Math.floor(Math.random() * avZ.length)];
+            
+            let rZ = -1;
+            if (isMobility && safePegs.length > 0) {
+                let safeZones = avZ.filter(idx => {
+                    return pools1[idx].p.some(p => safePegs.includes(p)) || (matchDays == 2 && pools2[zones.indexOf(rotationMap[zones[idx]])].p.some(p => safePegs.includes(p)));
+                });
+                if (safeZones.length > 0) rZ = safeZones[Math.floor(Math.random() * safeZones.length)];
+            }
+            if (rZ === -1) rZ = avZ[Math.floor(Math.random() * avZ.length)];
+            
             const destZ2 = rotationMap[zones[rZ]];
             return { 
                 z1: zones[rZ], p1: pullPeg(zones[rZ], false, isMobility), 
@@ -709,13 +733,30 @@
             let needsDraw = entry.anglers.filter(a => !a.z1);
             if (needsDraw.length === 0) return;
 
-            // Sort team array temporarily so mobility anglers draw their specific pegs FIRST
             let drawOrder = needsDraw.map((a, i) => ({ a, i })).sort((x, y) => (y.a.mobility ? 1 : 0) - (x.a.mobility ? 1 : 0));
 
             if (entry.isTeam && needsDraw.length === 4) {
                 let zIndexes = [0, 1, 2, 3]; 
                 for (let j = 3; j > 0; j--) { const k = Math.floor(Math.random() * (j + 1)); [zIndexes[j], zIndexes[k]] = [zIndexes[k], zIndexes[j]]; }
                 
+                // THE MAGNET ENGINE (v10.21.0)
+                // Force the Mobility Angler into the zone that holds the [M] Peg
+                drawOrder.forEach((item, loopIdx) => {
+                    if (item.a.mobility && safePegs.length > 0) {
+                        let targetK = -1;
+                        for (let k = loopIdx; k < 4; k++) {
+                            let zi = zIndexes[k];
+                            let hasSafe = pools1[zi].p.some(p => safePegs.includes(p)) || (matchDays == 2 && pools2[zones.indexOf(rotationMap[zones[zi]])].p.some(p => safePegs.includes(p)));
+                            if (hasSafe) { targetK = k; break; }
+                        }
+                        if (targetK !== -1 && targetK !== loopIdx) {
+                            let temp = zIndexes[loopIdx];
+                            zIndexes[loopIdx] = zIndexes[targetK];
+                            zIndexes[targetK] = temp;
+                        }
+                    }
+                });
+
                 drawOrder.forEach((item, loopIdx) => {
                     const a = item.a;
                     if (vacantPool.length > 0) {
@@ -916,8 +957,10 @@
 
             let nameClass = a.mobility ? 'angler-name m-name' : 'angler-name';
             let mIcon = a.mobility ? '<span class="m-tag">[M]</span>' : '';
-            let p1Icon = p1Safe ? '<span class="m-tag" style="font-size:10px;">[SAFE]</span>' : '';
-            let p2Icon = p2Safe ? '<span class="m-tag" style="font-size:10px;">[SAFE]</span>' : '';
+            
+            // Replaced [SAFE] with [M PEG] in the UI code block
+            let p1Icon = p1Safe ? '<span class="m-tag" style="font-size:10px;">[M PEG]</span>' : '';
+            let p2Icon = p2Safe ? '<span class="m-tag" style="font-size:10px;">[M PEG]</span>' : '';
 
             h += `<div class="${rowClass}" ${clickEvt}>
                     <span class="${nameClass}">${a.name}${mIcon}</span>
@@ -1134,7 +1177,7 @@
     function clearAllHistory() { if(confirm("PERMANENTLY ERASE ALL RECORDS?")) { localStorage.removeItem('zonedraw_vault_v10'); showHistory(); } }
 
     /* ---------------------------------------------------
-       B&W DISPATCH SLIP LOGIC (v10.20.0)
+       B&W DISPATCH SLIP LOGIC (v10.21.0)
        --------------------------------------------------- */
     function generateDispatchSlips() {
         const container = document.getElementById('dispatchSection');
@@ -1158,11 +1201,12 @@
                         let vA2 = matchDays == 2 ? getVenueName(a.z2, 2) : '';
                         vA1 = (matchVenues == 2 && vA1) ? vA1 + ' | ' : '';
                         vA2 = (matchVenues == 2 && vA2) ? vA2 + ' | ' : '';
-                        let p1Safe = isPegSafe(a.p1) ? ' <b style="font-size:14px;">[SAFE PEG]</b>' : '';
-                        let p2Safe = isPegSafe(a.p2) ? ' <b style="font-size:14px;">[SAFE PEG]</b>' : '';
+                        // Replaced [SAFE PEG] with [M PEG] in physical print code block
+                        let p1Safe = isPegSafe(a.p1) ? ' <b style="font-size:14px;">[M PEG]</b>' : '';
+                        let p2Safe = isPegSafe(a.p2) ? ' <b style="font-size:14px;">[M PEG]</b>' : '';
                         return `
                         <tr>
-                            <td>${a.name || '---'} ${a.mobility ? '<b style="font-size:14px;">[MOBILITY]</b>' : ''}</td>
+                            <td>${a.name || '---'} ${a.mobility ? '<b style="font-size:14px;">[M]</b>' : ''}</td>
                             <td><b>[${vA1}${a.z1} ZONE]</b> PEG ${a.p1}${p1Safe}</td>
                             <td>${matchDays == 2 ? `<b>[${vA2}${a.z2} ZONE]</b> PEG ${a.p2}${p2Safe}` : '---'}</td>
                         </tr>
@@ -1188,8 +1232,9 @@
                 let vA2 = matchDays == 2 ? getVenueName(a.z2, 2) : '';
                 vA1 = (matchVenues == 2 && vA1) ? vA1 + ' | ' : '';
                 vA2 = (matchVenues == 2 && vA2) ? vA2 + ' | ' : '';
-                let p1Safe = isPegSafe(a.p1) ? ' <b style="font-size:12px;">[SAFE PEG]</b>' : '';
-                let p2Safe = isPegSafe(a.p2) ? ' <b style="font-size:12px;">[SAFE PEG]</b>' : '';
+                // Replaced [SAFE PEG] with [M PEG] in physical print code block
+                let p1Safe = isPegSafe(a.p1) ? ' <b style="font-size:12px;">[M PEG]</b>' : '';
+                let p2Safe = isPegSafe(a.p2) ? ' <b style="font-size:12px;">[M PEG]</b>' : '';
                 
                 const slip = document.createElement('div');
                 slip.className = 'dispatch-slip';
@@ -1198,7 +1243,7 @@
                 slip.style.marginBottom = '20px';
                 slip.innerHTML = `
                     <div class="dispatch-header" style="padding-bottom:10px; margin-bottom:15px; border-bottom-width:4px;">
-                        <div><h1 style="font-size:20px;">${title}</h1><h2 style="font-size:16px;">SOLO COMPETITOR: ${a.name} ${a.mobility ? '<b style="font-size:14px;">[MOBILITY]</b>' : ''}</h2></div>
+                        <div><h1 style="font-size:20px;">${title}</h1><h2 style="font-size:16px;">SOLO COMPETITOR: ${a.name} ${a.mobility ? '<b style="font-size:14px;">[M]</b>' : ''}</h2></div>
                     </div>
                     <table class="dispatch-table" style="margin-top:10px; font-size:14px;">
                         <tr><th>DAY 1 (ZONE & PEG)</th><th>DAY 2 (ZONE & PEG)</th></tr>
