@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ZONEDRAW v10.15.0</title>
+    <title>ZONEDRAW v10.16.0</title>
     <link rel="manifest" href="manifest.json">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
@@ -54,7 +54,7 @@
         .dt-opt.active { background: var(--accent); color: white; box-shadow: 0 4px 10px var(--accent-glow); }
 
         /* Data Cards & Pending States */
-        .zone-card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 12px; backdrop-filter: blur(10px); position: relative; transition: 0.3s; }
+        .zone-card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 12px; backdrop-filter: blur(10px); position: relative; transition: 0.3s; break-inside: avoid !important; page-break-inside: avoid !important; }
         .zone-card.solo-card { height: fit-content; align-self: start; }
         .zone-card.selected { border-color: var(--accent); box-shadow: 0 0 20px var(--accent-glow); }
         .zone-card.pending { border-color: var(--pending); box-shadow: 0 0 15px var(--pending-glow); }
@@ -124,14 +124,19 @@
             body.printing-dispatch > :not(#dispatchSection) { display: none !important; }
             .dispatch-slip { border: 5px solid black !important; }
 
-            /* Page Break Logic added for full-color SHARE */
-            .zone-card { break-inside: avoid; page-break-inside: avoid; }
+            /* Full Color Share Bypass - Forces dark background and colors for digital PDF */
+            body.full-color-share { background: #0f172a !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+            body.full-color-share #resultsSection { background: #0f172a !important; }
+            body.full-color-share .zone-card { background: rgba(30, 41, 59, 0.98) !important; border: 1px solid rgba(148, 163, 184, 0.4) !important; box-shadow: none !important; }
+            body.full-color-share .horizontal-legend { display: flex !important; }
+            body.full-color-share .no-print { display: none !important; }
+            body.full-color-share .bucket-grid { display: block !important; } /* Force cards stack for better PDF flow */
 
-            /* Default B&W Print logic for the Brother Laser Printer, bypassed during digital sharing */
+            /* Standard B&W Print logic for the Brother Laser Printer */
             body:not(.printing-map):not(.printing-dispatch):not(.full-color-share) .no-print { display: none !important; } 
             body:not(.printing-map):not(.printing-dispatch):not(.full-color-share) { background: white !important; color: black !important; }
             body:not(.printing-map):not(.printing-dispatch):not(.full-color-share) .bucket-grid { display: grid !important; grid-template-columns: repeat(2, 1fr) !important; gap: 10px !important; }
-            body:not(.printing-map):not(.printing-dispatch):not(.full-color-share) .zone-card { border: 1px solid #ddd !important; background: white !important; transform: none !important; box-shadow: none !important; }
+            body:not(.printing-map):not(.printing-dispatch):not(.full-color-share) .zone-card { border: 1px solid #ddd !important; background: white !important; page-break-inside: avoid !important; }
             body:not(.printing-map):not(.printing-dispatch):not(.full-color-share) .pending-tag { display: none !important; }
             body:not(.printing-map):not(.printing-dispatch):not(.full-color-share) .angler-name { color: black !important; }
             body:not(.printing-map):not(.printing-dispatch):not(.full-color-share) .draw-pill { color: black !important; border: 1px solid #ccc; background: none !important; }
@@ -153,7 +158,7 @@
 <div class="fixed-header no-print">
     <div class="header-content">
         <button class="home-btn" onclick="showHub()" tabindex="-1">🏠 RETURN TO HOMEPAGE</button>
-        <div class="brand-name">ZONEDRAW <span id="vTag" class="v-tag">v10.15.0</span></div>
+        <div class="brand-name">ZONEDRAW <span id="vTag" class="v-tag">v10.16.0</span></div>
         <div style="width: 180px;"></div>
     </div>
 </div>
@@ -300,6 +305,7 @@
         document.getElementById('hubSection').style.display = 'grid';
         document.getElementById('commandBar').style.display = 'none';
         document.body.classList.remove('printing-dispatch');
+        document.body.classList.remove('full-color-share');
         window.scrollTo(0,0);
     }
 
@@ -772,7 +778,7 @@
             
             h += `<tr>
                 <td><input type="text" class="steward-input" value="${a.name || ''}" oninput="updateStewardField('${eId}', ${i}, 'name', this.value)" placeholder="NAME..."></td>
-                <td style="font-size:12px;">${item.team || ''}</td>
+                <td style="font-size:12px;">${item.team || '-'}</td>
                 <td style="text-align:center;"><div class="cb-custom ${a.present ? 'active' : ''}" onclick="toggleStewardCB('${eId}', ${i}, 'present', this)"></div></td>
                 <td style="text-align:center;"><div class="cb-custom ${a.captain ? 'active' : ''}" onclick="toggleStewardCB('${eId}', ${i}, 'captain', this)"></div></td>
                 <td><input type="text" class="steward-input" id="contact_${eId}_${i}" value="${a.phone || ''}" oninput="updateStewardField('${eId}', ${i}, 'phone', this.value)" placeholder="PHONE..." style="display:${a.captain ? 'block' : 'none'};"></td>
@@ -841,7 +847,7 @@
 
         list.forEach(item => {
             const a = item.angler;
-            // Cleaned CSV: dash removed for blank teams
+            // Removed dash for individual collation
             csv += `${a.name || ""},${item.team || ""},${a.present?"YES":"NO"},${a.captain?"YES":"NO"},${a.phone || ""},${a.prize?"YES":"NO"},${a.pairs?"YES":"NO"}\n`;
         });
         
@@ -866,7 +872,7 @@
 
     function exportToCSV() {
         let csv = "NAME,TEAM,DAY 1 ZONE,DAY 2 ZONE\n";
-        // Cleaned CSV: dash removed for blank teams
+        // Removed dash for individual collation
         appState.forEach(g => g.anglers.forEach(a => { if(a.name) csv += `${a.name},${g.tName || ""},${a.z1},${matchDays==2?a.z2:""}\n`; }));
         const blob = new Blob([csv], {type: 'text/csv'});
         const lnk = document.createElement('a'); lnk.href = URL.createObjectURL(blob); 
@@ -890,7 +896,6 @@
         const title = (document.getElementById('matchTitle').value || "MATCH RESULTS").toUpperCase();
         const stamp = new Date().toLocaleString();
 
-        // 1. Process Teams (One A4 Page per Team)
         appState.filter(e => e.isTeam).forEach(e => {
             const slip = document.createElement('div');
             slip.className = 'dispatch-slip';
@@ -918,7 +923,6 @@
             container.appendChild(slip);
         });
 
-        // 2. Process Solos (Grouped 4 per page to save paper)
         const solos = appState.filter(e => !e.isTeam);
         for (let i = 0; i < solos.length; i += 4) {
             const batch = solos.slice(i, i + 4);
@@ -958,28 +962,24 @@
     }
 
     /* ---------------------------------------------------
-       DIGITAL COLOR SHARING LOGIC (v10.14.0)
+       DIGITAL COLOR SHARING LOGIC (v10.16.0)
        --------------------------------------------------- */
     function shareDraw() {
         const element = document.getElementById('resultsSection');
         const matchName = document.getElementById('matchTitle').value || "MATCH_DRAW";
         
-        // Add the bypass class to maintain colors during the capture
         document.body.classList.add('full-color-share');
 
         const opt = {
-            margin:       0.5,
+            margin:       0.2,
             filename:     `${matchName}_Full_Color_Draw.pdf`,
             image:        { type: 'jpeg', quality: 0.98 },
             html2canvas:  { scale: 2, useCORS: true, backgroundColor: '#0f172a' },
             jsPDF:        { unit: 'in', format: 'letter', orientation: 'portrait' },
-            // Explicit Page Break Logic added for v10.15.0
             pagebreak:    { mode: ['css', 'legacy'] }
         };
 
-        // Generate the full color PDF
         html2pdf().set(opt).from(element).save().then(() => {
-            // Remove bypass class to return to standard B&W print defaults
             document.body.classList.remove('full-color-share');
         });
     }
