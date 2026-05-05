@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ZONEDRAW v10.41.0</title>
+    <title>ZONEDRAW v10.42.0</title>
     <link rel="manifest" href="manifest.json">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
@@ -38,7 +38,6 @@
         .hub-icon { font-size: 44px; margin-bottom: 20px; display: block; filter: drop-shadow(0 0 10px var(--accent-glow)); }
         .hub-title { font-size: 18px; font-weight: 900; letter-spacing: 1px; }
 
-        /* NEW GLASS AESTHETIC FOR HOMEPAGE */
         .glass-tile { background: rgba(30, 41, 59, 0.4) !important; backdrop-filter: blur(16px) !important; -webkit-backdrop-filter: blur(16px) !important; border: 1px solid rgba(255, 255, 255, 0.1) !important; box-shadow: 0 10px 40px rgba(0,0,0,0.5) !important; }
         .glass-tile:hover { background: rgba(30, 41, 59, 0.7) !important; border-color: var(--accent) !important; box-shadow: 0 15px 50px var(--accent-glow) !important; }
 
@@ -121,35 +120,50 @@
         .roster-table td { padding: 6px 8px; border-bottom: 1px solid #e2e8f0; vertical-align: middle; color: black; }
         .roster-table tr:nth-child(even) { background-color: #f8fafc; }
 
-        /* -----------------------------------------------------
-           DIGITAL PDF EXPORT (Mobile-First Contrast Lock)
-           ----------------------------------------------------- */
+        /* Payout Dashboard Styles */
+        .payout-dashboard { display: flex; flex-wrap: wrap; gap: 15px; justify-content: center; margin-top: 25px; padding-top: 25px; border-top: 1px solid rgba(255,255,255,0.1); width: 100%; }
+        .payout-card { background: rgba(0,0,0,0.3); border: 1px solid var(--border); padding: 12px 20px; border-radius: 12px; display: flex; flex-direction: column; align-items: center; min-width: 120px; }
+        .payout-label { font-size: 10px; color: var(--accent); letter-spacing: 1px; margin-bottom: 5px; font-weight: 900; text-align: center; }
+        .payout-val { font-size: 18px; font-weight: 900; color: white; }
+
+        /* Payout Modal Styles */
+        .modal-overlay { position: fixed; inset: 0; background: rgba(15, 23, 42, 0.8); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); z-index: 9999; display: none; align-items: center; justify-content: center; }
+        .modal-content { background: var(--card); border: 1px solid var(--accent); border-radius: 24px; padding: 30px; width: 90%; max-width: 500px; box-shadow: 0 20px 50px rgba(0,0,0,0.5); }
+        .payout-row { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid rgba(255,255,255,0.05); }
+        .payout-row:last-child { border-bottom: none; }
+        .payout-toggle { display: flex; align-items: center; gap: 10px; cursor: pointer; }
+        .payout-toggle input { width: 18px; height: 18px; accent-color: var(--accent); cursor: pointer; }
+        .payout-input-group { display: flex; align-items: center; gap: 5px; opacity: 0.4; pointer-events: none; transition: 0.2s; }
+        .payout-input-group.active { opacity: 1; pointer-events: auto; }
+        .payout-pct { width: 60px !important; text-align: center; font-size: 16px !important; }
+        .total-bar-container { background: rgba(0,0,0,0.5); border-radius: 12px; padding: 15px; margin-top: 20px; display: flex; justify-content: space-between; align-items: center; border: 1px solid var(--border); transition: 0.3s; }
+        .total-bar-container.valid { border-color: #10b981; box-shadow: 0 0 15px rgba(16, 185, 129, 0.2); }
+        .total-bar-container.invalid { border-color: #ef4444; box-shadow: 0 0 15px rgba(239, 68, 68, 0.2); }
+        .total-text { font-size: 18px; font-weight: 900; }
+        .total-text.valid { color: #10b981; }
+        .total-text.invalid { color: #ef4444; }
+
+        /* Digital PDF Export Rules */
         body.full-color-share { background-color: #0f172a !important; color: #f8fafc !important; }
         body.full-color-share #resultsSection { max-width: 600px !important; margin: 0 auto !important; padding: 20px !important; background-color: #0f172a !important; }
         body.full-color-share #resTitle { color: #f8fafc !important; font-size: 2.2rem !important; margin-bottom: 20px !important; }
         body.full-color-share .horizontal-legend { color: #f8fafc !important; font-size: 11px !important; gap: 10px !important; }
         body.full-color-share .legend-item { color: #f8fafc !important; border-color: rgba(255,255,255,0.2) !important; padding: 6px 10px !important; }
-        
         body.full-color-share .bucket-grid { display: grid !important; grid-template-columns: 1fr !important; gap: 12px !important; }
         body.full-color-share .zone-card { break-inside: avoid !important; page-break-inside: avoid !important; margin-bottom: 0 !important; }
         body.full-color-share .res-row { grid-template-columns: 1fr 75px 75px !important; gap: 4px !important; }
         body.full-color-share .no-print { display: none !important; }
 
-        /* -----------------------------------------------------
-           PHYSICAL PRINTER OPTIMIZATION (Ink Saver)
-           ----------------------------------------------------- */
+        /* Printer Rules */
         @media print { 
             * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
             .no-print { display: none !important; } 
-            
             body.printing-rosters > :not(#rosterSection) { display: none !important; }
             #rosterSection { display: block !important; }
             body.printing-rosters { background: white !important; margin: 0; }
-            
             body.printing-dispatch #dispatchSection { display: block !important; }
             body.printing-dispatch > :not(#dispatchSection) { display: none !important; }
             .dispatch-slip { border: 5px solid black !important; }
-
             body:not(.printing-rosters):not(.printing-dispatch) { background: white !important; color: black !important; }
             body:not(.printing-rosters):not(.printing-dispatch) .control-panel { background: white !important; color: black !important; box-shadow: none !important; border: 2px solid black !important; }
             body:not(.printing-rosters):not(.printing-dispatch) .bucket-grid { display: grid !important; grid-template-columns: repeat(2, 1fr) !important; gap: 15px !important; }
@@ -158,20 +172,20 @@
             body:not(.printing-rosters):not(.printing-dispatch) .group-label,
             body:not(.printing-rosters):not(.printing-dispatch) .zone-header { color: black !important; }
             body:not(.printing-rosters):not(.printing-dispatch) .res-row { border-bottom: 1px solid #eee !important; }
-            
             body:not(.printing-rosters):not(.printing-dispatch) .fixed-header { display: none; }
             body:not(.printing-rosters):not(.printing-dispatch) .legend-item { color: black !important; border: 1px solid #ccc !important; background: white !important; }
-            
             body:not(.printing-rosters):not(.printing-dispatch) .check-sheet-table th { color: black !important; border-bottom: 2px solid black !important; }
             body:not(.printing-rosters):not(.printing-dispatch) .check-sheet-table td { border-bottom: 1px solid #ccc !important; color: black !important; }
             body:not(.printing-rosters):not(.printing-dispatch) .steward-input { border: 1px solid #ccc !important; background: transparent !important; color: black !important; padding: 4px !important; font-size: 14px !important; }
             body:not(.printing-rosters):not(.printing-dispatch) .steward-input::placeholder { color: transparent !important; }
             body:not(.printing-rosters):not(.printing-dispatch) .cb-custom { border: 2px solid black !important; background: white !important; box-shadow: none !important; }
             body:not(.printing-rosters):not(.printing-dispatch) .cb-custom.active::after { color: black !important; }
-            
             body:not(.printing-rosters):not(.printing-dispatch) .m-name { color: black !important; font-weight: 900 !important; }
             body:not(.printing-rosters):not(.printing-dispatch) .m-tag { color: black !important; text-shadow: none !important; }
             body:not(.printing-rosters):not(.printing-dispatch) .m-peg { border: 2px solid black !important; box-shadow: none !important; }
+            body:not(.printing-rosters):not(.printing-dispatch) .payout-dashboard { border-top: 2px solid black !important; }
+            body:not(.printing-rosters):not(.printing-dispatch) .payout-card { background: white !important; border: 2px solid black !important; color: black !important; }
+            body:not(.printing-rosters):not(.printing-dispatch) .payout-label, body:not(.printing-rosters):not(.printing-dispatch) .payout-val { color: black !important; }
         }
     </style>
 </head>
@@ -180,7 +194,7 @@
 <div class="fixed-header no-print">
     <div class="header-content">
         <button class="home-btn" onclick="showHub()" tabindex="-1">🏠 RETURN TO HOMEPAGE</button>
-        <div class="brand-name">ZONEDRAW <span id="vTag" class="v-tag">v10.41.0</span></div>
+        <div class="brand-name">ZONEDRAW <span id="vTag" class="v-tag">v10.42.0</span></div>
         <div style="width: 180px; text-align:right;">
             <button class="btn-tool" onclick="showHistory()" style="font-size: 12px; padding: 8px 15px;">📜 ARCHIVES</button>
         </div>
@@ -188,13 +202,10 @@
 </div>
 
 <div id="hubSection">
-    <!-- State 1: No Active Match -->
     <div id="btnGenerate" class="hub-tile glass-tile" onclick="confirmStartNewDraw()">
         <span class="hub-icon">🎯</span>
         <span class="hub-title">GENERATE NEW DRAW</span>
     </div>
-    
-    <!-- State 2: Active Match (Hidden until a draw is running) -->
     <div id="btnResume" class="hub-tile glass-tile" onclick="resumeActiveMatch()" style="display:none;">
         <span class="hub-icon">▶️</span>
         <span class="hub-title">RESUME MATCH</span>
@@ -334,10 +345,26 @@
     <div style="width:350px; height:6px; background:rgba(255,255,255,0.1); border-radius:10px; overflow:hidden; margin-top:25px;"><div id="pBar" style="height:100%; width:0%; background:var(--accent); transition:0.1s;"></div></div>
 </div>
 
-<!-- PDF GENERATION OVERLAY -->
 <div id="pdfOverlay" data-html2canvas-ignore="true" style="position:fixed; inset:0; background:rgba(15,23,42,0.98); z-index:9999; display:none; flex-direction:column; align-items:center; justify-content:center;">
     <h2 style="font-size:2.5rem; font-weight:900; letter-spacing:3px; color:#f8fafc; text-align:center;">FORMATTING SECURE PDF...</h2>
     <p style="color:var(--accent); font-weight:900; margin-top:10px; font-size:1.2rem;">PLEASE DO NOT CLOSE THE APP</p>
+</div>
+
+<!-- NEW: PAYOUT CONFIGURATOR MODAL -->
+<div id="payoutModal" class="modal-overlay no-print" data-html2canvas-ignore="true">
+    <div class="modal-content">
+        <h2 style="margin: 0 0 20px 0; color: var(--accent); text-align: center; letter-spacing: 1px;">🏆 CONFIGURE PAYOUTS</h2>
+        <div id="payoutRowsContainer"></div>
+        
+        <div id="totalBar" class="total-bar-container valid">
+            <span class="total-text valid" id="totalPctText">TOTAL ALLOCATED: 100%</span>
+        </div>
+        
+        <div style="display:flex; justify-content:space-between; margin-top:25px; gap:15px;">
+            <button onclick="closePayoutModal()" class="btn-tool" style="padding:12px 20px; font-size:12px; width:45%;">CANCEL</button>
+            <button id="savePayoutBtn" onclick="savePayoutConfig()" class="btn-action" style="padding:12px 20px; font-size:12px; width:55%; background:#10b981;">SAVE SETTINGS</button>
+        </div>
+    </div>
 </div>
 
 <script>
@@ -352,9 +379,20 @@
     let prizeFee = 10, pairsFee = 5;
     let currentZoneSize = 0; 
     let isStewardMode = false;
-
     let isSwapMode = false;
     let swapObj1 = null;
+
+    // Default Payout Structure
+    let payoutConfig = [
+        { id: 's1', label: 'SOLO 1ST PLACE', active: true, pct: 50 },
+        { id: 's2', label: 'SOLO 2ND PLACE', active: true, pct: 30 },
+        { id: 's3', label: 'SOLO 3RD PLACE', active: true, pct: 20 },
+        { id: 't1', label: 'TEAM 1ST PLACE', active: false, pct: 0 },
+        { id: 't2', label: 'TEAM 2ND PLACE', active: false, pct: 0 },
+        { id: 't3', label: 'TEAM 3RD PLACE', active: false, pct: 0 },
+        { id: 'zw', label: 'ZONE WINNERS (TOTAL POT)', active: false, pct: 0 },
+        { id: 'hf', label: 'HEAVIEST FISH', active: false, pct: 0 }
+    ];
 
     const genId = () => 'id_' + Math.random().toString(36).substr(2, 9);
 
@@ -393,10 +431,6 @@
         } else {
             alert("NO ACTIVE MATCH FOUND.");
         }
-    }
-
-    function resumeLatestMatch() {
-        resumeActiveMatch();
     }
 
     function archiveTournament() {
@@ -455,6 +489,19 @@
         document.getElementById('d2v2').value = '';
         
         appState = []; vacantPool = []; currentZoneSize = 0;
+        
+        // Reset config to default
+        payoutConfig = [
+            { id: 's1', label: 'SOLO 1ST PLACE', active: true, pct: 50 },
+            { id: 's2', label: 'SOLO 2ND PLACE', active: true, pct: 30 },
+            { id: 's3', label: 'SOLO 3RD PLACE', active: true, pct: 20 },
+            { id: 't1', label: 'TEAM 1ST PLACE', active: false, pct: 0 },
+            { id: 't2', label: 'TEAM 2ND PLACE', active: false, pct: 0 },
+            { id: 't3', label: 'TEAM 3RD PLACE', active: false, pct: 0 },
+            { id: 'zw', label: 'ZONE WINNERS (TOTAL POT)', active: false, pct: 0 },
+            { id: 'hf', label: 'HEAVIEST FISH', active: false, pct: 0 }
+        ];
+
         setDays(2); setVenues(1);
         isStewardMode = false;
         
@@ -509,6 +556,10 @@
         document.getElementById('d2v1').value = vc.d2v1 || '';
         document.getElementById('d2v2').value = vc.d2v2 || '';
         
+        if (entry.payoutConfig) {
+            payoutConfig = JSON.parse(JSON.stringify(entry.payoutConfig));
+        }
+
         setVenues(vc.venues || 1);
         setDays(entry.days || 2); 
         currentZoneSize = entry.zoneSize || 0;
@@ -912,6 +963,7 @@
             pairs: pairsFee, 
             zoneSize: currentZoneSize,
             safePegs: document.getElementById('accPegs').value,
+            payoutConfig: payoutConfig,
             venueConfig: {
                 venues: matchVenues,
                 d1v1: document.getElementById('d1v1').value,
@@ -965,11 +1017,6 @@
             e1.anglers[swapObj1.aIdx].p1 = e2.anglers[aIdx].p1;
             e1.anglers[swapObj1.aIdx].z2 = e2.anglers[aIdx].z2;
             e1.anglers[swapObj1.aIdx].p2 = e2.anglers[aIdx].p2;
-            
-            e2.anglers[aIdx].z1 = tempZ1;
-            e2.anglers[aIdx].p1 = tempP1;
-            e2.anglers[aIdx].z2 = tempZ2;
-            e2.anglers[aIdx].p2 = tempP2;
             
             e2.anglers[aIdx].z1 = tempZ1;
             e2.anglers[aIdx].p1 = tempP1;
@@ -1174,9 +1221,13 @@
                     </div>
                     <div style="display:flex; gap:15px; justify-content:center; flex-wrap:wrap;">
                         <button onclick="window.print()" class="btn-action" style="background:#64748b;">PRINT SIGN-IN</button>
+                        <button onclick="openPayoutModal()" class="btn-action" style="background:#f59e0b;">🏆 CONFIGURE PAYOUTS</button>
                         <button onclick="exportStewardCSV()" class="btn-action" style="background:#10b981;">SAVE ACCOUNTING CSV</button>
                         <button onclick="displayDraw()" class="btn-action">BACK TO RESULTS</button>
                     </div>
+                    
+                    <div id="payoutDashboard" class="payout-dashboard"></div>
+
                  </div>
                  <table class="check-sheet-table">
                     <tr>
@@ -1254,6 +1305,119 @@
         });
         document.getElementById('tkPrize').innerText = '£' + pTotal;
         document.getElementById('tkPairs').innerText = '£' + spTotal;
+
+        renderPayoutDashboard(pTotal);
+    }
+
+    function openPayoutModal() {
+        const modal = document.getElementById('payoutModal');
+        const container = document.getElementById('payoutRowsContainer');
+        container.innerHTML = '';
+
+        payoutConfig.forEach((cfg, idx) => {
+            let row = document.createElement('div');
+            row.className = 'payout-row';
+            row.innerHTML = `
+                <label class="payout-toggle">
+                    <input type="checkbox" id="cb_${cfg.id}" ${cfg.active ? 'checked' : ''} onchange="togglePayoutInput(${idx})">
+                    <span style="font-weight:900; font-size:14px;">${cfg.label}</span>
+                </label>
+                <div class="payout-input-group ${cfg.active ? 'active' : ''}" id="grp_${cfg.id}">
+                    <input type="number" id="val_${cfg.id}" class="payout-pct" value="${cfg.pct}" oninput="updatePayoutTotal()">
+                    <span style="font-weight:900; color:var(--accent);">%</span>
+                </div>
+            `;
+            container.appendChild(row);
+        });
+
+        modal.style.display = 'flex';
+        updatePayoutTotal();
+    }
+
+    function togglePayoutInput(idx) {
+        const cfg = payoutConfig[idx];
+        const isChecked = document.getElementById(`cb_${cfg.id}`).checked;
+        const grp = document.getElementById(`grp_${cfg.id}`);
+        
+        if(isChecked) {
+            grp.classList.add('active');
+        } else {
+            grp.classList.remove('active');
+            document.getElementById(`val_${cfg.id}`).value = 0;
+        }
+        updatePayoutTotal();
+    }
+
+    function updatePayoutTotal() {
+        let total = 0;
+        payoutConfig.forEach(cfg => {
+            const isChecked = document.getElementById(`cb_${cfg.id}`).checked;
+            if(isChecked) {
+                total += parseFloat(document.getElementById(`val_${cfg.id}`).value) || 0;
+            }
+        });
+
+        const bar = document.getElementById('totalBar');
+        const text = document.getElementById('totalPctText');
+        const btn = document.getElementById('savePayoutBtn');
+
+        text.innerText = `TOTAL ALLOCATED: ${total}%`;
+
+        if(total === 100) {
+            bar.className = 'total-bar-container valid';
+            text.className = 'total-text valid';
+            btn.style.opacity = '1';
+            btn.style.pointerEvents = 'auto';
+            btn.style.background = '#10b981';
+            btn.innerText = 'SAVE SETTINGS';
+        } else {
+            bar.className = 'total-bar-container invalid';
+            text.className = 'total-text invalid';
+            btn.style.opacity = '0.5';
+            btn.style.pointerEvents = 'none';
+            btn.style.background = '#ef4444';
+            btn.innerText = 'MUST EQUAL 100%';
+        }
+    }
+
+    function closePayoutModal() {
+        document.getElementById('payoutModal').style.display = 'none';
+    }
+
+    function savePayoutConfig() {
+        payoutConfig.forEach(cfg => {
+            cfg.active = document.getElementById(`cb_${cfg.id}`).checked;
+            cfg.pct = parseFloat(document.getElementById(`val_${cfg.id}`).value) || 0;
+        });
+        
+        persistToVault();
+        updateCash(); 
+        closePayoutModal();
+    }
+
+    function renderPayoutDashboard(totalPot) {
+        const dash = document.getElementById('payoutDashboard');
+        if(!dash) return;
+        
+        dash.innerHTML = '';
+        
+        let hasActive = false;
+        payoutConfig.forEach(cfg => {
+            if(cfg.active && cfg.pct > 0) {
+                hasActive = true;
+                const amt = (totalPot * (cfg.pct / 100)).toFixed(2);
+                dash.innerHTML += `
+                    <div class="payout-card">
+                        <span class="payout-label">${cfg.label} (${cfg.pct}%)</span>
+                        <span class="payout-val">£${amt}</span>
+                    </div>
+                `;
+            }
+        });
+
+        if(!hasActive) {
+            dash.innerHTML = `<div style="font-size:12px; color:rgba(255,255,255,0.4); font-weight:900;">NO PAYOUT STRUCTURE CONFIGURED</div>`;
+        }
     }
 
     function exportStewardCSV() {
@@ -1466,7 +1630,7 @@
         }, 500); 
     }
     
-    // NEW: On-Boot Initialization with Legacy Catch-Up Migration
+    // On-Boot Initialization with Legacy Catch-Up Migration
     window.onload = () => {
         let migrated = localStorage.getItem('zonedraw_legacy_migrated');
         let activeKey = localStorage.getItem('zonedraw_active_key');
