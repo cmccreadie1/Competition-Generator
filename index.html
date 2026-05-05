@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ZONEDRAW v10.34.0</title>
+    <title>ZONEDRAW v10.35.0</title>
     <link rel="manifest" href="manifest.json">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
@@ -157,7 +157,7 @@
 <div class="fixed-header no-print">
     <div class="header-content">
         <button class="home-btn" onclick="showHub()" tabindex="-1">🏠 RETURN TO HOMEPAGE</button>
-        <div class="brand-name">ZONEDRAW <span id="vTag" class="v-tag">v10.34.0</span></div>
+        <div class="brand-name">ZONEDRAW <span id="vTag" class="v-tag">v10.35.0</span></div>
         <div style="width: 180px;"></div>
     </div>
 </div>
@@ -1008,7 +1008,9 @@
         container.style.position = 'absolute';
         container.style.left = '0';
         container.style.top = '0';
-        container.style.zIndex = '-9999';
+        container.style.opacity = '0.001'; 
+        container.style.pointerEvents = 'none';
+        container.style.zIndex = '1';
         container.style.width = '800px';
         container.style.backgroundColor = 'white';
         container.style.color = 'black';
@@ -1076,19 +1078,21 @@
         container.innerHTML = h;
         document.body.appendChild(container);
 
-        const matchName = document.getElementById('matchTitle').value || "MATCH";
-        const ts = Date.now();
-        const opt = {
-            margin:       0,
-            filename:     `${matchName.replace(/[^a-z0-9]/gi, '_')}_Zone_Rosters_${ts}.pdf`,
-            image:        { type: 'jpeg', quality: 0.98 },
-            html2canvas:  { scale: 2, useCORS: true, backgroundColor: '#ffffff' },
-            jsPDF:        { unit: 'in', format: 'a4', orientation: 'portrait' }
-        };
+        setTimeout(() => {
+            const matchName = document.getElementById('matchTitle').value || "MATCH";
+            const ts = Date.now();
+            const opt = {
+                margin:       0,
+                filename:     `${matchName.replace(/[^a-z0-9]/gi, '_')}_Zone_Rosters_${ts}.pdf`,
+                image:        { type: 'jpeg', quality: 0.98 },
+                html2canvas:  { scale: 2, useCORS: true, backgroundColor: '#ffffff', scrollY: 0 },
+                jsPDF:        { unit: 'in', format: 'a4', orientation: 'portrait' }
+            };
 
-        html2pdf().set(opt).from(container).save().then(() => {
-            document.body.removeChild(container);
-        });
+            html2pdf().set(opt).from(container).save().then(() => {
+                document.body.removeChild(container);
+            });
+        }, 250);
     }
 
     function showSteward() {
@@ -1224,21 +1228,23 @@
         header.id = 'tempStewardHeader';
         element.insertBefore(header, element.firstChild);
         
-        const matchName = document.getElementById('matchTitle').value || "REGISTRATION";
-        const ts = Date.now();
-        const opt = {
-            margin:       0.3,
-            filename:     `${matchName.replace(/[^a-z0-9]/gi, '_')}_Steward_Sheet_${ts}.pdf`,
-            image:        { type: 'jpeg', quality: 0.98 },
-            html2canvas:  { scale: 2, useCORS: true, backgroundColor: '#0f172a' },
-            jsPDF:        { unit: 'in', format: 'a4', orientation: 'landscape' }
-        };
+        setTimeout(() => {
+            const matchName = document.getElementById('matchTitle').value || "REGISTRATION";
+            const ts = Date.now();
+            const opt = {
+                margin:       0.3,
+                filename:     `${matchName.replace(/[^a-z0-9]/gi, '_')}_Steward_Sheet_${ts}.pdf`,
+                image:        { type: 'jpeg', quality: 0.98 },
+                html2canvas:  { scale: 2, useCORS: true, backgroundColor: '#0f172a', scrollY: 0 },
+                jsPDF:        { unit: 'in', format: 'a4', orientation: 'landscape' }
+            };
 
-        html2pdf().set(opt).from(element).save().then(() => {
-            if (controls) controls.style.display = 'block';
-            const h = document.getElementById('tempStewardHeader');
-            if (h) h.remove();
-        });
+            html2pdf().set(opt).from(element).save().then(() => {
+                if (controls) controls.style.display = 'block';
+                const h = document.getElementById('tempStewardHeader');
+                if (h) h.remove();
+            });
+        }, 250);
     }
 
     function exportStewardCSV() {
@@ -1300,7 +1306,9 @@
         container.style.position = 'absolute';
         container.style.left = '0';
         container.style.top = '0';
-        container.style.zIndex = '-9999';
+        container.style.opacity = '0.001'; 
+        container.style.pointerEvents = 'none';
+        container.style.zIndex = '1';
         container.style.backgroundColor = '#0f172a';
         container.style.color = '#f8fafc';
         container.style.padding = '20px';
@@ -1349,19 +1357,21 @@
         container.innerHTML = h;
         document.body.appendChild(container);
 
-        const matchName = document.getElementById('matchTitle').value || "MATCH";
-        const ts = Date.now();
-        const opt = {
-            margin:       0.2,
-            filename:     `${matchName.replace(/[^a-z0-9]/gi, '_')}_Captains_Pack_${ts}.pdf`,
-            image:        { type: 'jpeg', quality: 0.98 },
-            html2canvas:  { scale: 2, useCORS: true, backgroundColor: '#0f172a' },
-            jsPDF:        { unit: 'in', format: 'a4', orientation: 'portrait' }
-        };
+        setTimeout(() => {
+            const matchName = document.getElementById('matchTitle').value || "MATCH";
+            const ts = Date.now();
+            const opt = {
+                margin:       0.2,
+                filename:     `${matchName.replace(/[^a-z0-9]/gi, '_')}_Captains_Pack_${ts}.pdf`,
+                image:        { type: 'jpeg', quality: 0.98 },
+                html2canvas:  { scale: 2, useCORS: true, backgroundColor: '#0f172a', scrollY: 0 },
+                jsPDF:        { unit: 'in', format: 'a4', orientation: 'portrait' }
+            };
 
-        html2pdf().set(opt).from(container).save().then(() => {
-            document.body.removeChild(container);
-        });
+            html2pdf().set(opt).from(container).save().then(() => {
+                document.body.removeChild(container);
+            });
+        }, 250);
     }
 
     function exportDispatchSlipsPDF() {
@@ -1369,7 +1379,9 @@
         container.style.position = 'absolute';
         container.style.left = '0';
         container.style.top = '0';
-        container.style.zIndex = '-9999';
+        container.style.opacity = '0.001'; 
+        container.style.pointerEvents = 'none';
+        container.style.zIndex = '1';
         container.style.width = '800px';
         container.style.backgroundColor = 'white';
         container.style.color = 'black';
@@ -1464,42 +1476,43 @@
         container.innerHTML = h;
         document.body.appendChild(container);
 
-        const matchName = document.getElementById('matchTitle').value || "MATCH";
-        const ts = Date.now();
-        const opt = {
-            margin:       0.2,
-            filename:     `${matchName.replace(/[^a-z0-9]/gi, '_')}_Team_Slips_${ts}.pdf`,
-            image:        { type: 'jpeg', quality: 0.98 },
-            html2canvas:  { scale: 2, useCORS: true, backgroundColor: '#ffffff' },
-            jsPDF:        { unit: 'in', format: 'a4', orientation: 'portrait' },
-            pagebreak:    { mode: ['css', 'legacy'] }
-        };
+        setTimeout(() => {
+            const matchName = document.getElementById('matchTitle').value || "MATCH";
+            const ts = Date.now();
+            const opt = {
+                margin:       0.2,
+                filename:     `${matchName.replace(/[^a-z0-9]/gi, '_')}_Team_Slips_${ts}.pdf`,
+                image:        { type: 'jpeg', quality: 0.98 },
+                html2canvas:  { scale: 2, useCORS: true, backgroundColor: '#ffffff', scrollY: 0 },
+                jsPDF:        { unit: 'in', format: 'a4', orientation: 'portrait' },
+                pagebreak:    { mode: ['css', 'legacy'] }
+            };
 
-        html2pdf().set(opt).from(container).save().then(() => {
-            document.body.removeChild(container);
-        });
+            html2pdf().set(opt).from(container).save().then(() => {
+                document.body.removeChild(container);
+            });
+        }, 250);
     }
 
     function shareDraw() {
         const element = document.getElementById('resultsSection');
-        const matchName = document.getElementById('matchTitle').value || "MATCH_DRAW";
-        
         document.body.classList.add('full-color-share');
 
         setTimeout(() => {
+            const matchName = document.getElementById('matchTitle').value || "MATCH_DRAW";
             const ts = Date.now();
             const opt = {
                 margin:       0.2,
                 filename:     `${matchName.replace(/[^a-z0-9]/gi, '_')}_Premium_Draw_${ts}.pdf`,
                 image:        { type: 'jpeg', quality: 0.98 },
-                html2canvas:  { scale: 2, useCORS: true, backgroundColor: '#0f172a' },
+                html2canvas:  { scale: 2, useCORS: true, backgroundColor: '#0f172a', scrollY: 0 },
                 jsPDF:        { unit: 'in', format: 'a4', orientation: 'portrait' } 
             };
 
             html2pdf().set(opt).from(element).save().then(() => {
                 document.body.classList.remove('full-color-share');
             });
-        }, 100);
+        }, 250);
     }
 </script>
 </body>
