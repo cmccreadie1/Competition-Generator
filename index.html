@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ZONEDRAW v10.45.0</title>
+    <title>ZONEDRAW v10.46.0</title>
     <link rel="manifest" href="manifest.json">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
@@ -18,10 +18,11 @@
             --green-g: linear-gradient(135deg, #10b981, #064e3b);
             --blue-g: linear-gradient(135deg, #3b82f6, #1e3a8a);
             --pending: #f59e0b; --pending-glow: rgba(245, 158, 11, 0.3);
+            --m2-color: #f59e0b; --m1-color: #fde047;
         }
         
         body { font-family: 'Inter', system-ui, sans-serif; background: var(--bg); color: var(--text); margin: 0; padding: 0; text-transform: uppercase; line-height: 1.1; overflow-x: hidden; }
-        input { text-transform: uppercase; font-weight: 900 !important; color: white; background: rgba(255,255,255,0.05); border: 1px solid var(--border); border-radius: 8px; padding: 10px 12px; outline: none; transition: 0.2s; }
+        input { text-transform: uppercase; font-weight: 900 !important; color: white; background: rgba(255,255,255,0.05); border: 1px solid var(--border); border-radius: 8px; padding: 10px 12px; outline: none; transition: 0.2s; width: 100%; box-sizing: border-box; }
         input:focus { border-color: var(--accent); box-shadow: 0 0 15px var(--accent-glow); background: rgba(255,255,255,0.1); }
 
         .fixed-header { position: fixed; top: 0; left: 0; right: 0; z-index: 5000; background: rgba(15, 23, 42, 0.98); backdrop-filter: blur(15px); border-bottom: 1px solid var(--border); padding: 12px 20px; }
@@ -68,9 +69,12 @@
         .res-row.swap-selected { background: rgba(139, 92, 246, 0.4) !important; border-left: 4px solid #8b5cf6 !important; border-radius: 8px; }
         @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.6; } 100% { opacity: 1; } }
 
-        .m-name { color: #fde047; }
-        .m-tag { color: #fde047; font-weight: 900; margin-left: 4px; text-shadow: 0 0 5px rgba(253, 224, 71, 0.5); font-size: 12px; }
-        .m-peg { border: 2px solid #fde047 !important; box-shadow: 0 0 10px rgba(253, 224, 71, 0.5) !important; }
+        .m1-name { color: var(--m1-color); }
+        .m2-name { color: var(--m2-color); }
+        .m1-tag { color: var(--m1-color); font-weight: 900; margin-left: 4px; text-shadow: 0 0 5px rgba(253, 224, 71, 0.5); font-size: 12px; }
+        .m2-tag { color: var(--m2-color); font-weight: 900; margin-left: 4px; text-shadow: 0 0 5px rgba(245, 158, 11, 0.5); font-size: 12px; }
+        .m1-peg { border: 2px solid var(--m1-color) !important; box-shadow: 0 0 10px rgba(253, 224, 71, 0.5) !important; }
+        .m2-peg { border: 2px solid var(--m2-color) !important; box-shadow: 0 0 10px rgba(245, 158, 11, 0.5) !important; }
 
         .check-sheet-table { width: 100%; border-collapse: collapse; }
         .check-sheet-table th { padding: 14px; font-size: 12px; color: var(--accent); border-bottom: 2px solid var(--border); letter-spacing: 1px; }
@@ -182,9 +186,10 @@
             body:not(.printing-rosters):not(.printing-dispatch) .steward-input::placeholder { color: transparent !important; }
             body:not(.printing-rosters):not(.printing-dispatch) .cb-custom { border: 2px solid black !important; background: white !important; box-shadow: none !important; }
             body:not(.printing-rosters):not(.printing-dispatch) .cb-custom.active::after { color: black !important; }
-            body:not(.printing-rosters):not(.printing-dispatch) .m-name { color: black !important; font-weight: 900 !important; }
-            body:not(.printing-rosters):not(.printing-dispatch) .m-tag { color: black !important; text-shadow: none !important; }
-            body:not(.printing-rosters):not(.printing-dispatch) .m-peg { border: 2px solid black !important; box-shadow: none !important; }
+            body:not(.printing-rosters):not(.printing-dispatch) .m1-name { color: black !important; font-weight: 900 !important; }
+            body:not(.printing-rosters):not(.printing-dispatch) .m2-name { color: black !important; font-weight: 900 !important; }
+            body:not(.printing-rosters):not(.printing-dispatch) .m1-tag, body:not(.printing-rosters):not(.printing-dispatch) .m2-tag { color: black !important; text-shadow: none !important; }
+            body:not(.printing-rosters):not(.printing-dispatch) .m1-peg, body:not(.printing-rosters):not(.printing-dispatch) .m2-peg { border: 2px solid black !important; box-shadow: none !important; }
             body:not(.printing-rosters):not(.printing-dispatch) .payout-dashboard { border-top: 2px solid black !important; }
             body:not(.printing-rosters):not(.printing-dispatch) .payout-card { background: white !important; border: 2px solid black !important; color: black !important; }
             body:not(.printing-rosters):not(.printing-dispatch) .payout-label, body:not(.printing-rosters):not(.printing-dispatch) .payout-val { color: black !important; }
@@ -196,7 +201,7 @@
 <div class="fixed-header no-print">
     <div class="header-content">
         <button class="home-btn" onclick="showHub()" tabindex="-1">🏠 RETURN TO HOMEPAGE</button>
-        <div class="brand-name">ZONEDRAW <span id="vTag" class="v-tag">v10.45.0</span></div>
+        <div class="brand-name">ZONEDRAW <span id="vTag" class="v-tag">v10.46.0</span></div>
         <div style="width: 180px; text-align:right;">
             <button class="btn-tool" onclick="showHistory()" style="font-size: 12px; padding: 8px 15px;">📜 ARCHIVES</button>
         </div>
@@ -225,10 +230,16 @@
         <input type="text" id="matchTitle" style="width:100%; font-size:22px; text-align:center; margin-top:10px;" placeholder="e.g. SCOTTISH SHORE CHAMPIONSHIP 2026" onblur="persistToVault()">
         
         <div style="margin-top:20px; display:flex; flex-direction:column; align-items:center; gap:10px;">
-            <label style="font-size: 10px; opacity: 0.6; letter-spacing: 1px; color:var(--accent);">ACCESSIBLE PEGS (MOBILITY PROTOCOL)</label>
-            <div style="display:flex; gap:10px; width:100%; justify-content:center; max-width:600px;">
-                <input type="text" id="accPegs1" style="width:100%; font-size:16px; text-align:center; border-color:var(--accent);" placeholder="DAY 1 PEGS (e.g. 1, 2, 40)" onblur="formatPegs(this)">
-                <input type="text" id="accPegs2" style="width:100%; font-size:16px; text-align:center; border-color:var(--accent); display:none;" placeholder="DAY 2 PEGS (e.g. 1, 2, 40)" onblur="formatPegs(this)">
+            <label style="font-size: 10px; opacity: 0.6; letter-spacing: 1px; color:var(--accent);">ACCESSIBLE PEGS (M1 = PRIME | M2 = INTERMEDIATE)</label>
+            <div style="display:flex; flex-direction:column; gap:10px; width:100%; max-width:600px;">
+                <div style="display:flex; gap:10px; width:100%;">
+                    <input type="text" id="accPegs1_m1" style="font-size:14px; text-align:center; border-color:var(--m1-color);" placeholder="DAY 1 M1 PEGS (1, 2...)" onblur="formatPegs(this)">
+                    <input type="text" id="accPegs1_m2" style="font-size:14px; text-align:center; border-color:var(--m2-color);" placeholder="DAY 1 M2 PEGS (10, 11...)" onblur="formatPegs(this)">
+                </div>
+                <div id="day2PegsContainer" style="display:none; gap:10px; width:100%;">
+                    <input type="text" id="accPegs2_m1" style="font-size:14px; text-align:center; border-color:var(--m1-color);" placeholder="DAY 2 M1 PEGS (1, 2...)" onblur="formatPegs(this)">
+                    <input type="text" id="accPegs2_m2" style="font-size:14px; text-align:center; border-color:var(--m2-color);" placeholder="DAY 2 M2 PEGS (10, 11...)" onblur="formatPegs(this)">
+                </div>
             </div>
         </div>
 
@@ -485,7 +496,7 @@
         matchDays = d;
         document.getElementById('dayOpt1').classList.toggle('active', d === 1);
         document.getElementById('dayOpt2').classList.toggle('active', d === 2);
-        document.getElementById('accPegs2').style.display = d === 2 ? 'block' : 'none';
+        document.getElementById('day2PegsContainer').style.display = d === 2 ? 'flex' : 'none';
         updateVenueInputs();
     }
 
@@ -500,8 +511,10 @@
         document.getElementById('matchTitle').value = '';
         document.getElementById('initTeams').value = 0;
         document.getElementById('initIndivs').value = 0;
-        document.getElementById('accPegs1').value = '';
-        document.getElementById('accPegs2').value = '';
+        document.getElementById('accPegs1_m1').value = '';
+        document.getElementById('accPegs1_m2').value = '';
+        document.getElementById('accPegs2_m1').value = '';
+        document.getElementById('accPegs2_m2').value = '';
         document.getElementById('d1v1').value = '';
         document.getElementById('d1v2').value = '';
         document.getElementById('d2v1').value = '';
@@ -566,8 +579,10 @@
 
     function loadMatch(title, entry) {
         document.getElementById('matchTitle').value = title;
-        document.getElementById('accPegs1').value = entry.safePegs1 || entry.safePegs || '';
-        document.getElementById('accPegs2').value = entry.safePegs2 || entry.safePegs || '';
+        document.getElementById('accPegs1_m1').value = entry.safePegs1_m1 || entry.safePegs1 || entry.safePegs || '';
+        document.getElementById('accPegs1_m2').value = entry.safePegs1_m2 || '';
+        document.getElementById('accPegs2_m1').value = entry.safePegs2_m1 || entry.safePegs2 || entry.safePegs || '';
+        document.getElementById('accPegs2_m2').value = entry.safePegs2_m2 || '';
         prizeFee = entry.prize || 10; pairsFee = entry.pairs || 5;
         
         let vc = entry.venueConfig || { venues: 1, d1v1: '', d1v2: '', d2v1: '', d2v2: '' };
@@ -625,7 +640,15 @@
         syncScreenToState();
         const entry = appState.find(e => e.id === eId);
         if (entry) {
-            entry.anglers[aIdx].mobility = !entry.anglers[aIdx].mobility;
+            let a = entry.anglers[aIdx];
+            // Cycle: undefined/0 -> 1 (M1) -> 2 (M2) -> 0
+            if (!a.mobility || a.mobility === 0) {
+                a.mobility = 1;
+            } else if (a.mobility === 1) {
+                a.mobility = 2;
+            } else {
+                a.mobility = 0;
+            }
             renderStateToScreen();
         }
     }
@@ -679,16 +702,24 @@
             if(entry.isTeam) {
                 h += `<label style="font-size:10px; opacity:0.6;">TEAM NAME</label><input type="text" class="t-name" value="${entry.tName}" style="width:95%; margin-bottom:12px; font-size:14px;">`;
                 for(let i=0; i<4; i++) {
+                    let mText = entry.anglers[i].mobility === 1 ? '[M1]' : entry.anglers[i].mobility === 2 ? '[M2]' : '[M]';
+                    let mBg = entry.anglers[i].mobility === 1 ? 'var(--m1-color)' : entry.anglers[i].mobility === 2 ? 'var(--m2-color)' : 'rgba(255,255,255,0.1)';
+                    let mColor = entry.anglers[i].mobility ? '#0f172a' : 'var(--accent)';
+
                     h += `<div style="display:flex; align-items:center; gap:5px; margin-bottom:6px;">
                             <input type="text" class="a-name" value="${entry.anglers[i].name || ''}" placeholder="ANGLER ${i+1}" style="width:100%; margin:0; font-size:13px;">
-                            <button class="btn-tool" onclick="toggleMobility('${entry.id}', ${i})" style="padding:10px 12px; background:${entry.anglers[i].mobility ? 'var(--accent)' : 'rgba(255,255,255,0.1)'}; color:${entry.anglers[i].mobility ? 'white' : 'var(--accent)'};" title="Flag for Mobility Priority" tabindex="-1">[M]</button>
+                            <button class="btn-tool" onclick="toggleMobility('${entry.id}', ${i})" style="padding:10px 12px; font-weight:900; background:${mBg}; color:${mColor}; border-color:${mBg};" title="Toggle Mobility Tier" tabindex="-1">${mText}</button>
                           </div>`;
                 }
             } else {
                 h += `<label style="font-size:10px; opacity:0.6;">SOLO NAME</label>`;
+                let mText = entry.anglers[0].mobility === 1 ? '[M1]' : entry.anglers[0].mobility === 2 ? '[M2]' : '[M]';
+                let mBg = entry.anglers[0].mobility === 1 ? 'var(--m1-color)' : entry.anglers[0].mobility === 2 ? 'var(--m2-color)' : 'rgba(255,255,255,0.1)';
+                let mColor = entry.anglers[0].mobility ? '#0f172a' : 'var(--accent)';
+
                 h += `<div style="display:flex; align-items:center; gap:5px;">
                         <input type="text" class="a-name" value="${entry.anglers[0].name || ''}" style="width:100%; margin:0; font-size:14px;">
-                        <button class="btn-tool" onclick="toggleMobility('${entry.id}', 0)" style="padding:10px 12px; background:${entry.anglers[0].mobility ? 'var(--accent)' : 'rgba(255,255,255,0.1)'}; color:${entry.anglers[0].mobility ? 'white' : 'var(--accent)'};" title="Flag for Mobility Priority" tabindex="-1">[M]</button>
+                        <button class="btn-tool" onclick="toggleMobility('${entry.id}', 0)" style="padding:10px 12px; font-weight:900; background:${mBg}; color:${mColor}; border-color:${mBg};" title="Toggle Mobility Tier" tabindex="-1">${mText}</button>
                       </div>`;
             }
             div.innerHTML = h; 
@@ -810,14 +841,20 @@
             return e.anglers[0].name.trim() !== '' || e.anglers[0].z1;
         });
 
+        // Sort: M1 First, then M2, then Default
         appState.sort((a, b) => {
-            let aMob = a.anglers.some(ang => ang.mobility) ? 1 : 0;
-            let bMob = b.anglers.some(ang => ang.mobility) ? 1 : 0;
-            return bMob - aMob;
+            let getHighTier = (entry) => {
+                if (entry.anglers.some(ang => ang.mobility === 1)) return 2;
+                if (entry.anglers.some(ang => ang.mobility === 2)) return 1;
+                return 0;
+            };
+            return getHighTier(b) - getHighTier(a);
         });
 
-        const safePegs1 = (document.getElementById('accPegs1').value || '').match(/\d+/g)?.map(Number) || [];
-        const safePegs2 = matchDays == 2 ? ((document.getElementById('accPegs2').value || '').match(/\d+/g)?.map(Number) || []) : [];
+        const sPegs1_M1 = (document.getElementById('accPegs1_m1').value || '').match(/\d+/g)?.map(Number) || [];
+        const sPegs1_M2 = (document.getElementById('accPegs1_m2').value || '').match(/\d+/g)?.map(Number) || [];
+        const sPegs2_M1 = matchDays == 2 ? ((document.getElementById('accPegs2_m1').value || '').match(/\d+/g)?.map(Number) || []) : [];
+        const sPegs2_M2 = matchDays == 2 ? ((document.getElementById('accPegs2_m2').value || '').match(/\d+/g)?.map(Number) || []) : [];
 
         let occ1 = { RED:[], YELLOW:[], GREEN:[], BLUE:[] }, occ2 = { RED:[], YELLOW:[], GREEN:[], BLUE:[] };
         let totalCompetitors = 0;
@@ -857,34 +894,53 @@
             return { z, p };
         });
 
-        const pullPeg = (zone, isDay2, isMobility) => {
+        const pullPeg = (zone, isDay2, mobilityTier) => {
             const pools = isDay2 ? pools2 : pools1;
             const zIdx = zones.indexOf(zone);
-            let currentSafePegs = isDay2 ? safePegs2 : safePegs1;
+            const m1List = isDay2 ? sPegs2_M1 : sPegs1_M1;
+            const m2List = isDay2 ? sPegs2_M2 : sPegs1_M2;
+            const allSafe = [...m1List, ...m2List];
             
-            if (isMobility && currentSafePegs.length > 0) {
-                const sIdx = pools[zIdx].p.findIndex(peg => currentSafePegs.includes(peg));
-                if (sIdx !== -1) return pools[zIdx].p.splice(sIdx, 1)[0];
+            if (mobilityTier === 1) {
+                const s1Idx = pools[zIdx].p.findIndex(peg => m1List.includes(peg));
+                if (s1Idx !== -1) return pools[zIdx].p.splice(s1Idx, 1)[0];
+                const s2Idx = pools[zIdx].p.findIndex(peg => m2List.includes(peg));
+                if (s2Idx !== -1) return pools[zIdx].p.splice(s2Idx, 1)[0];
+            } else if (mobilityTier === 2) {
+                const s2Idx = pools[zIdx].p.findIndex(peg => m2List.includes(peg));
+                if (s2Idx !== -1) return pools[zIdx].p.splice(s2Idx, 1)[0];
             }
 
-            if (!isMobility && currentSafePegs.length > 0) {
-                const nonSafeIdx = pools[zIdx].p.findIndex(peg => !currentSafePegs.includes(peg));
+            if (!mobilityTier && allSafe.length > 0) {
+                const nonSafeIdx = pools[zIdx].p.findIndex(peg => !allSafe.includes(peg));
                 if (nonSafeIdx !== -1) return pools[zIdx].p.splice(nonSafeIdx, 1)[0];
             }
             
             return pools[zIdx].p.pop() || 99;
         };
 
-        const pullRandomPeg = (isMobility) => {
+        const pullRandomPeg = (mobilityTier) => {
             if (vacantPool.length > 0) return vacantPool.shift();
             let avZ = pools1.map((p, idx) => idx).filter(idx => pools1[idx].p.length > 0);
             if (avZ.length === 0) return { z1: 'RED', p1: 99, z2: 'BLUE', p2: 99 }; 
             
             let rZ = -1;
-            if (isMobility) {
+            if (mobilityTier === 1 || mobilityTier === 2) {
+                let m1_1 = sPegs1_M1, m2_1 = sPegs1_M2;
+                let m1_2 = matchDays == 2 ? sPegs2_M1 : [], m2_2 = matchDays == 2 ? sPegs2_M2 : [];
+                
+                let checkSafe = (idx, day, tier) => {
+                    let pPool = day === 1 ? pools1[idx].p : pools2[idx].p;
+                    if (tier === 1) return pPool.some(p => m1_1.includes(p) || m2_1.includes(p));
+                    if (tier === 2) return pPool.some(p => m2_1.includes(p));
+                    return false;
+                };
+
+                // Perfect Pair Search
                 let perfectZones = avZ.filter(idx => {
-                    let s1 = pools1[idx].p.some(p => safePegs1.includes(p));
-                    let s2 = matchDays == 2 ? pools2[zones.indexOf(rotationMap[zones[idx]])].p.some(p => safePegs2.includes(p)) : true;
+                    let destIdx = zones.indexOf(rotationMap[zones[idx]]);
+                    let s1 = checkSafe(idx, 1, mobilityTier);
+                    let s2 = matchDays == 2 ? checkSafe(destIdx, 2, mobilityTier) : true;
                     return s1 && s2;
                 });
                 
@@ -892,8 +948,9 @@
                     rZ = perfectZones[Math.floor(Math.random() * perfectZones.length)];
                 } else {
                     let partialZones = avZ.filter(idx => {
-                        let s1 = pools1[idx].p.some(p => safePegs1.includes(p));
-                        let s2 = matchDays == 2 ? pools2[zones.indexOf(rotationMap[zones[idx]])].p.some(p => safePegs2.includes(p)) : false;
+                        let destIdx = zones.indexOf(rotationMap[zones[idx]]);
+                        let s1 = checkSafe(idx, 1, mobilityTier);
+                        let s2 = matchDays == 2 ? checkSafe(destIdx, 2, mobilityTier) : false;
                         return s1 || s2;
                     });
                     if (partialZones.length > 0) rZ = partialZones[Math.floor(Math.random() * partialZones.length)];
@@ -903,8 +960,8 @@
             
             const destZ2 = rotationMap[zones[rZ]];
             return { 
-                z1: zones[rZ], p1: pullPeg(zones[rZ], false, isMobility), 
-                z2: destZ2, p2: pullPeg(destZ2, true, isMobility) 
+                z1: zones[rZ], p1: pullPeg(zones[rZ], false, mobilityTier), 
+                z2: destZ2, p2: pullPeg(destZ2, true, mobilityTier) 
             };
         };
 
@@ -912,21 +969,37 @@
             let needsDraw = entry.anglers.filter(a => !a.z1);
             if (needsDraw.length === 0) return;
 
-            let drawOrder = needsDraw.map((a, i) => ({ a, i })).sort((x, y) => (y.a.mobility ? 1 : 0) - (x.a.mobility ? 1 : 0));
+            let drawOrder = needsDraw.map((a, i) => ({ a, i })).sort((x, y) => (y.a.mobility || 0) - (x.a.mobility || 0));
+            // Ensure M1 (1) is highest priority, then M2 (2), then 0. So flip logic:
+            drawOrder.sort((x, y) => {
+                let pX = x.a.mobility === 1 ? 2 : x.a.mobility === 2 ? 1 : 0;
+                let pY = y.a.mobility === 1 ? 2 : y.a.mobility === 2 ? 1 : 0;
+                return pY - pX;
+            });
 
             if (entry.isTeam && needsDraw.length === 4) {
                 let zIndexes = [0, 1, 2, 3]; 
                 for (let j = 3; j > 0; j--) { const k = Math.floor(Math.random() * (j + 1)); [zIndexes[j], zIndexes[k]] = [zIndexes[k], zIndexes[j]]; }
                 
                 drawOrder.forEach((item, loopIdx) => {
-                    if (item.a.mobility && (safePegs1.length > 0 || safePegs2.length > 0)) {
+                    let tier = item.a.mobility;
+                    if (tier === 1 || tier === 2) {
                         let targetK = -1;
                         
+                        let checkSafe = (zi, day, t) => {
+                            let pPool = day === 1 ? pools1[zi].p : pools2[zones.indexOf(rotationMap[zones[zi]])].p;
+                            let list1 = day === 1 ? sPegs1_M1 : sPegs2_M1;
+                            let list2 = day === 1 ? sPegs1_M2 : sPegs2_M2;
+                            if (t === 1) return pPool.some(p => list1.includes(p) || list2.includes(p));
+                            if (t === 2) return pPool.some(p => list2.includes(p));
+                            return false;
+                        };
+
                         // Strict AND check for perfect pair
                         for (let k = loopIdx; k < 4; k++) {
                             let zi = zIndexes[k];
-                            let s1 = pools1[zi].p.some(p => safePegs1.includes(p));
-                            let s2 = matchDays == 2 ? pools2[zones.indexOf(rotationMap[zones[zi]])].p.some(p => safePegs2.includes(p)) : true;
+                            let s1 = checkSafe(zi, 1, tier);
+                            let s2 = matchDays == 2 ? checkSafe(zi, 2, tier) : true;
                             if (s1 && s2) { targetK = k; break; }
                         }
                         
@@ -934,8 +1007,8 @@
                         if (targetK === -1) {
                             for (let k = loopIdx; k < 4; k++) {
                                 let zi = zIndexes[k];
-                                let s1 = pools1[zi].p.some(p => safePegs1.includes(p));
-                                let s2 = matchDays == 2 ? pools2[zones.indexOf(rotationMap[zones[zi]])].p.some(p => safePegs2.includes(p)) : false;
+                                let s1 = checkSafe(zi, 1, tier);
+                                let s2 = matchDays == 2 ? checkSafe(zi, 2, tier) : false;
                                 if (s1 || s2) { targetK = k; break; }
                             }
                         }
@@ -973,10 +1046,14 @@
         displayDraw();
     }
 
-    function isPegSafe(p, day) {
-        const safePegsStr = day === 1 ? (document.getElementById('accPegs1').value || '') : (document.getElementById('accPegs2').value || '');
-        const safePegs = safePegsStr.split(',').map(n => parseInt(n.trim())).filter(n => !isNaN(n));
-        return safePegs.includes(parseInt(p));
+    function getPegTier(p, day) {
+        let m1 = day === 1 ? (document.getElementById('accPegs1_m1').value || '') : (document.getElementById('accPegs2_m1').value || '');
+        let m2 = day === 1 ? (document.getElementById('accPegs1_m2').value || '') : (document.getElementById('accPegs2_m2').value || '');
+        let m1List = m1.split(',').map(n => parseInt(n.trim())).filter(n => !isNaN(n));
+        let m2List = m2.split(',').map(n => parseInt(n.trim())).filter(n => !isNaN(n));
+        if (m1List.includes(parseInt(p))) return 1;
+        if (m2List.includes(parseInt(p))) return 2;
+        return 0;
     }
 
     const getVenueName = (z, day) => {
@@ -1010,8 +1087,10 @@
             prize: prizeFee, 
             pairs: pairsFee, 
             zoneSize: currentZoneSize,
-            safePegs1: document.getElementById('accPegs1').value,
-            safePegs2: document.getElementById('accPegs2').value,
+            safePegs1_m1: document.getElementById('accPegs1_m1').value,
+            safePegs1_m2: document.getElementById('accPegs1_m2').value,
+            safePegs2_m1: document.getElementById('accPegs2_m1').value,
+            safePegs2_m2: document.getElementById('accPegs2_m2').value,
             payoutConfig: payoutConfig,
             venueConfig: {
                 venues: matchVenues,
@@ -1139,17 +1218,17 @@
             let vA1 = (matchVenues == 2) ? `<div style="font-size:7.5px; opacity:0.8; margin-bottom:3px; letter-spacing:0.5px; font-weight:900;">${getVenueName(a.z1, 1).toUpperCase()}</div>` : '';
             let vA2 = (matchVenues == 2 && matchDays == 2 && a.z2) ? `<div style="font-size:7.5px; opacity:0.8; margin-bottom:3px; letter-spacing:0.5px; font-weight:900;">${getVenueName(a.z2, 2).toUpperCase()}</div>` : '';
 
-            let p1Safe = isPegSafe(a.p1, 1);
-            let p2Safe = isPegSafe(a.p2, 2);
+            let p1Tier = getPegTier(a.p1, 1);
+            let p2Tier = getPegTier(a.p2, 2);
 
-            let pill1Class = p1Safe ? 'draw-pill m-peg' : 'draw-pill';
-            let pill2Class = p2Safe ? 'draw-pill m-peg' : 'draw-pill';
+            let pill1Class = 'draw-pill' + (p1Tier === 1 ? ' m1-peg' : p1Tier === 2 ? ' m2-peg' : '');
+            let pill2Class = 'draw-pill' + (p2Tier === 1 ? ' m1-peg' : p2Tier === 2 ? ' m2-peg' : '');
 
-            let nameClass = a.mobility ? 'angler-name m-name' : 'angler-name';
-            let mIcon = a.mobility ? '<span class="m-tag">[M]</span>' : '';
+            let nameClass = a.mobility === 1 ? 'angler-name m1-name' : a.mobility === 2 ? 'angler-name m2-name' : 'angler-name';
+            let mIcon = a.mobility === 1 ? '<span class="m1-tag">[M1]</span>' : a.mobility === 2 ? '<span class="m2-tag">[M2]</span>' : '';
             
-            let p1Icon = p1Safe ? '<span class="m-tag" style="font-size:10px;">[M PEG]</span>' : '';
-            let p2Icon = p2Safe ? '<span class="m-tag" style="font-size:10px;">[M PEG]</span>' : '';
+            let p1Icon = p1Tier === 1 ? '<span class="m1-tag" style="font-size:10px;">[M1 PEG]</span>' : p1Tier === 2 ? '<span class="m2-tag" style="font-size:10px;">[M2 PEG]</span>' : '';
+            let p2Icon = p2Tier === 1 ? '<span class="m1-tag" style="font-size:10px;">[M1 PEG]</span>' : p2Tier === 2 ? '<span class="m2-tag" style="font-size:10px;">[M2 PEG]</span>' : '';
 
             h += `<div class="${rowClass}" ${clickEvt}>
                     <span class="${nameClass}">${a.name}${mIcon}</span>
@@ -1219,7 +1298,7 @@
                                 ${zoneAnglers.map(ang => `
                                     <tr>
                                         <td style="font-size: 18px; font-weight: 900; text-align: center; color: ${zColor}; border-right: 2px solid #e2e8f0;">${ang.peg}</td>
-                                        <td style="font-size: 14px; font-weight: 800; color: black;">${ang.name} ${ang.mobility ? '<span style="color:#d97706; font-size:12px;">[M]</span>' : ''}</td>
+                                        <td style="font-size: 14px; font-weight: 800; color: black;">${ang.name} ${ang.mobility === 1 ? '<span style="color:#ca8a04; font-size:12px;">[M1]</span>' : ang.mobility === 2 ? '<span style="color:#d97706; font-size:12px;">[M2]</span>' : ''}</td>
                                         <td style="font-size: 12px; font-weight: 700; color: #475569;">${ang.team}</td>
                                     </tr>
                                 `).join('')}
@@ -1293,7 +1372,7 @@
             const a = item.angler;
             const eId = item.entryId;
             const i = item.aIdx;
-            const mTag = a.mobility ? ' [M]' : '';
+            const mTag = a.mobility === 1 ? ' [M1]' : a.mobility === 2 ? ' [M2]' : '';
             
             h += `<tr>
                 <td><input type="text" class="steward-input" value="${a.name || ''}" oninput="updateStewardField('${eId}', ${i}, 'name', this.value)" placeholder="NAME..."><span style="color:#8b5cf6; font-size:10px; font-weight:900;">${mTag}</span></td>
@@ -1554,11 +1633,14 @@
                         let vA2 = matchDays == 2 ? getVenueName(a.z2, 2) : '';
                         vA1 = (matchVenues == 2 && vA1) ? vA1 + ' | ' : '';
                         vA2 = (matchVenues == 2 && vA2) ? vA2 + ' | ' : '';
-                        let p1Safe = isPegSafe(a.p1, 1) ? ' <b style="font-size:14px;">[M PEG]</b>' : '';
-                        let p2Safe = isPegSafe(a.p2, 2) ? ' <b style="font-size:14px;">[M PEG]</b>' : '';
+                        let p1Tier = getPegTier(a.p1, 1);
+                        let p2Tier = getPegTier(a.p2, 2);
+                        let p1Safe = p1Tier === 1 ? ' <b style="font-size:14px;">[M1 PEG]</b>' : p1Tier === 2 ? ' <b style="font-size:14px;">[M2 PEG]</b>' : '';
+                        let p2Safe = p2Tier === 1 ? ' <b style="font-size:14px;">[M1 PEG]</b>' : p2Tier === 2 ? ' <b style="font-size:14px;">[M2 PEG]</b>' : '';
+                        let aMob = a.mobility === 1 ? '<b style="font-size:14px;">[M1]</b>' : a.mobility === 2 ? '<b style="font-size:14px;">[M2]</b>' : '';
                         return `
                         <tr>
-                            <td>${a.name || '---'} ${a.mobility ? '<b style="font-size:14px;">[M]</b>' : ''}</td>
+                            <td>${a.name || '---'} ${aMob}</td>
                             <td><b>[${vA1}${a.z1} ZONE]</b> PEG ${a.p1}${p1Safe}</td>
                             <td>${matchDays == 2 ? `<b>[${vA2}${a.z2} ZONE]</b> PEG ${a.p2}${p2Safe}` : '---'}</td>
                             <td style="text-align:center;"><div style="width:24px; height:24px; border:2px solid black; margin: 0 auto;"></div></td>
@@ -1586,8 +1668,11 @@
                 let vA2 = matchDays == 2 ? getVenueName(a.z2, 2) : '';
                 vA1 = (matchVenues == 2 && vA1) ? vA1 + ' | ' : '';
                 vA2 = (matchVenues == 2 && vA2) ? vA2 + ' | ' : '';
-                let p1Safe = isPegSafe(a.p1, 1) ? ' <b style="font-size:12px;">[M PEG]</b>' : '';
-                let p2Safe = isPegSafe(a.p2, 2) ? ' <b style="font-size:12px;">[M PEG]</b>' : '';
+                let p1Tier = getPegTier(a.p1, 1);
+                let p2Tier = getPegTier(a.p2, 2);
+                let p1Safe = p1Tier === 1 ? ' <b style="font-size:12px;">[M1 PEG]</b>' : p1Tier === 2 ? ' <b style="font-size:12px;">[M2 PEG]</b>' : '';
+                let p2Safe = p2Tier === 1 ? ' <b style="font-size:12px;">[M1 PEG]</b>' : p2Tier === 2 ? ' <b style="font-size:12px;">[M2 PEG]</b>' : '';
+                let aMob = a.mobility === 1 ? '<b style="font-size:14px;">[M1]</b>' : a.mobility === 2 ? '<b style="font-size:14px;">[M2]</b>' : '';
                 
                 const slip = document.createElement('div');
                 slip.className = 'dispatch-slip';
@@ -1596,7 +1681,7 @@
                 slip.style.marginBottom = '20px';
                 slip.innerHTML = `
                     <div class="dispatch-header" style="padding-bottom:10px; margin-bottom:15px; border-bottom-width:4px;">
-                        <div><h1 style="font-size:20px;">${title}</h1><h2 style="font-size:16px;">SOLO COMPETITOR: ${a.name} ${a.mobility ? '<b style="font-size:14px;">[M]</b>' : ''}</h2></div>
+                        <div><h1 style="font-size:20px;">${title}</h1><h2 style="font-size:16px;">SOLO COMPETITOR: ${a.name} ${aMob}</h2></div>
                     </div>
                     <table class="dispatch-table" style="margin-top:10px; font-size:14px;">
                         <tr>
