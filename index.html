@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ZONEDRAW v10.35.0</title>
+    <title>ZONEDRAW v10.36.0</title>
     <link rel="manifest" href="manifest.json">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
@@ -157,7 +157,7 @@
 <div class="fixed-header no-print">
     <div class="header-content">
         <button class="home-btn" onclick="showHub()" tabindex="-1">🏠 RETURN TO HOMEPAGE</button>
-        <div class="brand-name">ZONEDRAW <span id="vTag" class="v-tag">v10.35.0</span></div>
+        <div class="brand-name">ZONEDRAW <span id="vTag" class="v-tag">v10.36.0</span></div>
         <div style="width: 180px;"></div>
     </div>
 </div>
@@ -304,6 +304,12 @@
 <div id="shuffleOverlay" style="position:fixed; inset:0; background:rgba(15,23,42,0.98); z-index:9000; display:none; flex-direction:column; align-items:center; justify-content:center;">
     <h2 style="font-size:2.5rem; font-weight:900; letter-spacing:5px;">LOCKING INTEGRITY ENGINE...</h2>
     <div style="width:350px; height:6px; background:rgba(255,255,255,0.1); border-radius:10px; overflow:hidden; margin-top:25px;"><div id="pBar" style="height:100%; width:0%; background:var(--accent); transition:0.1s;"></div></div>
+</div>
+
+<!-- NEW: PDF GENERATION OVERLAY -->
+<div id="pdfOverlay" data-html2canvas-ignore="true" style="position:fixed; inset:0; background:rgba(15,23,42,0.98); z-index:9999; display:none; flex-direction:column; align-items:center; justify-content:center;">
+    <h2 style="font-size:2.5rem; font-weight:900; letter-spacing:3px; color:#f8fafc; text-align:center;">FORMATTING SECURE PDF...</h2>
+    <p style="color:var(--accent); font-weight:900; margin-top:10px; font-size:1.2rem;">PLEASE DO NOT CLOSE THE APP</p>
 </div>
 
 <script>
@@ -1004,13 +1010,13 @@
     }
 
     function exportZoneRostersPDF() {
+        document.getElementById('pdfOverlay').style.display = 'flex';
+        
         const container = document.createElement('div');
         container.style.position = 'absolute';
         container.style.left = '0';
         container.style.top = '0';
-        container.style.opacity = '0.001'; 
-        container.style.pointerEvents = 'none';
-        container.style.zIndex = '1';
+        container.style.zIndex = '9998'; 
         container.style.width = '800px';
         container.style.backgroundColor = 'white';
         container.style.color = 'black';
@@ -1091,6 +1097,7 @@
 
             html2pdf().set(opt).from(container).save().then(() => {
                 document.body.removeChild(container);
+                document.getElementById('pdfOverlay').style.display = 'none';
             });
         }, 250);
     }
@@ -1212,6 +1219,7 @@
     }
 
     function exportStewardPDF() {
+        document.getElementById('pdfOverlay').style.display = 'flex';
         const element = document.getElementById('stewardArea');
         
         element.querySelectorAll('input').forEach(inp => inp.setAttribute('value', inp.value));
@@ -1243,6 +1251,7 @@
                 if (controls) controls.style.display = 'block';
                 const h = document.getElementById('tempStewardHeader');
                 if (h) h.remove();
+                document.getElementById('pdfOverlay').style.display = 'none';
             });
         }, 250);
     }
@@ -1301,14 +1310,14 @@
     }
 
     function shareCaptainsPack() {
+        document.getElementById('pdfOverlay').style.display = 'flex';
+        
         const container = document.createElement('div');
         container.id = 'tempCaptainsPack';
         container.style.position = 'absolute';
         container.style.left = '0';
         container.style.top = '0';
-        container.style.opacity = '0.001'; 
-        container.style.pointerEvents = 'none';
-        container.style.zIndex = '1';
+        container.style.zIndex = '9998'; 
         container.style.backgroundColor = '#0f172a';
         container.style.color = '#f8fafc';
         container.style.padding = '20px';
@@ -1370,18 +1379,19 @@
 
             html2pdf().set(opt).from(container).save().then(() => {
                 document.body.removeChild(container);
+                document.getElementById('pdfOverlay').style.display = 'none';
             });
         }, 250);
     }
 
     function exportDispatchSlipsPDF() {
+        document.getElementById('pdfOverlay').style.display = 'flex';
+        
         const container = document.createElement('div');
         container.style.position = 'absolute';
         container.style.left = '0';
         container.style.top = '0';
-        container.style.opacity = '0.001'; 
-        container.style.pointerEvents = 'none';
-        container.style.zIndex = '1';
+        container.style.zIndex = '9998'; 
         container.style.width = '800px';
         container.style.backgroundColor = 'white';
         container.style.color = 'black';
@@ -1490,11 +1500,13 @@
 
             html2pdf().set(opt).from(container).save().then(() => {
                 document.body.removeChild(container);
+                document.getElementById('pdfOverlay').style.display = 'none';
             });
         }, 250);
     }
 
     function shareDraw() {
+        document.getElementById('pdfOverlay').style.display = 'flex';
         const element = document.getElementById('resultsSection');
         document.body.classList.add('full-color-share');
 
@@ -1511,6 +1523,7 @@
 
             html2pdf().set(opt).from(element).save().then(() => {
                 document.body.classList.remove('full-color-share');
+                document.getElementById('pdfOverlay').style.display = 'none';
             });
         }, 250);
     }
