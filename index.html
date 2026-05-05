@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ZONEDRAW v10.36.0</title>
+    <title>ZONEDRAW v10.37.0</title>
     <link rel="manifest" href="manifest.json">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
@@ -118,37 +118,42 @@
         .roster-table tr:nth-child(even) { background-color: #f8fafc; }
 
         /* -----------------------------------------------------
-           DIGITAL PDF EXPORT (Mobile-First Contrast Lock)
+           PHYSICAL PRINTER OPTIMIZATION (Ink Saver)
            ----------------------------------------------------- */
-        body.full-color-share { background-color: #0f172a !important; color: #f8fafc !important; }
-        body.full-color-share #resultsSection { max-width: 650px !important; margin: 0 auto !important; padding: 20px !important; background-color: #0f172a !important; }
-        body.full-color-share #resTitle { color: #f8fafc !important; font-size: 2.2rem !important; margin-bottom: 20px !important; }
-        body.full-color-share .horizontal-legend { color: #f8fafc !important; font-size: 11px !important; gap: 10px !important; }
-        body.full-color-share .legend-item { color: #f8fafc !important; border-color: rgba(255,255,255,0.2) !important; padding: 6px 10px !important; }
-        
-        body.full-color-share .bucket-grid { display: grid !important; grid-template-columns: 1fr !important; gap: 12px !important; }
-        body.full-color-share .zone-card { break-inside: avoid !important; page-break-inside: avoid !important; margin-bottom: 0 !important; }
-        body.full-color-share .res-row { grid-template-columns: 1fr 75px 75px !important; gap: 4px !important; }
-        body.full-color-share .no-print { display: none !important; }
-
         @media print { 
+            * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
             .no-print { display: none !important; } 
-            body { background: white !important; color: black !important; }
-            .bucket-grid { display: grid !important; grid-template-columns: repeat(2, 1fr) !important; gap: 10px !important; }
-            .zone-card { border: 1px solid #ddd !important; background: white !important; break-inside: avoid !important; page-break-inside: avoid !important; }
-            .angler-name { color: black !important; }
-            .draw-pill { color: black !important; border: 1px solid #ccc; background: none !important; }
-            .fixed-header { display: none; }
-            .legend-item { color: black !important; border: 1px solid #ccc !important; }
-            .check-sheet-table th { color: black !important; border-bottom: 2px solid black !important; }
-            .check-sheet-table td { border-bottom: 1px solid #ddd !important; }
-            .steward-input { border: none !important; background: transparent !important; color: black !important; padding: 0 !important; font-size: 14px !important; }
-            .steward-input::placeholder { color: transparent !important; }
-            .cb-custom { border: 2px solid black !important; background: white !important; box-shadow: none !important; }
-            .cb-custom.active::after { color: black !important; }
-            .m-name { color: black !important; }
-            .m-tag { color: black !important; text-shadow: none !important; }
-            .m-peg { border: 2px solid black !important; box-shadow: none !important; }
+            
+            body.printing-rosters > :not(#rosterSection) { display: none !important; }
+            #rosterSection { display: block !important; }
+            body.printing-rosters { background: white !important; margin: 0; }
+            
+            body.printing-dispatch #dispatchSection { display: block !important; }
+            body.printing-dispatch > :not(#dispatchSection) { display: none !important; }
+            .dispatch-slip { border: 5px solid black !important; }
+
+            body:not(.printing-rosters):not(.printing-dispatch) { background: white !important; color: black !important; }
+            body:not(.printing-rosters):not(.printing-dispatch) .control-panel { background: white !important; color: black !important; box-shadow: none !important; border: 2px solid black !important; }
+            body:not(.printing-rosters):not(.printing-dispatch) .bucket-grid { display: grid !important; grid-template-columns: repeat(2, 1fr) !important; gap: 15px !important; }
+            body:not(.printing-rosters):not(.printing-dispatch) .zone-card { border: 2px solid #ccc !important; background: white !important; break-inside: avoid !important; page-break-inside: avoid !important; color: black !important; }
+            body:not(.printing-rosters):not(.printing-dispatch) .angler-name, 
+            body:not(.printing-rosters):not(.printing-dispatch) .group-label,
+            body:not(.printing-rosters):not(.printing-dispatch) .zone-header { color: black !important; }
+            body:not(.printing-rosters):not(.printing-dispatch) .res-row { border-bottom: 1px solid #eee !important; }
+            
+            body:not(.printing-rosters):not(.printing-dispatch) .fixed-header { display: none; }
+            body:not(.printing-rosters):not(.printing-dispatch) .legend-item { color: black !important; border: 1px solid #ccc !important; background: white !important; }
+            
+            body:not(.printing-rosters):not(.printing-dispatch) .check-sheet-table th { color: black !important; border-bottom: 2px solid black !important; }
+            body:not(.printing-rosters):not(.printing-dispatch) .check-sheet-table td { border-bottom: 1px solid #ccc !important; color: black !important; }
+            body:not(.printing-rosters):not(.printing-dispatch) .steward-input { border: 1px solid #ccc !important; background: transparent !important; color: black !important; padding: 4px !important; font-size: 14px !important; }
+            body:not(.printing-rosters):not(.printing-dispatch) .steward-input::placeholder { color: transparent !important; }
+            body:not(.printing-rosters):not(.printing-dispatch) .cb-custom { border: 2px solid black !important; background: white !important; box-shadow: none !important; }
+            body:not(.printing-rosters):not(.printing-dispatch) .cb-custom.active::after { color: black !important; }
+            
+            body:not(.printing-rosters):not(.printing-dispatch) .m-name { color: black !important; font-weight: 900 !important; }
+            body:not(.printing-rosters):not(.printing-dispatch) .m-tag { color: black !important; text-shadow: none !important; }
+            body:not(.printing-rosters):not(.printing-dispatch) .m-peg { border: 2px solid black !important; box-shadow: none !important; }
         }
     </style>
 </head>
@@ -157,7 +162,7 @@
 <div class="fixed-header no-print">
     <div class="header-content">
         <button class="home-btn" onclick="showHub()" tabindex="-1">🏠 RETURN TO HOMEPAGE</button>
-        <div class="brand-name">ZONEDRAW <span id="vTag" class="v-tag">v10.36.0</span></div>
+        <div class="brand-name">ZONEDRAW <span id="vTag" class="v-tag">v10.37.0</span></div>
         <div style="width: 180px;"></div>
     </div>
 </div>
@@ -240,10 +245,9 @@
     </div>
     
     <div id="exportMenu" class="no-print" data-html2canvas-ignore="true" style="display:none; gap:12px; justify-content:center; margin-bottom:20px; padding:15px; background:rgba(255,255,255,0.05); border-radius:12px; flex-wrap:wrap;">
-        <button onclick="shareDraw()" class="btn-action" style="background:#64748b; font-size:11px; padding: 12px 20px;">SHARE MASTER DRAW (PDF)</button>
-        <button onclick="shareCaptainsPack()" class="btn-action" style="background:#8b5cf6; font-size:11px; padding: 12px 20px;">SHARE CAPTAINS PACK (PDF)</button>
-        <button onclick="exportDispatchSlipsPDF()" class="btn-action" style="background:#0ea5e9; font-size:11px; padding: 12px 20px;">EXPORT TEAM SLIPS (PDF)</button>
-        <button onclick="exportZoneRostersPDF()" class="btn-action" style="background:#0ea5e9; font-size:11px; padding: 12px 20px;">EXPORT ZONE ROSTERS (PDF)</button>
+        <button onclick="shareDraw()" class="btn-action" style="background:#64748b; font-size:11px; padding: 12px 20px;">SHARE DIGITAL DRAW (PDF)</button>
+        <button onclick="generateDispatchSlips()" class="btn-action" style="background:#0ea5e9; font-size:11px; padding: 12px 20px;">PRINT TEAM SLIPS</button>
+        <button onclick="printZoneRosters()" class="btn-action" style="background:#0ea5e9; font-size:11px; padding: 12px 20px;">PRINT ZONE ROSTERS</button>
         <button onclick="exportToCSV()" class="btn-action" style="background:#10b981; font-size:11px; padding: 12px 20px;">CREATE EXCEL COMPETITOR LIST</button>
     </div>
     
@@ -269,6 +273,10 @@
 </div>
 
 <div id="stewardSection"><div id="stewardArea"></div></div>
+
+<div id="dispatchSection" class="no-print"></div>
+
+<div id="rosterSection" class="no-print"></div>
 
 <div id="historySection">
     <h2 style="text-align:center; letter-spacing:3px;">PREVIOUS DRAWS</h2>
@@ -306,7 +314,7 @@
     <div style="width:350px; height:6px; background:rgba(255,255,255,0.1); border-radius:10px; overflow:hidden; margin-top:25px;"><div id="pBar" style="height:100%; width:0%; background:var(--accent); transition:0.1s;"></div></div>
 </div>
 
-<!-- NEW: PDF GENERATION OVERLAY -->
+<!-- PDF GENERATION OVERLAY -->
 <div id="pdfOverlay" data-html2canvas-ignore="true" style="position:fixed; inset:0; background:rgba(15,23,42,0.98); z-index:9999; display:none; flex-direction:column; align-items:center; justify-content:center;">
     <h2 style="font-size:2.5rem; font-weight:900; letter-spacing:3px; color:#f8fafc; text-align:center;">FORMATTING SECURE PDF...</h2>
     <p style="color:var(--accent); font-weight:900; margin-top:10px; font-size:1.2rem;">PLEASE DO NOT CLOSE THE APP</p>
@@ -334,7 +342,6 @@
         document.querySelectorAll('body > div[id$="Section"]').forEach(s => s.style.display = 'none');
         document.getElementById('hubSection').style.display = 'grid';
         document.getElementById('commandBar').style.display = 'none';
-        document.body.classList.remove('full-color-share');
         isSwapMode = false; swapObj1 = null;
         isStewardMode = false;
         document.getElementById('exportMenu').style.display = 'none';
@@ -1009,22 +1016,12 @@
         div.innerHTML = h; container.appendChild(div);
     }
 
-    function exportZoneRostersPDF() {
-        document.getElementById('pdfOverlay').style.display = 'flex';
-        
-        const container = document.createElement('div');
-        container.style.position = 'absolute';
-        container.style.left = '0';
-        container.style.top = '0';
-        container.style.zIndex = '9998'; 
-        container.style.width = '800px';
-        container.style.backgroundColor = 'white';
-        container.style.color = 'black';
-        
+    function printZoneRosters() {
+        const container = document.getElementById('rosterSection');
+        container.innerHTML = '';
         const title = (document.getElementById('matchTitle').value || "THE MATCH").toUpperCase();
         
         let daysToPrint = matchDays == 2 ? [1, 2] : [1];
-        let h = '';
         
         daysToPrint.forEach(day => {
             zones.forEach(zone => {
@@ -1051,8 +1048,9 @@
                 const zGradients = { 'RED': '#ef4444', 'YELLOW': '#f59e0b', 'GREEN': '#10b981', 'BLUE': '#3b82f6' };
                 const zColor = zGradients[zone];
 
-                h += `
-                <div class="roster-page">
+                const page = document.createElement('div');
+                page.className = 'roster-page';
+                page.innerHTML = `
                     <div class="roster-header" style="border-bottom-color: ${zColor};">
                         <h1>${title}</h1>
                         <h2>DAY ${day} - ${zone} ZONE${vText}</h2>
@@ -1077,29 +1075,14 @@
                             </tbody>
                         </table>
                     </div>
-                </div>`;
+                `;
+                container.appendChild(page);
             });
         });
         
-        container.innerHTML = h;
-        document.body.appendChild(container);
-
-        setTimeout(() => {
-            const matchName = document.getElementById('matchTitle').value || "MATCH";
-            const ts = Date.now();
-            const opt = {
-                margin:       0,
-                filename:     `${matchName.replace(/[^a-z0-9]/gi, '_')}_Zone_Rosters_${ts}.pdf`,
-                image:        { type: 'jpeg', quality: 0.98 },
-                html2canvas:  { scale: 2, useCORS: true, backgroundColor: '#ffffff', scrollY: 0 },
-                jsPDF:        { unit: 'in', format: 'a4', orientation: 'portrait' }
-            };
-
-            html2pdf().set(opt).from(container).save().then(() => {
-                document.body.removeChild(container);
-                document.getElementById('pdfOverlay').style.display = 'none';
-            });
-        }, 250);
+        document.body.classList.add('printing-rosters');
+        window.print();
+        document.body.classList.remove('printing-rosters');
     }
 
     function showSteward() {
@@ -1135,7 +1118,7 @@
                         <div style="display:flex; align-items:center; gap:10px;"><label>PAIRS (£)</label><input type="number" id="sPairs" value="${pairsFee}" oninput="pairsFee=this.value; updateCash(); persistToVault();" style="width:75px;"></div>
                     </div>
                     <div style="display:flex; gap:15px; justify-content:center; flex-wrap:wrap;">
-                        <button onclick="exportStewardPDF()" class="btn-action" style="background:#64748b;">EXPORT SIGN-IN (PDF)</button>
+                        <button onclick="window.print()" class="btn-action" style="background:#64748b;">PRINT SIGN-IN</button>
                         <button onclick="exportStewardCSV()" class="btn-action" style="background:#10b981;">SAVE ACCOUNTING CSV</button>
                         <button onclick="displayDraw()" class="btn-action">BACK TO RESULTS</button>
                     </div>
@@ -1218,44 +1201,6 @@
         document.getElementById('tkPairs').innerText = '£' + spTotal;
     }
 
-    function exportStewardPDF() {
-        document.getElementById('pdfOverlay').style.display = 'flex';
-        const element = document.getElementById('stewardArea');
-        
-        element.querySelectorAll('input').forEach(inp => inp.setAttribute('value', inp.value));
-        
-        const controls = element.querySelector('.control-panel');
-        if (controls) controls.style.display = 'none';
-
-        const title = document.getElementById('matchTitle').value || "THE MATCH";
-        const header = document.createElement('h2');
-        header.style.textAlign = 'center';
-        header.style.color = '#f8fafc';
-        header.style.marginBottom = '20px';
-        header.innerText = `${title.toUpperCase()} - REGISTRATION STEWARD SHEET`;
-        header.id = 'tempStewardHeader';
-        element.insertBefore(header, element.firstChild);
-        
-        setTimeout(() => {
-            const matchName = document.getElementById('matchTitle').value || "REGISTRATION";
-            const ts = Date.now();
-            const opt = {
-                margin:       0.3,
-                filename:     `${matchName.replace(/[^a-z0-9]/gi, '_')}_Steward_Sheet_${ts}.pdf`,
-                image:        { type: 'jpeg', quality: 0.98 },
-                html2canvas:  { scale: 2, useCORS: true, backgroundColor: '#0f172a', scrollY: 0 },
-                jsPDF:        { unit: 'in', format: 'a4', orientation: 'landscape' }
-            };
-
-            html2pdf().set(opt).from(element).save().then(() => {
-                if (controls) controls.style.display = 'block';
-                const h = document.getElementById('tempStewardHeader');
-                if (h) h.remove();
-                document.getElementById('pdfOverlay').style.display = 'none';
-            });
-        }, 250);
-    }
-
     function exportStewardCSV() {
         let csv = "NAME,TEAM,PRESENT,CAPTAIN,PHONE,PRIZE POOL,SECRET PAIRS\n";
         
@@ -1309,101 +1254,16 @@
         lnk.click();
     }
 
-    function shareCaptainsPack() {
-        document.getElementById('pdfOverlay').style.display = 'flex';
-        
-        const container = document.createElement('div');
-        container.id = 'tempCaptainsPack';
-        container.style.position = 'absolute';
-        container.style.left = '0';
-        container.style.top = '0';
-        container.style.zIndex = '9998'; 
-        container.style.backgroundColor = '#0f172a';
-        container.style.color = '#f8fafc';
-        container.style.padding = '20px';
-        container.style.width = '650px'; 
-        container.style.fontFamily = "'Inter', system-ui, sans-serif";
-        container.style.textTransform = "uppercase";
-
-        const title = document.getElementById('matchTitle').value || 'THE MATCH';
-        
-        let h = `<h1 style="text-align:center; font-size:24px; border-bottom:4px solid #6366f1; padding-bottom:10px; margin-bottom:20px;">${title} - CAPTAINS PACK</h1>`;
-        h += `<div style="text-align:center; margin-bottom:30px; font-weight:900; color:#6366f1; font-size:16px;">ENTRY FEES: PRIZE POOL [£${prizeFee}] | SECRET PAIRS [£${pairsFee}]</div>`;
-        
-        const teams = appState.filter(e => e.isTeam);
-        const solos = appState.filter(e => !e.isTeam);
-
-        const renderAnglerRow = (a) => {
-            if(!a.name) return '';
-            let vA1 = (matchVenues == 2) ? `${getVenueName(a.z1, 1).toUpperCase()} | ` : '';
-            let vA2 = (matchVenues == 2 && matchDays == 2 && a.z2) ? `${getVenueName(a.z2, 2).toUpperCase()} | ` : '';
-            let p1Safe = isPegSafe(a.p1) ? ' <b style="color:#fde047;">[M PEG]</b>' : '';
-            let p2Safe = isPegSafe(a.p2) ? ' <b style="color:#fde047;">[M PEG]</b>' : '';
-            let mIcon = a.mobility ? ' <span style="color:#fde047;">[M]</span>' : '';
-            
-            let row = `<div style="display:flex; justify-content:space-between; align-items:center; padding:8px 0; border-bottom:1px solid rgba(255,255,255,0.1);">
-                <div style="font-size:14px; font-weight:900; width:35%;">${a.name}${mIcon}</div>
-                <div style="font-size:12px; font-weight:800; width:30%; text-align:center;">D1: ${vA1}${a.z1} ${a.p1}${p1Safe}</div>
-                <div style="font-size:12px; font-weight:800; width:30%; text-align:center;">${matchDays == 2 ? `D2: ${vA2}${a.z2} ${a.p2}${p2Safe}` : ''}</div>
-            </div>`;
-            return row;
-        };
-
-        teams.forEach(e => {
-            h += `<div style="background:rgba(30, 41, 59, 0.9); border: 1px solid rgba(148, 163, 184, 0.2); border-radius: 12px; padding: 15px; margin-bottom: 20px; border-top: 4px solid #6366f1;">`;
-            h += `<div style="font-size:18px; font-weight:900; margin-bottom:10px; color:#6366f1; text-align:center;">TEAM: ${e.tName || 'UNNAMED'}</div>`;
-            e.anglers.forEach(a => h += renderAnglerRow(a));
-            h += `</div>`;
-        });
-
-        if(solos.length > 0) {
-            h += `<div style="background:rgba(30, 41, 59, 0.9); border: 1px solid rgba(148, 163, 184, 0.2); border-radius: 12px; padding: 15px; margin-bottom: 20px; border-top: 4px solid #10b981;">`;
-            h += `<div style="font-size:18px; font-weight:900; margin-bottom:10px; color:#10b981; text-align:center;">SOLO COMPETITORS</div>`;
-            solos.forEach(e => h += renderAnglerRow(e.anglers[0]));
-            h += `</div>`;
-        }
-        
-        container.innerHTML = h;
-        document.body.appendChild(container);
-
-        setTimeout(() => {
-            const matchName = document.getElementById('matchTitle').value || "MATCH";
-            const ts = Date.now();
-            const opt = {
-                margin:       0.2,
-                filename:     `${matchName.replace(/[^a-z0-9]/gi, '_')}_Captains_Pack_${ts}.pdf`,
-                image:        { type: 'jpeg', quality: 0.98 },
-                html2canvas:  { scale: 2, useCORS: true, backgroundColor: '#0f172a', scrollY: 0 },
-                jsPDF:        { unit: 'in', format: 'a4', orientation: 'portrait' }
-            };
-
-            html2pdf().set(opt).from(container).save().then(() => {
-                document.body.removeChild(container);
-                document.getElementById('pdfOverlay').style.display = 'none';
-            });
-        }, 250);
-    }
-
-    function exportDispatchSlipsPDF() {
-        document.getElementById('pdfOverlay').style.display = 'flex';
-        
-        const container = document.createElement('div');
-        container.style.position = 'absolute';
-        container.style.left = '0';
-        container.style.top = '0';
-        container.style.zIndex = '9998'; 
-        container.style.width = '800px';
-        container.style.backgroundColor = 'white';
-        container.style.color = 'black';
-        
+    function generateDispatchSlips() {
+        const container = document.getElementById('dispatchSection');
+        container.innerHTML = '';
         const title = (document.getElementById('matchTitle').value || "MATCH RESULTS").toUpperCase();
         const stamp = new Date().toLocaleString();
-        
-        let h = '';
 
         appState.filter(e => e.isTeam).forEach(e => {
-            h += `
-            <div class="dispatch-slip">
+            const slip = document.createElement('div');
+            slip.className = 'dispatch-slip';
+            slip.innerHTML = `
                 <div class="dispatch-header">
                     <div><h1>${title}</h1><h2>TEAM: ${e.tName} | CAPTAIN'S DECLARATION</h2></div>
                     <div style="text-align:right; font-size:12px; font-weight:900;">${stamp}</div>
@@ -1438,13 +1298,15 @@
                     <p style="font-size:18px; font-weight:900;">TOTAL CASH DECLARED: £_______</p>
                     <div class="sig-line" style="width:100%;"><span>CAPTAIN'S SIGNATURE:</span><span>DATE:</span></div>
                 </div>
-            </div>`;
+            `;
+            container.appendChild(slip);
         });
 
         const solos = appState.filter(e => !e.isTeam);
         for (let i = 0; i < solos.length; i += 4) {
             const batch = solos.slice(i, i + 4);
-            h += `<div class="dispatch-slip" style="padding:20px;">`;
+            const page = document.createElement('div');
+            page.style.pageBreakAfter = 'always';
             
             batch.forEach(e => {
                 const a = e.anglers[0];
@@ -1455,77 +1317,89 @@
                 let p1Safe = isPegSafe(a.p1) ? ' <b style="font-size:12px;">[M PEG]</b>' : '';
                 let p2Safe = isPegSafe(a.p2) ? ' <b style="font-size:12px;">[M PEG]</b>' : '';
                 
-                h += `
-                    <div style="border: 2px solid black; padding: 15px; margin-bottom: 20px;">
-                        <div class="dispatch-header" style="padding-bottom:10px; margin-bottom:15px; border-bottom-width:4px;">
-                            <div><h1 style="font-size:20px;">${title}</h1><h2 style="font-size:16px;">SOLO COMPETITOR: ${a.name} ${a.mobility ? '<b style="font-size:14px;">[M]</b>' : ''}</h2></div>
-                        </div>
-                        <table class="dispatch-table" style="margin-top:10px; font-size:14px;">
-                            <tr>
-                                <th>DAY 1 (ZONE & PEG)</th>
-                                <th>DAY 2 (ZONE & PEG)</th>
-                                <th style="text-align:center;">PRIZE POOL [£${prizeFee}]</th>
-                                <th style="text-align:center;">SECRET PAIRS [£${pairsFee}]</th>
-                            </tr>
-                            <tr>
-                                <td><b>[${vA1}${a.z1} ZONE]</b> PEG ${a.p1}${p1Safe}</td>
-                                <td>${matchDays == 2 ? `<b>[${vA2}${a.z2} ZONE]</b> PEG ${a.p2}${p2Safe}` : '---'}</td>
-                                <td style="text-align:center;"><div style="width:20px; height:20px; border:2px solid black; margin: 0 auto;"></div></td>
-                                <td style="text-align:center;"><div style="width:20px; height:20px; border:2px solid black; margin: 0 auto;"></div></td>
-                            </tr>
-                        </table>
-                        <div class="receipt-zone" style="margin-top:20px; padding-top:15px; border-top: 2px dashed black;">
-                            <p style="font-size:14px; font-weight:900;">TOTAL CASH DECLARED: £_______</p>
-                            <div class="sig-line" style="width:100%; margin-top:20px; font-size:10px;"><span>SIGNATURE:</span><span>DATE:</span></div>
-                        </div>
-                    </div>`;
+                const slip = document.createElement('div');
+                slip.className = 'dispatch-slip';
+                slip.style.minHeight = '200px';
+                slip.style.pageBreakAfter = 'auto';
+                slip.style.marginBottom = '20px';
+                slip.innerHTML = `
+                    <div class="dispatch-header" style="padding-bottom:10px; margin-bottom:15px; border-bottom-width:4px;">
+                        <div><h1 style="font-size:20px;">${title}</h1><h2 style="font-size:16px;">SOLO COMPETITOR: ${a.name} ${a.mobility ? '<b style="font-size:14px;">[M]</b>' : ''}</h2></div>
+                    </div>
+                    <table class="dispatch-table" style="margin-top:10px; font-size:14px;">
+                        <tr>
+                            <th>DAY 1 (ZONE & PEG)</th>
+                            <th>DAY 2 (ZONE & PEG)</th>
+                            <th style="text-align:center;">PRIZE POOL [£${prizeFee}]</th>
+                            <th style="text-align:center;">SECRET PAIRS [£${pairsFee}]</th>
+                        </tr>
+                        <tr>
+                            <td><b>[${vA1}${a.z1} ZONE]</b> PEG ${a.p1}${p1Safe}</td>
+                            <td>${matchDays == 2 ? `<b>[${vA2}${a.z2} ZONE]</b> PEG ${a.p2}${p2Safe}` : '---'}</td>
+                            <td style="text-align:center;"><div style="width:20px; height:20px; border:2px solid black; margin: 0 auto;"></div></td>
+                            <td style="text-align:center;"><div style="width:20px; height:20px; border:2px solid black; margin: 0 auto;"></div></td>
+                        </tr>
+                    </table>
+                    <div class="receipt-zone" style="margin-top:20px; padding-top:15px;">
+                        <p style="font-size:14px; font-weight:900;">TOTAL CASH DECLARED: £_______</p>
+                        <div class="sig-line" style="width:100%; margin-top:20px; font-size:10px;"><span>SIGNATURE:</span><span>DATE:</span></div>
+                    </div>
+                `;
+                page.appendChild(slip);
             });
-            h += `</div>`;
+            container.appendChild(page);
         }
 
-        container.innerHTML = h;
-        document.body.appendChild(container);
-
-        setTimeout(() => {
-            const matchName = document.getElementById('matchTitle').value || "MATCH";
-            const ts = Date.now();
-            const opt = {
-                margin:       0.2,
-                filename:     `${matchName.replace(/[^a-z0-9]/gi, '_')}_Team_Slips_${ts}.pdf`,
-                image:        { type: 'jpeg', quality: 0.98 },
-                html2canvas:  { scale: 2, useCORS: true, backgroundColor: '#ffffff', scrollY: 0 },
-                jsPDF:        { unit: 'in', format: 'a4', orientation: 'portrait' },
-                pagebreak:    { mode: ['css', 'legacy'] }
-            };
-
-            html2pdf().set(opt).from(container).save().then(() => {
-                document.body.removeChild(container);
-                document.getElementById('pdfOverlay').style.display = 'none';
-            });
-        }, 250);
+        document.body.classList.add('printing-dispatch');
+        window.print();
+        document.body.classList.remove('printing-dispatch');
     }
 
     function shareDraw() {
         document.getElementById('pdfOverlay').style.display = 'flex';
-        const element = document.getElementById('resultsSection');
-        document.body.classList.add('full-color-share');
+        
+        const original = document.getElementById('resultsSection');
+        const clone = original.cloneNode(true);
+        
+        clone.querySelectorAll('.no-print').forEach(el => el.remove());
+        
+        const finSummary = document.createElement('div');
+        finSummary.innerHTML = `<h2 style="text-align:center; color:#10b981; margin-bottom: 25px; font-size:1.4rem;">ENTRY FEES: PRIZE POOL [£${prizeFee}] | SECRET PAIRS [£${pairsFee}]</h2>`;
+        clone.insertBefore(finSummary, clone.firstChild);
+
+        const container = document.createElement('div');
+        container.style.position = 'absolute';
+        container.style.top = '0';
+        container.style.left = '0';
+        container.style.width = '600px'; 
+        container.style.backgroundColor = '#0f172a';
+        container.style.color = '#f8fafc';
+        container.style.zIndex = '9998'; 
+        
+        clone.querySelectorAll('.bucket-grid').forEach(grid => {
+            grid.style.display = 'grid';
+            grid.style.gridTemplateColumns = '1fr';
+        });
+        
+        container.appendChild(clone);
+        document.body.appendChild(container);
 
         setTimeout(() => {
             const matchName = document.getElementById('matchTitle').value || "MATCH_DRAW";
             const ts = Date.now();
             const opt = {
                 margin:       0.2,
-                filename:     `${matchName.replace(/[^a-z0-9]/gi, '_')}_Premium_Draw_${ts}.pdf`,
+                filename:     `${matchName.replace(/[^a-z0-9]/gi, '_')}_Digital_Draw_${ts}.pdf`,
                 image:        { type: 'jpeg', quality: 0.98 },
                 html2canvas:  { scale: 2, useCORS: true, backgroundColor: '#0f172a', scrollY: 0 },
                 jsPDF:        { unit: 'in', format: 'a4', orientation: 'portrait' } 
             };
 
-            html2pdf().set(opt).from(element).save().then(() => {
-                document.body.classList.remove('full-color-share');
+            html2pdf().set(opt).from(container).save().then(() => {
+                document.body.removeChild(container);
                 document.getElementById('pdfOverlay').style.display = 'none';
             });
-        }, 250);
+        }, 500); 
     }
 </script>
 </body>
