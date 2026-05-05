@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ZONEDRAW v10.46.0</title>
+    <title>ZONEDRAW v10.47.0</title>
     <link rel="manifest" href="manifest.json">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
@@ -201,7 +201,7 @@
 <div class="fixed-header no-print">
     <div class="header-content">
         <button class="home-btn" onclick="showHub()" tabindex="-1">🏠 RETURN TO HOMEPAGE</button>
-        <div class="brand-name">ZONEDRAW <span id="vTag" class="v-tag">v10.46.0</span></div>
+        <div class="brand-name">ZONEDRAW <span id="vTag" class="v-tag">v10.47.0</span></div>
         <div style="width: 180px; text-align:right;">
             <button class="btn-tool" onclick="showHistory()" style="font-size: 12px; padding: 8px 15px;">📜 ARCHIVES</button>
         </div>
@@ -374,6 +374,11 @@
         <h2 style="margin: 0 0 20px 0; color: var(--accent); text-align: center; letter-spacing: 1px;">🏆 CONFIGURE PAYOUTS</h2>
         <div id="payoutRowsContainer"></div>
         
+        <div style="margin-top: 15px; padding: 12px; background: rgba(0,0,0,0.3); border-radius: 8px; border: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; flex-shrink: 0;">
+            <span style="font-weight: 900; font-size: 13px; color: #10b981;">💷 ROUND ALL PAYOUTS TO NEAREST £5</span>
+            <input type="checkbox" id="cb_round5" style="width: 18px; height: 18px; accent-color: #10b981; cursor: pointer;" onchange="updatePayoutTotal()">
+        </div>
+
         <div id="totalBar" class="total-bar-container valid">
             <span class="total-text valid" id="totalPctText">TOTAL ALLOCATED: 100%</span>
         </div>
@@ -399,6 +404,7 @@
     let isStewardMode = false;
     let isSwapMode = false;
     let swapObj1 = null;
+    let roundPayoutsTo5 = false;
 
     let payoutConfig = [
         { id: 's1', label: 'SOLO 1ST PLACE', active: true, pct: 50 },
@@ -521,6 +527,7 @@
         document.getElementById('d2v2').value = '';
         
         appState = []; vacantPool = []; currentZoneSize = 0;
+        roundPayoutsTo5 = false;
         
         payoutConfig = [
             { id: 's1', label: 'SOLO 1ST PLACE', active: true, pct: 50 },
@@ -584,6 +591,7 @@
         document.getElementById('accPegs2_m1').value = entry.safePegs2_m1 || entry.safePegs2 || entry.safePegs || '';
         document.getElementById('accPegs2_m2').value = entry.safePegs2_m2 || '';
         prizeFee = entry.prize || 10; pairsFee = entry.pairs || 5;
+        roundPayoutsTo5 = entry.roundPayoutsTo5 || false;
         
         let vc = entry.venueConfig || { venues: 1, d1v1: '', d1v2: '', d2v1: '', d2v2: '' };
         document.getElementById('d1v1').value = vc.d1v1 || '';
@@ -641,7 +649,6 @@
         const entry = appState.find(e => e.id === eId);
         if (entry) {
             let a = entry.anglers[aIdx];
-            // Cycle: undefined/0 -> 1 (M1) -> 2 (M2) -> 0
             if (!a.mobility || a.mobility === 0) {
                 a.mobility = 1;
             } else if (a.mobility === 1) {
@@ -841,7 +848,6 @@
             return e.anglers[0].name.trim() !== '' || e.anglers[0].z1;
         });
 
-        // Sort: M1 First, then M2, then Default
         appState.sort((a, b) => {
             let getHighTier = (entry) => {
                 if (entry.anglers.some(ang => ang.mobility === 1)) return 2;
@@ -936,7 +942,6 @@
                     return false;
                 };
 
-                // Perfect Pair Search
                 let perfectZones = avZ.filter(idx => {
                     let destIdx = zones.indexOf(rotationMap[zones[idx]]);
                     let s1 = checkSafe(idx, 1, mobilityTier);
@@ -970,7 +975,6 @@
             if (needsDraw.length === 0) return;
 
             let drawOrder = needsDraw.map((a, i) => ({ a, i })).sort((x, y) => (y.a.mobility || 0) - (x.a.mobility || 0));
-            // Ensure M1 (1) is highest priority, then M2 (2), then 0. So flip logic:
             drawOrder.sort((x, y) => {
                 let pX = x.a.mobility === 1 ? 2 : x.a.mobility === 2 ? 1 : 0;
                 let pY = y.a.mobility === 1 ? 2 : y.a.mobility === 2 ? 1 : 0;
@@ -995,7 +999,6 @@
                             return false;
                         };
 
-                        // Strict AND check for perfect pair
                         for (let k = loopIdx; k < 4; k++) {
                             let zi = zIndexes[k];
                             let s1 = checkSafe(zi, 1, tier);
@@ -1003,7 +1006,6 @@
                             if (s1 && s2) { targetK = k; break; }
                         }
                         
-                        // Fallback OR check
                         if (targetK === -1) {
                             for (let k = loopIdx; k < 4; k++) {
                                 let zi = zIndexes[k];
@@ -1092,6 +1094,7 @@
             safePegs2_m1: document.getElementById('accPegs2_m1').value,
             safePegs2_m2: document.getElementById('accPegs2_m2').value,
             payoutConfig: payoutConfig,
+            roundPayoutsTo5: roundPayoutsTo5,
             venueConfig: {
                 venues: matchVenues,
                 d1v1: document.getElementById('d1v1').value,
@@ -1458,6 +1461,8 @@
             container.appendChild(row);
         });
 
+        document.getElementById('cb_round5').checked = roundPayoutsTo5;
+
         modal.style.display = 'flex';
         updatePayoutTotal();
     }
@@ -1518,6 +1523,8 @@
             cfg.pct = parseFloat(document.getElementById(`val_${cfg.id}`).value) || 0;
         });
         
+        roundPayoutsTo5 = document.getElementById('cb_round5').checked;
+
         persistToVault();
         updateCash(); 
         closePayoutModal();
@@ -1530,14 +1537,24 @@
         dash.innerHTML = '';
         
         let hasActive = false;
+        let totalAllocatedCash = 0;
+        let dashHTML = '';
+
         payoutConfig.forEach(cfg => {
             if(cfg.active && cfg.pct > 0) {
                 hasActive = true;
-                const amt = (totalPot * (cfg.pct / 100)).toFixed(2);
-                dash.innerHTML += `
+                let amt = totalPot * (cfg.pct / 100);
+                
+                if (roundPayoutsTo5) {
+                    amt = Math.round(amt / 5) * 5;
+                }
+
+                totalAllocatedCash += amt;
+                
+                dashHTML += `
                     <div class="payout-card">
                         <span class="payout-label">${cfg.label} (${cfg.pct}%)</span>
-                        <span class="payout-val">£${amt}</span>
+                        <span class="payout-val">£${amt.toFixed(2)}</span>
                     </div>
                 `;
             }
@@ -1545,6 +1562,19 @@
 
         if(!hasActive) {
             dash.innerHTML = `<div style="font-size:12px; color:rgba(255,255,255,0.4); font-weight:900;">NO PAYOUT STRUCTURE CONFIGURED</div>`;
+        } else {
+            if (roundPayoutsTo5) {
+                let leftover = totalPot - totalAllocatedCash;
+                let leftoverColor = leftover >= 0 ? '#10b981' : '#ef4444';
+                let leftoverText = leftover >= 0 ? `CLUB FUNDS / REMAINING: £${leftover.toFixed(2)}` : `⚠️ SHORTFALL (ADJUST ENVELOPES): £${Math.abs(leftover).toFixed(2)}`;
+                
+                dashHTML += `
+                    <div style="width: 100%; margin-top: 15px; padding: 12px; background: rgba(0,0,0,0.4); border: 1px solid ${leftoverColor}; border-radius: 12px; text-align: center;">
+                        <span style="font-size: 14px; font-weight: 900; color: ${leftoverColor};">${leftoverText}</span>
+                    </div>
+                `;
+            }
+            dash.innerHTML = dashHTML;
         }
     }
 
