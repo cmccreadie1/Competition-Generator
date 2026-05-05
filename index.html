@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ZONEDRAW v10.38.0</title>
+    <title>ZONEDRAW v10.39.0</title>
     <link rel="manifest" href="manifest.json">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
@@ -37,6 +37,10 @@
         .hub-tile:hover { transform: translateY(-10px); border-color: var(--accent); box-shadow: 0 20px 50px var(--accent-glow); }
         .hub-icon { font-size: 44px; margin-bottom: 20px; display: block; filter: drop-shadow(0 0 10px var(--accent-glow)); }
         .hub-title { font-size: 18px; font-weight: 900; letter-spacing: 1px; }
+
+        /* NEW GLASS AESTHETIC FOR HOMEPAGE */
+        .glass-tile { background: rgba(30, 41, 59, 0.4) !important; backdrop-filter: blur(16px) !important; -webkit-backdrop-filter: blur(16px) !important; border: 1px solid rgba(255, 255, 255, 0.1) !important; box-shadow: 0 10px 40px rgba(0,0,0,0.5) !important; }
+        .glass-tile:hover { background: rgba(30, 41, 59, 0.7) !important; border-color: var(--accent) !important; box-shadow: 0 15px 50px var(--accent-glow) !important; }
 
         #entrySection, #resultsSection, #stewardSection, #historySection, #dispatchSection, #rosterSection { max-width: 1400px; margin: 0 auto; padding: 110px 20px 140px; display: none; }
         .control-panel { background: var(--card); border-radius: 24px; padding: 30px; border: 1px solid var(--border); text-align: center; margin-bottom: 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.2); }
@@ -121,7 +125,7 @@
            DIGITAL PDF EXPORT (Mobile-First Contrast Lock)
            ----------------------------------------------------- */
         body.full-color-share { background-color: #0f172a !important; color: #f8fafc !important; }
-        body.full-color-share #resultsSection { max-width: 650px !important; margin: 0 auto !important; padding: 20px !important; background-color: #0f172a !important; }
+        body.full-color-share #resultsSection { max-width: 600px !important; margin: 0 auto !important; padding: 20px !important; background-color: #0f172a !important; }
         body.full-color-share #resTitle { color: #f8fafc !important; font-size: 2.2rem !important; margin-bottom: 20px !important; }
         body.full-color-share .horizontal-legend { color: #f8fafc !important; font-size: 11px !important; gap: 10px !important; }
         body.full-color-share .legend-item { color: #f8fafc !important; border-color: rgba(255,255,255,0.2) !important; padding: 6px 10px !important; }
@@ -176,27 +180,28 @@
 <div class="fixed-header no-print">
     <div class="header-content">
         <button class="home-btn" onclick="showHub()" tabindex="-1">🏠 RETURN TO HOMEPAGE</button>
-        <div class="brand-name">ZONEDRAW <span id="vTag" class="v-tag">v10.38.0</span></div>
-        <div style="width: 180px;"></div>
+        <div class="brand-name">ZONEDRAW <span id="vTag" class="v-tag">v10.39.0</span></div>
+        <div style="width: 180px; text-align:right;">
+            <button class="btn-tool" onclick="showHistory()" style="font-size: 12px; padding: 8px 15px;">📜 ARCHIVES</button>
+        </div>
     </div>
 </div>
 
 <div id="hubSection">
-    <div class="hub-tile" onclick="resumeLatestMatch()">
-        <span class="hub-icon">▶️</span>
-        <span class="hub-title">RESUME LATEST MATCH</span>
-    </div>
-    <div class="hub-tile" onclick="goToActiveSteward()">
-        <span class="hub-icon">📋</span>
-        <span class="hub-title">STEWARD DESK</span>
-    </div>
-    <div class="hub-tile" onclick="confirmStartNewDraw()">
+    <!-- State 1: No Active Match -->
+    <div id="btnGenerate" class="hub-tile glass-tile" onclick="confirmStartNewDraw()">
         <span class="hub-icon">🎯</span>
         <span class="hub-title">GENERATE NEW DRAW</span>
     </div>
-    <div class="hub-tile" onclick="showHistory()">
-        <span class="hub-icon">📜</span>
-        <span class="hub-title">DRAW HISTORY</span>
+    
+    <!-- State 2: Active Match (Hidden until a draw is running) -->
+    <div id="btnResume" class="hub-tile glass-tile" onclick="resumeActiveMatch()" style="display:none;">
+        <span class="hub-icon">▶️</span>
+        <span class="hub-title">RESUME MATCH</span>
+    </div>
+    <div id="btnSteward" class="hub-tile glass-tile" onclick="goToActiveSteward()" style="display:none;">
+        <span class="hub-icon">📋</span>
+        <span class="hub-title">STEWARD DESK</span>
     </div>
 </div>
 
@@ -256,6 +261,7 @@
         <button onclick="handleAmend()" class="btn-action" style="background:#f59e0b;">AMEND DRAW</button>
         <button onclick="toggleSwapMode()" id="swapBtn" class="btn-action" style="background:#8b5cf6;">SWAP PEGS</button>
         <button onclick="toggleExportMenu()" id="exportToggleBtn" class="btn-action" style="background:#0ea5e9;">🖨️ OUTPUT & PRINT MENU</button>
+        <button onclick="archiveTournament()" id="archiveBtn" class="btn-action" style="background:#10b981;">📦 ARCHIVE TOURNAMENT</button>
     </div>
     
     <div id="exportMenu" class="no-print" data-html2canvas-ignore="true" style="display:none; gap:12px; justify-content:center; margin-bottom:20px; padding:15px; background:rgba(255,255,255,0.05); border-radius:12px; flex-wrap:wrap;">
@@ -360,28 +366,59 @@
         isSwapMode = false; swapObj1 = null;
         isStewardMode = false;
         document.getElementById('exportMenu').style.display = 'none';
+        
+        let activeKey = localStorage.getItem('zonedraw_active_key');
+        let vault = JSON.parse(localStorage.getItem('zonedraw_vault_v10') || '{}');
+        
+        if (activeKey && vault[activeKey]) {
+            document.getElementById('btnGenerate').style.display = 'none';
+            document.getElementById('btnResume').style.display = 'block';
+            document.getElementById('btnSteward').style.display = 'block';
+            document.getElementById('btnResume').querySelector('.hub-title').innerText = 'RESUME ' + activeKey.toUpperCase();
+        } else {
+            document.getElementById('btnGenerate').style.display = 'block';
+            document.getElementById('btnResume').style.display = 'none';
+            document.getElementById('btnSteward').style.display = 'none';
+        }
+
         updateTicker();
         window.scrollTo(0,0);
     }
 
+    function resumeActiveMatch() {
+        let activeKey = localStorage.getItem('zonedraw_active_key');
+        let vault = JSON.parse(localStorage.getItem('zonedraw_vault_v10') || '{}');
+        if(activeKey && vault[activeKey]) {
+            loadMatch(activeKey, vault[activeKey]);
+        } else {
+            alert("NO ACTIVE MATCH FOUND.");
+        }
+    }
+
     function resumeLatestMatch() {
-        const vault = JSON.parse(localStorage.getItem('zonedraw_vault_v10') || '{}');
-        const keys = Object.keys(vault);
-        if(keys.length === 0) return alert("NO ACTIVE DATABASE FOUND.");
-        
-        let latestKey = keys[0];
-        let latestTime = 0;
-        keys.forEach(k => {
-            let t = new Date(vault[k].time).getTime();
-            if(t > latestTime) { latestTime = t; latestKey = k; }
-        });
-        loadMatch(latestKey, vault[latestKey]);
+        // Fallback or old shortcut compatibility
+        resumeActiveMatch();
+    }
+
+    function archiveTournament() {
+        if(confirm("ARCHIVE THIS TOURNAMENT? It will be safely closed and secured in the Archives.")) {
+            localStorage.removeItem('zonedraw_active_key');
+            appState = []; vacantPool = []; currentZoneSize = 0;
+            document.getElementById('matchTitle').value = '';
+            showHub();
+        }
     }
 
     function confirmStartNewDraw() {
-        const vault = JSON.parse(localStorage.getItem('zonedraw_vault_v10') || '{}');
-        if(Object.keys(vault).length > 0) {
-            if(!confirm("WARNING: This will clear the current board to start a blank template. Proceed?")) return;
+        let activeKey = localStorage.getItem('zonedraw_active_key');
+        if(activeKey) {
+            if(!confirm("WARNING: This will clear the current active match to start a blank template. Proceed?")) return;
+            localStorage.removeItem('zonedraw_active_key');
+        } else {
+            const vault = JSON.parse(localStorage.getItem('zonedraw_vault_v10') || '{}');
+            if(Object.keys(vault).length > 0) {
+                if(!confirm("WARNING: Start a new blank template?")) return;
+            }
         }
         startNewDraw();
     }
@@ -439,7 +476,7 @@
         const vault = JSON.parse(localStorage.getItem('zonedraw_vault_v10') || '{}');
         Object.keys(vault).forEach(title => {
             const e = vault[title];
-            const div = document.createElement('div'); div.className = 'hub-tile';
+            const div = document.createElement('div'); div.className = 'hub-tile glass-tile';
             div.innerHTML = `
                 <div style="display:flex; justify-content:flex-end;">
                     <button onclick="event.stopPropagation(); deleteHistoryItem('${title}')" style="background:none; border:none; color:#ef4444; font-size:22px; cursor:pointer; padding:0; line-height:0.5;" title="Delete Record">✖</button>
@@ -457,6 +494,7 @@
             const vault = JSON.parse(localStorage.getItem('zonedraw_vault_v10') || '{}');
             delete vault[title];
             localStorage.setItem('zonedraw_vault_v10', JSON.stringify(vault));
+            if(localStorage.getItem('zonedraw_active_key') === title) localStorage.removeItem('zonedraw_active_key');
             showHistory(); 
         }
     }
@@ -480,17 +518,14 @@
     }
 
     function goToActiveSteward() {
-        const vault = JSON.parse(localStorage.getItem('zonedraw_vault_v10') || '{}');
-        const keys = Object.keys(vault);
-        if(keys.length === 0) return alert("NO ACTIVE DATABASE FOUND.");
-        let latestKey = keys[0];
-        let latestTime = 0;
-        keys.forEach(k => {
-            let t = new Date(vault[k].time).getTime();
-            if(t > latestTime) { latestTime = t; latestKey = k; }
-        });
-        loadMatch(latestKey, vault[latestKey]); 
-        showSteward();
+        let activeKey = localStorage.getItem('zonedraw_active_key');
+        let vault = JSON.parse(localStorage.getItem('zonedraw_vault_v10') || '{}');
+        if(activeKey && vault[activeKey]) {
+            loadMatch(activeKey, vault[activeKey]); 
+            showSteward();
+        } else {
+            alert("NO ACTIVE MATCH FOUND.");
+        }
     }
 
     function bulkInit() {
@@ -887,6 +922,7 @@
             }
         };
         localStorage.setItem('zonedraw_vault_v10', JSON.stringify(vault));
+        localStorage.setItem('zonedraw_active_key', title);
     }
 
     function toggleExportMenu() {
@@ -1382,6 +1418,11 @@
         element.insertBefore(finSummary, resTitle.nextSibling);
 
         document.body.classList.add('full-color-share');
+        
+        element.querySelectorAll('.bucket-grid').forEach(grid => {
+            grid.style.display = 'grid';
+            grid.style.gridTemplateColumns = '1fr';
+        });
 
         setTimeout(() => {
             const matchName = document.getElementById('matchTitle').value || "MATCH_DRAW";
@@ -1396,11 +1437,23 @@
 
             html2pdf().set(opt).from(element).save().then(() => {
                 document.body.classList.remove('full-color-share');
+                
+                element.querySelectorAll('.bucket-grid').forEach(grid => {
+                    grid.style.display = '';
+                    grid.style.gridTemplateColumns = '';
+                });
+
                 const summaryEl = document.getElementById('tempFinSummary');
                 if (summaryEl) summaryEl.remove();
                 document.getElementById('pdfOverlay').style.display = 'none';
             }).catch(err => {
                 document.body.classList.remove('full-color-share');
+                
+                element.querySelectorAll('.bucket-grid').forEach(grid => {
+                    grid.style.display = '';
+                    grid.style.gridTemplateColumns = '';
+                });
+
                 const summaryEl = document.getElementById('tempFinSummary');
                 if (summaryEl) summaryEl.remove();
                 document.getElementById('pdfOverlay').style.display = 'none';
