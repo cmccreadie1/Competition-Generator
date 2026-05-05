@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ZONEDRAW v10.37.0</title>
+    <title>ZONEDRAW v10.38.0</title>
     <link rel="manifest" href="manifest.json">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
@@ -118,6 +118,20 @@
         .roster-table tr:nth-child(even) { background-color: #f8fafc; }
 
         /* -----------------------------------------------------
+           DIGITAL PDF EXPORT (Mobile-First Contrast Lock)
+           ----------------------------------------------------- */
+        body.full-color-share { background-color: #0f172a !important; color: #f8fafc !important; }
+        body.full-color-share #resultsSection { max-width: 650px !important; margin: 0 auto !important; padding: 20px !important; background-color: #0f172a !important; }
+        body.full-color-share #resTitle { color: #f8fafc !important; font-size: 2.2rem !important; margin-bottom: 20px !important; }
+        body.full-color-share .horizontal-legend { color: #f8fafc !important; font-size: 11px !important; gap: 10px !important; }
+        body.full-color-share .legend-item { color: #f8fafc !important; border-color: rgba(255,255,255,0.2) !important; padding: 6px 10px !important; }
+        
+        body.full-color-share .bucket-grid { display: grid !important; grid-template-columns: 1fr !important; gap: 12px !important; }
+        body.full-color-share .zone-card { break-inside: avoid !important; page-break-inside: avoid !important; margin-bottom: 0 !important; }
+        body.full-color-share .res-row { grid-template-columns: 1fr 75px 75px !important; gap: 4px !important; }
+        body.full-color-share .no-print { display: none !important; }
+
+        /* -----------------------------------------------------
            PHYSICAL PRINTER OPTIMIZATION (Ink Saver)
            ----------------------------------------------------- */
         @media print { 
@@ -162,7 +176,7 @@
 <div class="fixed-header no-print">
     <div class="header-content">
         <button class="home-btn" onclick="showHub()" tabindex="-1">🏠 RETURN TO HOMEPAGE</button>
-        <div class="brand-name">ZONEDRAW <span id="vTag" class="v-tag">v10.37.0</span></div>
+        <div class="brand-name">ZONEDRAW <span id="vTag" class="v-tag">v10.38.0</span></div>
         <div style="width: 180px;"></div>
     </div>
 </div>
@@ -342,6 +356,7 @@
         document.querySelectorAll('body > div[id$="Section"]').forEach(s => s.style.display = 'none');
         document.getElementById('hubSection').style.display = 'grid';
         document.getElementById('commandBar').style.display = 'none';
+        document.body.classList.remove('full-color-share');
         isSwapMode = false; swapObj1 = null;
         isStewardMode = false;
         document.getElementById('exportMenu').style.display = 'none';
@@ -1357,32 +1372,16 @@
 
     function shareDraw() {
         document.getElementById('pdfOverlay').style.display = 'flex';
-        
-        const original = document.getElementById('resultsSection');
-        const clone = original.cloneNode(true);
-        
-        clone.querySelectorAll('.no-print').forEach(el => el.remove());
+        const element = document.getElementById('resultsSection');
         
         const finSummary = document.createElement('div');
+        finSummary.id = 'tempFinSummary';
         finSummary.innerHTML = `<h2 style="text-align:center; color:#10b981; margin-bottom: 25px; font-size:1.4rem;">ENTRY FEES: PRIZE POOL [£${prizeFee}] | SECRET PAIRS [£${pairsFee}]</h2>`;
-        clone.insertBefore(finSummary, clone.firstChild);
+        
+        const resTitle = document.getElementById('resTitle');
+        element.insertBefore(finSummary, resTitle.nextSibling);
 
-        const container = document.createElement('div');
-        container.style.position = 'absolute';
-        container.style.top = '0';
-        container.style.left = '0';
-        container.style.width = '600px'; 
-        container.style.backgroundColor = '#0f172a';
-        container.style.color = '#f8fafc';
-        container.style.zIndex = '9998'; 
-        
-        clone.querySelectorAll('.bucket-grid').forEach(grid => {
-            grid.style.display = 'grid';
-            grid.style.gridTemplateColumns = '1fr';
-        });
-        
-        container.appendChild(clone);
-        document.body.appendChild(container);
+        document.body.classList.add('full-color-share');
 
         setTimeout(() => {
             const matchName = document.getElementById('matchTitle').value || "MATCH_DRAW";
@@ -1395,9 +1394,17 @@
                 jsPDF:        { unit: 'in', format: 'a4', orientation: 'portrait' } 
             };
 
-            html2pdf().set(opt).from(container).save().then(() => {
-                document.body.removeChild(container);
+            html2pdf().set(opt).from(element).save().then(() => {
+                document.body.classList.remove('full-color-share');
+                const summaryEl = document.getElementById('tempFinSummary');
+                if (summaryEl) summaryEl.remove();
                 document.getElementById('pdfOverlay').style.display = 'none';
+            }).catch(err => {
+                document.body.classList.remove('full-color-share');
+                const summaryEl = document.getElementById('tempFinSummary');
+                if (summaryEl) summaryEl.remove();
+                document.getElementById('pdfOverlay').style.display = 'none';
+                console.error("PDF Generation failed:", err);
             });
         }, 500); 
     }
