@@ -1,4 +1,4 @@
-const CACHE_NAME = 'zonedraw-v10.40.0-bootcheck-v1';
+const CACHE_NAME = 'zonedraw-v10.41.0-legacyfix-v1';
 const ASSETS_TO_CACHE = [
     './',
     './index.html',
