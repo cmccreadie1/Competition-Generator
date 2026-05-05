@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ZONEDRAW v10.44.0</title>
+    <title>ZONEDRAW v10.45.0</title>
     <link rel="manifest" href="manifest.json">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
@@ -196,7 +196,7 @@
 <div class="fixed-header no-print">
     <div class="header-content">
         <button class="home-btn" onclick="showHub()" tabindex="-1">🏠 RETURN TO HOMEPAGE</button>
-        <div class="brand-name">ZONEDRAW <span id="vTag" class="v-tag">v10.44.0</span></div>
+        <div class="brand-name">ZONEDRAW <span id="vTag" class="v-tag">v10.45.0</span></div>
         <div style="width: 180px; text-align:right;">
             <button class="btn-tool" onclick="showHistory()" style="font-size: 12px; padding: 8px 15px;">📜 ARCHIVES</button>
         </div>
@@ -222,7 +222,7 @@
 <div id="entrySection" class="no-print">
     <div class="control-panel" id="setupPanel">
         <label style="font-size: 11px; opacity: 0.6; letter-spacing: 1px;">COMPETITION IDENTITY</label>
-        <input type="text" id="matchTitle" style="width:100%; font-size:22px; text-align:center; margin-top:10px;" placeholder="e.g. SCOTTISH SHORE CHAMPIONSHIP 2026">
+        <input type="text" id="matchTitle" style="width:100%; font-size:22px; text-align:center; margin-top:10px;" placeholder="e.g. SCOTTISH SHORE CHAMPIONSHIP 2026" onblur="persistToVault()">
         
         <div style="margin-top:20px; display:flex; flex-direction:column; align-items:center; gap:10px;">
             <label style="font-size: 10px; opacity: 0.6; letter-spacing: 1px; color:var(--accent);">ACCESSIBLE PEGS (MOBILITY PROTOCOL)</label>
@@ -252,13 +252,13 @@
         </div>
         
         <div id="venueNamesConfig" style="margin-top:15px; display:grid; grid-template-columns: 1fr 1fr; gap:10px; max-width: 600px; margin: 20px auto 0;">
-            <input type="text" id="d1v1" placeholder="DAY 1 VENUE..." style="font-size:12px;">
-            <input type="text" id="d1v2" placeholder="DAY 1 VENUE B (GREEN/BLUE)..." style="display:none; font-size:12px;">
-            <input type="text" id="d2v1" placeholder="DAY 2 VENUE..." style="font-size:12px;">
-            <input type="text" id="d2v2" placeholder="DAY 2 VENUE B (GREEN/BLUE)..." style="display:none; font-size:12px;">
+            <input type="text" id="d1v1" placeholder="DAY 1 VENUE..." style="font-size:12px;" onblur="persistToVault()">
+            <input type="text" id="d1v2" placeholder="DAY 1 VENUE B (GREEN/BLUE)..." style="display:none; font-size:12px;" onblur="persistToVault()">
+            <input type="text" id="d2v1" placeholder="DAY 2 VENUE..." style="font-size:12px;" onblur="persistToVault()">
+            <input type="text" id="d2v2" placeholder="DAY 2 VENUE B (GREEN/BLUE)..." style="display:none; font-size:12px;" onblur="persistToVault()">
         </div>
 
-        <button class="btn-action" style="margin-top:40px;" onclick="bulkInit()">INITIALIZE MATCH</button>
+        <button id="initMatchBtn" class="btn-action" style="margin-top:40px;" onclick="bulkInit()">INITIALIZE MATCH</button>
     </div>
     
     <div id="entryList">
@@ -526,6 +526,7 @@
         document.getElementById('hubSection').style.display = 'none';
         document.getElementById('entrySection').style.display = 'block';
         document.getElementById('setupPanel').style.display = 'block';
+        document.getElementById('initMatchBtn').style.display = 'inline-block';
         document.getElementById('amendTools').style.display = 'none';
         document.getElementById('entryTeamsContainer').style.display = 'none';
         document.getElementById('entrySolosContainer').style.display = 'none';
@@ -604,6 +605,7 @@
         for(let x=0; x<t; x++) appState.push({ id: genId(), isTeam: true, tName: '', anglers: [{},{},{},{}] });
         for(let y=0; y<i; y++) appState.push({ id: genId(), isTeam: false, tName: '', anglers: [{}] });
         
+        document.getElementById('initMatchBtn').style.display = 'none';
         document.getElementById('commandBar').style.display = 'flex';
         document.getElementById('amendTools').style.display = 'flex'; 
         document.getElementById('actionBtnArea').style.display = 'flex';
@@ -880,10 +882,22 @@
             
             let rZ = -1;
             if (isMobility) {
-                let safeZones = avZ.filter(idx => {
-                    return pools1[idx].p.some(p => safePegs1.includes(p)) || (matchDays == 2 && pools2[zones.indexOf(rotationMap[zones[idx]])].p.some(p => safePegs2.includes(p)));
+                let perfectZones = avZ.filter(idx => {
+                    let s1 = pools1[idx].p.some(p => safePegs1.includes(p));
+                    let s2 = matchDays == 2 ? pools2[zones.indexOf(rotationMap[zones[idx]])].p.some(p => safePegs2.includes(p)) : true;
+                    return s1 && s2;
                 });
-                if (safeZones.length > 0) rZ = safeZones[Math.floor(Math.random() * safeZones.length)];
+                
+                if (perfectZones.length > 0) {
+                    rZ = perfectZones[Math.floor(Math.random() * perfectZones.length)];
+                } else {
+                    let partialZones = avZ.filter(idx => {
+                        let s1 = pools1[idx].p.some(p => safePegs1.includes(p));
+                        let s2 = matchDays == 2 ? pools2[zones.indexOf(rotationMap[zones[idx]])].p.some(p => safePegs2.includes(p)) : false;
+                        return s1 || s2;
+                    });
+                    if (partialZones.length > 0) rZ = partialZones[Math.floor(Math.random() * partialZones.length)];
+                }
             }
             if (rZ === -1) rZ = avZ[Math.floor(Math.random() * avZ.length)];
             
@@ -907,11 +921,25 @@
                 drawOrder.forEach((item, loopIdx) => {
                     if (item.a.mobility && (safePegs1.length > 0 || safePegs2.length > 0)) {
                         let targetK = -1;
+                        
+                        // Strict AND check for perfect pair
                         for (let k = loopIdx; k < 4; k++) {
                             let zi = zIndexes[k];
-                            let hasSafe = pools1[zi].p.some(p => safePegs1.includes(p)) || (matchDays == 2 && pools2[zones.indexOf(rotationMap[zones[zi]])].p.some(p => safePegs2.includes(p)));
-                            if (hasSafe) { targetK = k; break; }
+                            let s1 = pools1[zi].p.some(p => safePegs1.includes(p));
+                            let s2 = matchDays == 2 ? pools2[zones.indexOf(rotationMap[zones[zi]])].p.some(p => safePegs2.includes(p)) : true;
+                            if (s1 && s2) { targetK = k; break; }
                         }
+                        
+                        // Fallback OR check
+                        if (targetK === -1) {
+                            for (let k = loopIdx; k < 4; k++) {
+                                let zi = zIndexes[k];
+                                let s1 = pools1[zi].p.some(p => safePegs1.includes(p));
+                                let s2 = matchDays == 2 ? pools2[zones.indexOf(rotationMap[zones[zi]])].p.some(p => safePegs2.includes(p)) : false;
+                                if (s1 || s2) { targetK = k; break; }
+                            }
+                        }
+
                         if (targetK !== -1 && targetK !== loopIdx) {
                             let temp = zIndexes[loopIdx];
                             zIndexes[loopIdx] = zIndexes[targetK];
@@ -1471,9 +1499,13 @@
     }
 
     function handleAmend() {
-        document.getElementById('resultsSection').style.display = 'none'; document.getElementById('entrySection').style.display = 'block'; 
-        document.getElementById('setupPanel').style.display = 'none'; document.getElementById('commandBar').style.display = 'flex';
-        document.getElementById('amendTools').style.display = 'flex'; document.getElementById('actionBtnArea').style.display = 'flex';
+        document.getElementById('resultsSection').style.display = 'none'; 
+        document.getElementById('entrySection').style.display = 'block'; 
+        document.getElementById('setupPanel').style.display = 'block'; 
+        document.getElementById('initMatchBtn').style.display = 'none';
+        document.getElementById('commandBar').style.display = 'flex';
+        document.getElementById('amendTools').style.display = 'flex'; 
+        document.getElementById('actionBtnArea').style.display = 'flex';
         document.getElementById('cashModule').style.display = 'none';
         isStewardMode = false;
         renderStateToScreen(); window.scrollTo(0,0);
