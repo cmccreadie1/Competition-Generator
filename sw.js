@@ -1,4 +1,4 @@
-const CACHE_NAME = 'zonedraw-v10.43.0-modalescape-v1';
+const CACHE_NAME = 'zonedraw-v10.44.0-dualmobility-v1';
 const ASSETS_TO_CACHE = [
     './',
     './index.html',
