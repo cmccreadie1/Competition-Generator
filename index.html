@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ZONEDRAW v10.40.0</title>
+    <title>ZONEDRAW v10.41.0</title>
     <link rel="manifest" href="manifest.json">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
@@ -180,7 +180,7 @@
 <div class="fixed-header no-print">
     <div class="header-content">
         <button class="home-btn" onclick="showHub()" tabindex="-1">🏠 RETURN TO HOMEPAGE</button>
-        <div class="brand-name">ZONEDRAW <span id="vTag" class="v-tag">v10.40.0</span></div>
+        <div class="brand-name">ZONEDRAW <span id="vTag" class="v-tag">v10.41.0</span></div>
         <div style="width: 180px; text-align:right;">
             <button class="btn-tool" onclick="showHistory()" style="font-size: 12px; padding: 8px 15px;">📜 ARCHIVES</button>
         </div>
@@ -971,6 +971,11 @@
             e2.anglers[aIdx].z2 = tempZ2;
             e2.anglers[aIdx].p2 = tempP2;
             
+            e2.anglers[aIdx].z1 = tempZ1;
+            e2.anglers[aIdx].p1 = tempP1;
+            e2.anglers[aIdx].z2 = tempZ2;
+            e2.anglers[aIdx].p2 = tempP2;
+            
             persistToVault();
             toggleSwapMode(); 
         }
@@ -1461,8 +1466,25 @@
         }, 500); 
     }
     
-    // NEW: On-Boot Initialization
+    // NEW: On-Boot Initialization with Legacy Catch-Up Migration
     window.onload = () => {
+        let migrated = localStorage.getItem('zonedraw_legacy_migrated');
+        let activeKey = localStorage.getItem('zonedraw_active_key');
+        let vault = JSON.parse(localStorage.getItem('zonedraw_vault_v10') || '{}');
+        
+        if (!activeKey && !migrated) {
+            const keys = Object.keys(vault);
+            if (keys.length > 0) {
+                let latestKey = keys[0];
+                let latestTime = 0;
+                keys.forEach(k => {
+                    let t = new Date(vault[k].time).getTime();
+                    if(t > latestTime) { latestTime = t; latestKey = k; }
+                });
+                localStorage.setItem('zonedraw_active_key', latestKey);
+            }
+            localStorage.setItem('zonedraw_legacy_migrated', 'true');
+        }
         showHub();
     };
 </script>
