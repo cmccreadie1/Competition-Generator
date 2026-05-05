@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ZONEDRAW v10.32.0</title>
+    <title>ZONEDRAW v10.33.0</title>
     <link rel="manifest" href="manifest.json">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
@@ -95,7 +95,7 @@
         .legend-item { display: flex; align-items: center; gap: 8px; background: rgba(255,255,255,0.05); padding: 6px 12px; border-radius: 8px; border: 1px solid var(--border); }
         .legend-swatch { width: 14px; height: 14px; border-radius: 4px; }
 
-        /* Legacy Dispatch Slip Print Styles (Used for PDF Export formatting) */
+        /* Legacy Dispatch Slip Print Styles */
         .dispatch-slip { background: white; color: black; padding: 40px; border: 6px solid black; margin-bottom: 40px; text-align: left; page-break-after: always; position: relative; font-family: 'Inter', sans-serif; text-transform: uppercase; box-sizing: border-box; }
         .dispatch-header { border-bottom: 8px solid black; padding-bottom: 15px; margin-bottom: 25px; display: flex; justify-content: space-between; align-items: flex-end; }
         .dispatch-header h1 { font-size: 28px; margin: 0; letter-spacing: -1px; }
@@ -106,7 +106,7 @@
         .receipt-zone { margin-top: 60px; border-top: 4px dashed black; padding-top: 25px; position: relative; }
         .sig-line { margin-top: 40px; border-bottom: 2px solid black; display: flex; justify-content: space-between; align-items: flex-end; }
 
-        /* High-Density Zone Roster Print Styles (Used for PDF Export formatting) */
+        /* High-Density Zone Roster Print Styles */
         .roster-page { page-break-after: always; background: white; min-height: 100vh; padding: 20px; box-sizing: border-box; font-family: 'Inter', sans-serif; color: black; text-transform: uppercase; }
         .roster-header { background: #0f172a; color: white; padding: 15px 20px; border-radius: 8px 8px 0 0; text-align: center; margin-bottom: 0; border-bottom: 4px solid; } 
         .roster-header h1 { font-size: 18px; margin: 0 0 5px 0; color: #94a3b8; letter-spacing: 1px;}
@@ -136,7 +136,6 @@
         .pdf-master-wrapper .m-peg { border: 2px solid #fde047 !important; }
 
         @media print { 
-            /* Fallback print styles just in case user hits Ctrl+P natively */
             .no-print { display: none !important; } 
             body { background: white !important; color: black !important; }
             .bucket-grid { display: grid !important; grid-template-columns: repeat(2, 1fr) !important; gap: 10px !important; }
@@ -162,7 +161,7 @@
 <div class="fixed-header no-print">
     <div class="header-content">
         <button class="home-btn" onclick="showHub()" tabindex="-1">🏠 RETURN TO HOMEPAGE</button>
-        <div class="brand-name">ZONEDRAW <span id="vTag" class="v-tag">v10.32.0</span></div>
+        <div class="brand-name">ZONEDRAW <span id="vTag" class="v-tag">v10.33.0</span></div>
         <div style="width: 180px;"></div>
     </div>
 </div>
@@ -1081,13 +1080,13 @@
         document.body.appendChild(container);
 
         const matchName = document.getElementById('matchTitle').value || "MATCH";
+        const ts = Date.now();
         const opt = {
             margin:       0,
-            filename:     `${matchName.replace(/[^a-z0-9]/gi, '_')}_Zone_Rosters.pdf`,
+            filename:     `${matchName.replace(/[^a-z0-9]/gi, '_')}_Zone_Rosters_${ts}.pdf`,
             image:        { type: 'jpeg', quality: 0.98 },
             html2canvas:  { scale: 2, useCORS: true, backgroundColor: '#ffffff' },
-            jsPDF:        { unit: 'in', format: 'a4', orientation: 'portrait' },
-            pagebreak:    { mode: ['css', 'legacy'] }
+            jsPDF:        { unit: 'in', format: 'a4', orientation: 'portrait' }
         };
 
         html2pdf().set(opt).from(container).save().then(() => {
@@ -1229,9 +1228,10 @@
         element.insertBefore(header, element.firstChild);
         
         const matchName = document.getElementById('matchTitle').value || "REGISTRATION";
+        const ts = Date.now();
         const opt = {
             margin:       0.3,
-            filename:     `${matchName.replace(/[^a-z0-9]/gi, '_')}_Steward_Sheet.pdf`,
+            filename:     `${matchName.replace(/[^a-z0-9]/gi, '_')}_Steward_Sheet_${ts}.pdf`,
             image:        { type: 'jpeg', quality: 0.98 },
             html2canvas:  { scale: 2, useCORS: true, backgroundColor: '#0f172a' },
             jsPDF:        { unit: 'in', format: 'a4', orientation: 'landscape' }
@@ -1265,8 +1265,9 @@
         const lnk = document.createElement('a'); lnk.href = URL.createObjectURL(blob); 
         
         let matchName = document.getElementById('matchTitle').value.trim();
-        if(!matchName) matchName = "REGISTRATION_" + Date.now();
-        else matchName = matchName.replace(/[^a-z0-9]/gi, '_').toUpperCase() + "_REGISTRATION";
+        const ts = Date.now();
+        if(!matchName) matchName = "REGISTRATION_" + ts;
+        else matchName = matchName.replace(/[^a-z0-9]/gi, '_').toUpperCase() + "_REGISTRATION_" + ts;
         
         lnk.download = `${matchName}.csv`; 
         lnk.click();
@@ -1288,8 +1289,9 @@
         const lnk = document.createElement('a'); lnk.href = URL.createObjectURL(blob); 
         
         let matchName = document.getElementById('matchTitle').value.trim();
-        if(!matchName) matchName = "ZONEDRAW_EXPORT_" + Date.now();
-        else matchName = matchName.replace(/[^a-z0-9]/gi, '_').toUpperCase();
+        const ts = Date.now();
+        if(!matchName) matchName = "ZONEDRAW_EXPORT_" + ts;
+        else matchName = matchName.replace(/[^a-z0-9]/gi, '_').toUpperCase() + "_" + ts;
         
         lnk.download = `${matchName}.csv`; 
         lnk.click();
@@ -1350,9 +1352,11 @@
         container.innerHTML = h;
         document.body.appendChild(container);
 
+        const matchName = document.getElementById('matchTitle').value || "MATCH";
+        const ts = Date.now();
         const opt = {
             margin:       0.2,
-            filename:     `${title.replace(/[^a-z0-9]/gi, '_')}_Captains_Pack.pdf`,
+            filename:     `${matchName.replace(/[^a-z0-9]/gi, '_')}_Captains_Pack_${ts}.pdf`,
             image:        { type: 'jpeg', quality: 0.98 },
             html2canvas:  { scale: 2, useCORS: true, backgroundColor: '#0f172a' },
             jsPDF:        { unit: 'in', format: 'a4', orientation: 'portrait' }
@@ -1464,9 +1468,10 @@
         document.body.appendChild(container);
 
         const matchName = document.getElementById('matchTitle').value || "MATCH";
+        const ts = Date.now();
         const opt = {
             margin:       0.2,
-            filename:     `${matchName.replace(/[^a-z0-9]/gi, '_')}_Team_Slips.pdf`,
+            filename:     `${matchName.replace(/[^a-z0-9]/gi, '_')}_Team_Slips_${ts}.pdf`,
             image:        { type: 'jpeg', quality: 0.98 },
             html2canvas:  { scale: 2, useCORS: true, backgroundColor: '#ffffff' },
             jsPDF:        { unit: 'in', format: 'a4', orientation: 'portrait' },
@@ -1498,10 +1503,11 @@
         document.body.appendChild(container);
 
         const matchName = document.getElementById('matchTitle').value || "MATCH_DRAW";
+        const ts = Date.now();
         
         const opt = {
             margin:       0.2,
-            filename:     `${matchName.replace(/[^a-z0-9]/gi, '_')}_Premium_Draw.pdf`,
+            filename:     `${matchName.replace(/[^a-z0-9]/gi, '_')}_Premium_Draw_${ts}.pdf`,
             image:        { type: 'jpeg', quality: 0.98 },
             html2canvas:  { scale: 2, useCORS: true, backgroundColor: '#0f172a' },
             jsPDF:        { unit: 'in', format: 'a4', orientation: 'portrait' } 
