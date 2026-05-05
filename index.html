@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ZONEDRAW v10.31.0</title>
+    <title>ZONEDRAW v10.32.0</title>
     <link rel="manifest" href="manifest.json">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
@@ -38,7 +38,7 @@
         .hub-icon { font-size: 44px; margin-bottom: 20px; display: block; filter: drop-shadow(0 0 10px var(--accent-glow)); }
         .hub-title { font-size: 18px; font-weight: 900; letter-spacing: 1px; }
 
-        #entrySection, #resultsSection, #stewardSection, #historySection { max-width: 1400px; margin: 0 auto; padding: 110px 20px 140px; display: none; }
+        #entrySection, #resultsSection, #stewardSection, #historySection, #dispatchSection, #rosterSection { max-width: 1400px; margin: 0 auto; padding: 110px 20px 140px; display: none; }
         .control-panel { background: var(--card); border-radius: 24px; padding: 30px; border: 1px solid var(--border); text-align: center; margin-bottom: 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.2); }
         
         .bucket-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(400px, 1fr)); gap: 18px; }
@@ -117,19 +117,44 @@
         .roster-table td { padding: 6px 8px; border-bottom: 1px solid #e2e8f0; vertical-align: middle; color: black; }
         .roster-table tr:nth-child(even) { background-color: #f8fafc; }
 
-        /* -----------------------------------------------------
-           DIGITAL PDF EXPORT (Mobile-First Contrast Lock)
-           ----------------------------------------------------- */
-        body.full-color-share { background-color: #0f172a !important; color: #f8fafc !important; }
-        body.full-color-share #resultsSection { max-width: 650px !important; margin: 0 auto !important; padding: 20px !important; background-color: #0f172a !important; }
-        body.full-color-share #resTitle { color: #f8fafc !important; font-size: 2.2rem !important; margin-bottom: 20px !important; }
-        body.full-color-share .horizontal-legend { color: #f8fafc !important; font-size: 11px !important; gap: 10px !important; }
-        body.full-color-share .legend-item { color: #f8fafc !important; border-color: rgba(255,255,255,0.2) !important; padding: 6px 10px !important; }
-        
-        body.full-color-share .bucket-grid { display: grid !important; grid-template-columns: 1fr !important; gap: 12px !important; }
-        body.full-color-share .zone-card { break-inside: avoid !important; page-break-inside: avoid !important; margin-bottom: 0 !important; }
-        body.full-color-share .res-row { grid-template-columns: 1fr 75px 75px !important; gap: 4px !important; }
-        body.full-color-share .no-print { display: none !important; }
+        /* Off-Screen Safe Master PDF Styles */
+        .pdf-master-wrapper { font-family: 'Inter', system-ui, sans-serif; text-transform: uppercase; background-color: #0f172a; color: #f8fafc; padding: 20px; box-sizing: border-box; }
+        .pdf-master-wrapper #resTitle { color: #f8fafc !important; font-size: 2.2rem !important; margin-bottom: 20px !important; text-align: center; }
+        .pdf-master-wrapper .horizontal-legend { display: flex !important; justify-content: center; color: #f8fafc !important; font-size: 11px !important; gap: 10px !important; margin-bottom: 25px; flex-wrap: wrap; }
+        .pdf-master-wrapper .legend-item { display: flex; align-items: center; gap: 6px; color: #f8fafc !important; border: 1px solid rgba(255,255,255,0.2) !important; padding: 6px 10px !important; background: rgba(255,255,255,0.05); border-radius: 8px; }
+        .pdf-master-wrapper .legend-swatch { width: 12px; height: 12px; border-radius: 4px; }
+        .pdf-master-wrapper .group-label { font-size: 1.4rem; font-weight: 900; color: #6366f1; border-left: 5px solid #6366f1; padding-left: 15px; margin: 40px 0 20px; letter-spacing: 1px; }
+        .pdf-master-wrapper .bucket-grid { display: grid !important; grid-template-columns: 1fr !important; gap: 12px !important; }
+        .pdf-master-wrapper .zone-card { break-inside: avoid !important; page-break-inside: avoid !important; margin-bottom: 0 !important; background: rgba(30, 41, 59, 0.9); border: 1px solid rgba(148, 163, 184, 0.2); border-radius: 12px; padding: 12px; }
+        .pdf-master-wrapper .zone-header { font-size: 10px; font-weight: 900; color: #6366f1; margin-bottom: 8px; border-bottom: 1px solid rgba(148, 163, 184, 0.2); padding-bottom: 6px; }
+        .pdf-master-wrapper .res-row { display: grid !important; grid-template-columns: 1fr 75px 75px !important; gap: 4px !important; border-bottom: 1px solid rgba(255,255,255,0.05); align-items: center; padding: 6px 0; }
+        .pdf-master-wrapper .angler-name { font-size: 13px; font-weight: 900; letter-spacing: 0.5px; }
+        .pdf-master-wrapper .draw-pill { padding: 4px 8px; border-radius: 6px; font-size: 9px; font-weight: 900; color: white; text-align: center; }
+        .pdf-master-wrapper .peg-num { font-size: 16px; font-weight: 900; margin-left: 5px; }
+        .pdf-master-wrapper .m-name { color: #fde047; }
+        .pdf-master-wrapper .m-tag { color: #fde047; font-weight: 900; margin-left: 4px; font-size: 12px; }
+        .pdf-master-wrapper .m-peg { border: 2px solid #fde047 !important; }
+
+        @media print { 
+            /* Fallback print styles just in case user hits Ctrl+P natively */
+            .no-print { display: none !important; } 
+            body { background: white !important; color: black !important; }
+            .bucket-grid { display: grid !important; grid-template-columns: repeat(2, 1fr) !important; gap: 10px !important; }
+            .zone-card { border: 1px solid #ddd !important; background: white !important; break-inside: avoid !important; page-break-inside: avoid !important; }
+            .angler-name { color: black !important; }
+            .draw-pill { color: black !important; border: 1px solid #ccc; background: none !important; }
+            .fixed-header { display: none; }
+            .legend-item { color: black !important; border: 1px solid #ccc !important; }
+            .check-sheet-table th { color: black !important; border-bottom: 2px solid black !important; }
+            .check-sheet-table td { border-bottom: 1px solid #ddd !important; }
+            .steward-input { border: none !important; background: transparent !important; color: black !important; padding: 0 !important; font-size: 14px !important; }
+            .steward-input::placeholder { color: transparent !important; }
+            .cb-custom { border: 2px solid black !important; background: white !important; box-shadow: none !important; }
+            .cb-custom.active::after { color: black !important; }
+            .m-name { color: black !important; }
+            .m-tag { color: black !important; text-shadow: none !important; }
+            .m-peg { border: 2px solid black !important; box-shadow: none !important; }
+        }
     </style>
 </head>
 <body>
@@ -137,7 +162,7 @@
 <div class="fixed-header no-print">
     <div class="header-content">
         <button class="home-btn" onclick="showHub()" tabindex="-1">🏠 RETURN TO HOMEPAGE</button>
-        <div class="brand-name">ZONEDRAW <span id="vTag" class="v-tag">v10.31.0</span></div>
+        <div class="brand-name">ZONEDRAW <span id="vTag" class="v-tag">v10.32.0</span></div>
         <div style="width: 180px;"></div>
     </div>
 </div>
@@ -308,7 +333,6 @@
         document.querySelectorAll('body > div[id$="Section"]').forEach(s => s.style.display = 'none');
         document.getElementById('hubSection').style.display = 'grid';
         document.getElementById('commandBar').style.display = 'none';
-        document.body.classList.remove('full-color-share');
         isSwapMode = false; swapObj1 = null;
         isStewardMode = false;
         document.getElementById('exportMenu').style.display = 'none';
@@ -985,6 +1009,10 @@
 
     function exportZoneRostersPDF() {
         const container = document.createElement('div');
+        container.style.position = 'absolute';
+        container.style.left = '-9999px';
+        container.style.top = '0';
+        container.style.zIndex = '-9999';
         container.style.width = '800px';
         container.style.backgroundColor = 'white';
         container.style.color = 'black';
@@ -1186,7 +1214,6 @@
     function exportStewardPDF() {
         const element = document.getElementById('stewardArea');
         
-        // Lock input values so html2canvas renders them
         element.querySelectorAll('input').forEach(inp => inp.setAttribute('value', inp.value));
         
         const controls = element.querySelector('.control-panel');
@@ -1271,6 +1298,10 @@
     function shareCaptainsPack() {
         const container = document.createElement('div');
         container.id = 'tempCaptainsPack';
+        container.style.position = 'absolute';
+        container.style.left = '-9999px';
+        container.style.top = '0';
+        container.style.zIndex = '-9999';
         container.style.backgroundColor = '#0f172a';
         container.style.color = '#f8fafc';
         container.style.padding = '20px';
@@ -1280,8 +1311,8 @@
 
         const title = document.getElementById('matchTitle').value || 'THE MATCH';
         
-        let h = `<h1 style="text-align:center; font-size:24px; border-bottom:4px solid var(--accent); padding-bottom:10px; margin-bottom:20px;">${title} - CAPTAINS PACK</h1>`;
-        h += `<div style="text-align:center; margin-bottom:30px; font-weight:900; color:var(--accent); font-size:16px;">ENTRY FEES: PRIZE POOL [£${prizeFee}] | SECRET PAIRS [£${pairsFee}]</div>`;
+        let h = `<h1 style="text-align:center; font-size:24px; border-bottom:4px solid #6366f1; padding-bottom:10px; margin-bottom:20px;">${title} - CAPTAINS PACK</h1>`;
+        h += `<div style="text-align:center; margin-bottom:30px; font-weight:900; color:#6366f1; font-size:16px;">ENTRY FEES: PRIZE POOL [£${prizeFee}] | SECRET PAIRS [£${pairsFee}]</div>`;
         
         const teams = appState.filter(e => e.isTeam);
         const solos = appState.filter(e => !e.isTeam);
@@ -1303,8 +1334,8 @@
         };
 
         teams.forEach(e => {
-            h += `<div style="background:rgba(30, 41, 59, 0.9); border: 1px solid rgba(148, 163, 184, 0.2); border-radius: 12px; padding: 15px; margin-bottom: 20px; border-top: 4px solid var(--accent);">`;
-            h += `<div style="font-size:18px; font-weight:900; margin-bottom:10px; color:var(--accent); text-align:center;">TEAM: ${e.tName || 'UNNAMED'}</div>`;
+            h += `<div style="background:rgba(30, 41, 59, 0.9); border: 1px solid rgba(148, 163, 184, 0.2); border-radius: 12px; padding: 15px; margin-bottom: 20px; border-top: 4px solid #6366f1;">`;
+            h += `<div style="font-size:18px; font-weight:900; margin-bottom:10px; color:#6366f1; text-align:center;">TEAM: ${e.tName || 'UNNAMED'}</div>`;
             e.anglers.forEach(a => h += renderAnglerRow(a));
             h += `</div>`;
         });
@@ -1324,8 +1355,7 @@
             filename:     `${title.replace(/[^a-z0-9]/gi, '_')}_Captains_Pack.pdf`,
             image:        { type: 'jpeg', quality: 0.98 },
             html2canvas:  { scale: 2, useCORS: true, backgroundColor: '#0f172a' },
-            jsPDF:        { unit: 'in', format: 'portrait' },
-            pagebreak:    { mode: ['css', 'legacy'] }
+            jsPDF:        { unit: 'in', format: 'a4', orientation: 'portrait' }
         };
 
         html2pdf().set(opt).from(container).save().then(() => {
@@ -1335,6 +1365,10 @@
 
     function exportDispatchSlipsPDF() {
         const container = document.createElement('div');
+        container.style.position = 'absolute';
+        container.style.left = '-9999px';
+        container.style.top = '0';
+        container.style.zIndex = '-9999';
         container.style.width = '800px';
         container.style.backgroundColor = 'white';
         container.style.color = 'black';
@@ -1445,25 +1479,37 @@
     }
 
     function shareDraw() {
-        const element = document.getElementById('resultsSection');
+        const original = document.getElementById('resultsSection');
+        const clone = original.cloneNode(true);
+        
+        const uiElements = clone.querySelectorAll('.no-print, #exportMenu, #swapPrompt, #exportToggleBtn');
+        uiElements.forEach(el => el.remove());
+
+        const container = document.createElement('div');
+        container.id = 'tempMasterDraw';
+        container.style.position = 'absolute';
+        container.style.left = '-9999px';
+        container.style.top = '0';
+        container.style.zIndex = '-9999';
+        container.style.width = '650px';
+        container.classList.add('pdf-master-wrapper'); 
+        
+        container.appendChild(clone);
+        document.body.appendChild(container);
+
         const matchName = document.getElementById('matchTitle').value || "MATCH_DRAW";
         
-        document.body.classList.add('full-color-share');
+        const opt = {
+            margin:       0.2,
+            filename:     `${matchName.replace(/[^a-z0-9]/gi, '_')}_Premium_Draw.pdf`,
+            image:        { type: 'jpeg', quality: 0.98 },
+            html2canvas:  { scale: 2, useCORS: true, backgroundColor: '#0f172a' },
+            jsPDF:        { unit: 'in', format: 'a4', orientation: 'portrait' } 
+        };
 
-        setTimeout(() => {
-            const opt = {
-                margin:       0.2,
-                filename:     `${matchName}_Premium_Draw.pdf`,
-                image:        { type: 'jpeg', quality: 0.98 },
-                html2canvas:  { scale: 2, useCORS: true, backgroundColor: '#0f172a' },
-                jsPDF:        { unit: 'in', format: 'portrait' },
-                pagebreak:    { mode: ['css', 'legacy'] }
-            };
-
-            html2pdf().set(opt).from(element).save().then(() => {
-                document.body.classList.remove('full-color-share');
-            });
-        }, 100);
+        html2pdf().set(opt).from(container).save().then(() => {
+            document.body.removeChild(container);
+        });
     }
 </script>
 </body>
