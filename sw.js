@@ -1,4 +1,4 @@
-const CACHE_NAME = 'zonedraw-v10.38.0-livecap-v1';
+const CACHE_NAME = 'zonedraw-v10.39.0-glass-archive-v1';
 const ASSETS_TO_CACHE = [
     './',
     './index.html',
