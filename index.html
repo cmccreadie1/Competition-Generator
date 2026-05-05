@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ZONEDRAW v10.33.0</title>
+    <title>ZONEDRAW v10.34.0</title>
     <link rel="manifest" href="manifest.json">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
@@ -117,23 +117,19 @@
         .roster-table td { padding: 6px 8px; border-bottom: 1px solid #e2e8f0; vertical-align: middle; color: black; }
         .roster-table tr:nth-child(even) { background-color: #f8fafc; }
 
-        /* Off-Screen Safe Master PDF Styles */
-        .pdf-master-wrapper { font-family: 'Inter', system-ui, sans-serif; text-transform: uppercase; background-color: #0f172a; color: #f8fafc; padding: 20px; box-sizing: border-box; }
-        .pdf-master-wrapper #resTitle { color: #f8fafc !important; font-size: 2.2rem !important; margin-bottom: 20px !important; text-align: center; }
-        .pdf-master-wrapper .horizontal-legend { display: flex !important; justify-content: center; color: #f8fafc !important; font-size: 11px !important; gap: 10px !important; margin-bottom: 25px; flex-wrap: wrap; }
-        .pdf-master-wrapper .legend-item { display: flex; align-items: center; gap: 6px; color: #f8fafc !important; border: 1px solid rgba(255,255,255,0.2) !important; padding: 6px 10px !important; background: rgba(255,255,255,0.05); border-radius: 8px; }
-        .pdf-master-wrapper .legend-swatch { width: 12px; height: 12px; border-radius: 4px; }
-        .pdf-master-wrapper .group-label { font-size: 1.4rem; font-weight: 900; color: #6366f1; border-left: 5px solid #6366f1; padding-left: 15px; margin: 40px 0 20px; letter-spacing: 1px; }
-        .pdf-master-wrapper .bucket-grid { display: grid !important; grid-template-columns: 1fr !important; gap: 12px !important; }
-        .pdf-master-wrapper .zone-card { break-inside: avoid !important; page-break-inside: avoid !important; margin-bottom: 0 !important; background: rgba(30, 41, 59, 0.9); border: 1px solid rgba(148, 163, 184, 0.2); border-radius: 12px; padding: 12px; }
-        .pdf-master-wrapper .zone-header { font-size: 10px; font-weight: 900; color: #6366f1; margin-bottom: 8px; border-bottom: 1px solid rgba(148, 163, 184, 0.2); padding-bottom: 6px; }
-        .pdf-master-wrapper .res-row { display: grid !important; grid-template-columns: 1fr 75px 75px !important; gap: 4px !important; border-bottom: 1px solid rgba(255,255,255,0.05); align-items: center; padding: 6px 0; }
-        .pdf-master-wrapper .angler-name { font-size: 13px; font-weight: 900; letter-spacing: 0.5px; }
-        .pdf-master-wrapper .draw-pill { padding: 4px 8px; border-radius: 6px; font-size: 9px; font-weight: 900; color: white; text-align: center; }
-        .pdf-master-wrapper .peg-num { font-size: 16px; font-weight: 900; margin-left: 5px; }
-        .pdf-master-wrapper .m-name { color: #fde047; }
-        .pdf-master-wrapper .m-tag { color: #fde047; font-weight: 900; margin-left: 4px; font-size: 12px; }
-        .pdf-master-wrapper .m-peg { border: 2px solid #fde047 !important; }
+        /* -----------------------------------------------------
+           DIGITAL PDF EXPORT (Mobile-First Contrast Lock)
+           ----------------------------------------------------- */
+        body.full-color-share { background-color: #0f172a !important; color: #f8fafc !important; }
+        body.full-color-share #resultsSection { max-width: 650px !important; margin: 0 auto !important; padding: 20px !important; background-color: #0f172a !important; }
+        body.full-color-share #resTitle { color: #f8fafc !important; font-size: 2.2rem !important; margin-bottom: 20px !important; }
+        body.full-color-share .horizontal-legend { color: #f8fafc !important; font-size: 11px !important; gap: 10px !important; }
+        body.full-color-share .legend-item { color: #f8fafc !important; border-color: rgba(255,255,255,0.2) !important; padding: 6px 10px !important; }
+        
+        body.full-color-share .bucket-grid { display: grid !important; grid-template-columns: 1fr !important; gap: 12px !important; }
+        body.full-color-share .zone-card { break-inside: avoid !important; page-break-inside: avoid !important; margin-bottom: 0 !important; }
+        body.full-color-share .res-row { grid-template-columns: 1fr 75px 75px !important; gap: 4px !important; }
+        body.full-color-share .no-print { display: none !important; }
 
         @media print { 
             .no-print { display: none !important; } 
@@ -161,7 +157,7 @@
 <div class="fixed-header no-print">
     <div class="header-content">
         <button class="home-btn" onclick="showHub()" tabindex="-1">🏠 RETURN TO HOMEPAGE</button>
-        <div class="brand-name">ZONEDRAW <span id="vTag" class="v-tag">v10.33.0</span></div>
+        <div class="brand-name">ZONEDRAW <span id="vTag" class="v-tag">v10.34.0</span></div>
         <div style="width: 180px;"></div>
     </div>
 </div>
@@ -332,6 +328,7 @@
         document.querySelectorAll('body > div[id$="Section"]').forEach(s => s.style.display = 'none');
         document.getElementById('hubSection').style.display = 'grid';
         document.getElementById('commandBar').style.display = 'none';
+        document.body.classList.remove('full-color-share');
         isSwapMode = false; swapObj1 = null;
         isStewardMode = false;
         document.getElementById('exportMenu').style.display = 'none';
@@ -1009,7 +1006,7 @@
     function exportZoneRostersPDF() {
         const container = document.createElement('div');
         container.style.position = 'absolute';
-        container.style.left = '-9999px';
+        container.style.left = '0';
         container.style.top = '0';
         container.style.zIndex = '-9999';
         container.style.width = '800px';
@@ -1301,7 +1298,7 @@
         const container = document.createElement('div');
         container.id = 'tempCaptainsPack';
         container.style.position = 'absolute';
-        container.style.left = '-9999px';
+        container.style.left = '0';
         container.style.top = '0';
         container.style.zIndex = '-9999';
         container.style.backgroundColor = '#0f172a';
@@ -1370,7 +1367,7 @@
     function exportDispatchSlipsPDF() {
         const container = document.createElement('div');
         container.style.position = 'absolute';
-        container.style.left = '-9999px';
+        container.style.left = '0';
         container.style.top = '0';
         container.style.zIndex = '-9999';
         container.style.width = '800px';
@@ -1484,38 +1481,25 @@
     }
 
     function shareDraw() {
-        const original = document.getElementById('resultsSection');
-        const clone = original.cloneNode(true);
-        
-        const uiElements = clone.querySelectorAll('.no-print, #exportMenu, #swapPrompt, #exportToggleBtn');
-        uiElements.forEach(el => el.remove());
-
-        const container = document.createElement('div');
-        container.id = 'tempMasterDraw';
-        container.style.position = 'absolute';
-        container.style.left = '-9999px';
-        container.style.top = '0';
-        container.style.zIndex = '-9999';
-        container.style.width = '650px';
-        container.classList.add('pdf-master-wrapper'); 
-        
-        container.appendChild(clone);
-        document.body.appendChild(container);
-
+        const element = document.getElementById('resultsSection');
         const matchName = document.getElementById('matchTitle').value || "MATCH_DRAW";
-        const ts = Date.now();
         
-        const opt = {
-            margin:       0.2,
-            filename:     `${matchName.replace(/[^a-z0-9]/gi, '_')}_Premium_Draw_${ts}.pdf`,
-            image:        { type: 'jpeg', quality: 0.98 },
-            html2canvas:  { scale: 2, useCORS: true, backgroundColor: '#0f172a' },
-            jsPDF:        { unit: 'in', format: 'a4', orientation: 'portrait' } 
-        };
+        document.body.classList.add('full-color-share');
 
-        html2pdf().set(opt).from(container).save().then(() => {
-            document.body.removeChild(container);
-        });
+        setTimeout(() => {
+            const ts = Date.now();
+            const opt = {
+                margin:       0.2,
+                filename:     `${matchName.replace(/[^a-z0-9]/gi, '_')}_Premium_Draw_${ts}.pdf`,
+                image:        { type: 'jpeg', quality: 0.98 },
+                html2canvas:  { scale: 2, useCORS: true, backgroundColor: '#0f172a' },
+                jsPDF:        { unit: 'in', format: 'a4', orientation: 'portrait' } 
+            };
+
+            html2pdf().set(opt).from(element).save().then(() => {
+                document.body.classList.remove('full-color-share');
+            });
+        }, 100);
     }
 </script>
 </body>
