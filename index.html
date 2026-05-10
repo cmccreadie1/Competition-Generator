@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ZONEDRAW v10.48.0</title>
+    <title>ZONEDRAW v10.49.0</title>
     <link rel="manifest" href="manifest.json">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
@@ -37,6 +37,9 @@
         input { text-transform: uppercase; font-weight: 900 !important; color: var(--text); background: rgba(0,0,0,0.03); border: 1px solid var(--border); border-radius: 8px; padding: 10px 12px; outline: none; transition: 0.2s; width: 100%; box-sizing: border-box; }
         input:focus { border-color: var(--accent); box-shadow: 0 0 15px var(--accent-glow); background: rgba(0,0,0,0.05); }
 
+        select { text-transform: uppercase; font-weight: 900; color: var(--text); background: rgba(0,0,0,0.03); border: 1px solid var(--border); border-radius: 8px; padding: 10px 12px; outline: none; transition: 0.2s; width: 100%; box-sizing: border-box; }
+        select:focus { border-color: var(--accent); box-shadow: 0 0 15px var(--accent-glow); }
+
         .fixed-header { position: fixed; top: 0; left: 0; right: 0; z-index: 5000; background: rgba(248, 250, 252, 0.95); backdrop-filter: blur(15px); border-bottom: 1px solid var(--border); padding: 12px 20px; box-shadow: 0 4px 20px rgba(0,0,0,0.05); }
         .header-content { display: flex; justify-content: space-between; align-items: center; max-width: 1400px; margin: 0 auto; }
         .brand-name { font-size: 18px; font-weight: 900; letter-spacing: -1px; color: var(--text); display: flex; align-items: center; }
@@ -60,8 +63,8 @@
         
         .bucket-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(400px, 1fr)); gap: 18px; }
 
-        .duration-toggle { display: grid; grid-template-columns: 1fr 1fr; gap: 5px; background: rgba(0,0,0,0.05); padding: 5px; border-radius: 12px; width: 200px; margin: 0 auto; }
-        .dt-opt { padding: 12px 0; border-radius: 8px; cursor: pointer; font-weight: 900; font-size: 12px; transition: 0.2s; display: flex; align-items: center; justify-content: center; color: var(--text); }
+        .duration-toggle { display: grid; grid-template-columns: 1fr 1fr; gap: 5px; background: rgba(0,0,0,0.05); padding: 5px; border-radius: 12px; width: 100%; margin: 0 auto; }
+        .dt-opt { padding: 12px 10px; border-radius: 8px; cursor: pointer; font-weight: 900; font-size: 12px; transition: 0.2s; display: flex; align-items: center; justify-content: center; color: var(--text); }
         .dt-opt.active { background: var(--accent); color: white; box-shadow: 0 4px 10px var(--accent-glow); }
 
         .zone-card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 12px; backdrop-filter: blur(10px); position: relative; transition: 0.3s; break-inside: avoid; page-break-inside: avoid; box-shadow: 0 4px 15px rgba(0,0,0,0.03); }
@@ -102,6 +105,7 @@
 
         .btn-action { background: var(--accent); border: none; color: white; font-weight: 900; padding: 16px 32px; border-radius: 12px; cursor: pointer; transition: 0.2s; font-size: 13px; box-shadow: 0 4px 0 #3730a3; }
         .btn-action:active { transform: translateY(2px); box-shadow: 0 0px 0 #3730a3; }
+        .btn-action:disabled { background: #94a3b8; box-shadow: 0 4px 0 #475569; cursor: not-allowed; }
         .btn-tool { background: white; border: 1px solid var(--border); color: var(--text); font-size: 10px; font-weight: 900; padding: 6px 12px; border-radius: 6px; cursor: pointer; transition: 0.2s; }
         .btn-tool:hover { background: var(--accent); color: white; border-color: var(--accent); }
         .btn-jumbo { padding: 15px 25px; font-size: 12px; background: white; border: 2px solid var(--accent); color: var(--text); border-radius: 12px; font-weight: 900; cursor: pointer; transition: 0.2s; white-space: nowrap; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
@@ -163,7 +167,7 @@
         .total-text.valid { color: #047857; }
         .total-text.invalid { color: #b91c1c; }
 
-        /* Digital PDF Export Rules (Now tuned for Light Mode Paper) */
+        /* Digital PDF Export Rules */
         body.full-color-share { background-color: #ffffff !important; color: #000000 !important; }
         body.full-color-share #resultsSection { max-width: 600px !important; margin: 0 auto !important; padding: 20px !important; background-color: #ffffff !important; }
         body.full-color-share #resTitle { color: #000000 !important; font-size: 2.2rem !important; margin-bottom: 20px !important; }
@@ -215,7 +219,7 @@
 <div class="fixed-header no-print">
     <div class="header-content">
         <button class="home-btn" onclick="showHub()" tabindex="-1">🏠 RETURN TO HOMEPAGE</button>
-        <div class="brand-name">ZONEDRAW <span id="vTag" class="v-tag">v10.48.0</span></div>
+        <div class="brand-name">ZONEDRAW <span id="vTag" class="v-tag">v10.49.0</span></div>
         <div style="width: 180px; text-align:right;">
             <button class="btn-tool" onclick="showHistory()" style="font-size: 12px; padding: 8px 15px;">📜 ARCHIVES</button>
         </div>
@@ -241,11 +245,23 @@
 <div id="entrySection" class="no-print">
     <div class="control-panel" id="setupPanel">
         <label style="font-size: 11px; opacity: 0.6; letter-spacing: 1px;">COMPETITION IDENTITY</label>
-        <input type="text" id="matchTitle" style="width:100%; font-size:22px; text-align:center; margin-top:10px;" placeholder="e.g. SCOTTISH SHORE CHAMPIONSHIP 2026" onblur="persistToVault()">
+        <input type="text" id="matchTitle" style="font-size:22px; text-align:center; margin-top:10px;" placeholder="e.g. SCOTTISH SHORE CHAMPIONSHIP 2026" onblur="persistToVault()">
         
-        <div style="margin-top:20px; display:flex; flex-direction:column; align-items:center; gap:10px;">
-            <label style="font-size: 10px; opacity: 0.6; letter-spacing: 1px; color:var(--accent);">ACCESSIBLE PEGS (M1 = PRIME | M2 = INTERMEDIATE)</label>
-            <div style="display:flex; flex-direction:column; gap:10px; width:100%; max-width:600px;">
+        <div style="margin-top:25px; display:flex; flex-direction:column; align-items:center; gap:10px;">
+            <label style="font-size: 10px; opacity: 0.6; letter-spacing: 1px; color:var(--accent);">MOBILITY PROTOCOL</label>
+            
+            <div style="display:flex; justify-content:center; gap:10px; width:100%; max-width:600px;">
+                <div id="mobModeA" class="dt-opt active" style="flex:1; flex-direction:column;" onclick="setMobilityMode('A')">
+                    <span>DISTRIBUTED PEGS</span>
+                    <span style="font-size:8px; opacity:0.7; margin-top:3px; text-transform:none;">For multiple access points. M-Anglers switch zones on Day 2.</span>
+                </div>
+                <div id="mobModeB" class="dt-opt" style="flex:1; flex-direction:column;" onclick="setMobilityMode('B')">
+                    <span>STATIC ZONE ANCHOR</span>
+                    <span style="font-size:8px; opacity:0.7; margin-top:3px; text-transform:none;">For single access points. Pins M-Anglers to one zone all weekend.</span>
+                </div>
+            </div>
+
+            <div id="modeASetup" style="display:flex; flex-direction:column; gap:10px; width:100%; max-width:600px; margin-top:10px;">
                 <div style="display:flex; gap:10px; width:100%;">
                     <input type="text" id="accPegs1_m1" style="font-size:14px; text-align:center; border-color:var(--m1-color);" placeholder="DAY 1 M1 PEGS (1, 2...)" onblur="formatPegs(this)">
                     <input type="text" id="accPegs1_m2" style="font-size:14px; text-align:center; border-color:var(--m2-color);" placeholder="DAY 1 M2 PEGS (10, 11...)" onblur="formatPegs(this)">
@@ -255,19 +271,29 @@
                     <input type="text" id="accPegs2_m2" style="font-size:14px; text-align:center; border-color:var(--m2-color);" placeholder="DAY 2 M2 PEGS (10, 11...)" onblur="formatPegs(this)">
                 </div>
             </div>
+
+            <div id="modeBSetup" style="display:none; flex-direction:column; gap:10px; width:100%; max-width:600px; margin-top:10px;">
+                <select id="anchorZoneSelect" onchange="persistToVault()">
+                    <option value="RED">ANCHOR ZONE: RED</option>
+                    <option value="YELLOW">ANCHOR ZONE: YELLOW</option>
+                    <option value="GREEN">ANCHOR ZONE: GREEN</option>
+                    <option value="BLUE">ANCHOR ZONE: BLUE</option>
+                </select>
+                <input type="text" id="accPegsAnchor" style="font-size:14px; text-align:center; border-color:var(--m1-color);" placeholder="ANCHOR ZONE SAFE PEGS (1, 2, 3...)" onblur="formatPegs(this)">
+            </div>
         </div>
 
         <div style="display:flex; justify-content:center; gap:20px; margin-top:25px; align-items:flex-end; flex-wrap:wrap;">
             <div>
                 <label style="display:block; margin-bottom:5px;">VENUES</label>
-                <div class="duration-toggle">
+                <div class="duration-toggle" style="width: 200px;">
                     <div id="venOpt1" class="dt-opt active" onclick="setVenues(1)">1 VENUE</div>
                     <div id="venOpt2" class="dt-opt" onclick="setVenues(2)">2 VENUES</div>
                 </div>
             </div>
             <div>
                 <label style="display:block; margin-bottom:5px;">DURATION</label>
-                <div class="duration-toggle">
+                <div class="duration-toggle" style="width: 200px;">
                     <div id="dayOpt1" class="dt-opt" onclick="setDays(1)">1 DAY</div>
                     <div id="dayOpt2" class="dt-opt active" onclick="setDays(2)">2 DAYS</div>
                 </div>
@@ -364,10 +390,13 @@
             <button class="btn-jumbo" onclick="addNewStateItem(false)" tabindex="-1">+ SOLO</button>
         </div>
     </div>
-    <div id="actionBtnArea" style="display:flex; gap:10px;">
-        <button class="btn-jumbo" id="mergeBtn" style="display:none; border-color:#10b981; color:#10b981;" onclick="mergeSelected()" tabindex="-1">CONSTRUCT TEAM (4)</button>
-        <button class="btn-action" id="testRedrawBtn" onclick="forceTestRedraw()" style="background:#ef4444;" tabindex="-1">⚠️ TEST FULL REDRAW</button>
-        <button class="btn-action" id="mainActionBtn" onclick="initiateShuffle()" tabindex="-1">PROCESS RANDOM DRAW</button>
+    <div id="actionBtnArea" style="display:flex; flex-direction:column; align-items:flex-end;">
+        <div id="teamClashWarning" style="display:none; color:#ef4444; font-size:11px; font-weight:900; text-align:center; margin-bottom:8px;">⚠️ MAX 1 MOBILITY ANGLER PER TEAM IN STATIC MODE</div>
+        <div style="display:flex; gap:10px;">
+            <button class="btn-jumbo" id="mergeBtn" style="display:none; border-color:#10b981; color:#10b981;" onclick="mergeSelected()" tabindex="-1">CONSTRUCT TEAM (4)</button>
+            <button class="btn-action" id="testRedrawBtn" onclick="forceTestRedraw()" style="background:#ef4444;" tabindex="-1">⚠️ TEST FULL REDRAW</button>
+            <button class="btn-action" id="mainActionBtn" onclick="initiateShuffle()" tabindex="-1">PROCESS RANDOM DRAW</button>
+        </div>
     </div>
 </div>
 
@@ -406,7 +435,6 @@
 <script>
     const zones = ['RED', 'YELLOW', 'GREEN', 'BLUE'];
     const zoneGradients = { 'RED': 'var(--red-g)', 'YELLOW': 'var(--yellow-g)', 'GREEN': 'var(--green-g)', 'BLUE': 'var(--blue-g)' };
-    const rotationMap = { 'RED': 'BLUE', 'BLUE': 'RED', 'YELLOW': 'GREEN', 'GREEN': 'YELLOW' };
     
     let appState = []; 
     let vacantPool = []; 
@@ -418,6 +446,7 @@
     let isSwapMode = false;
     let swapObj1 = null;
     let roundPayoutsTo5 = false;
+    let mobilityMode = 'A'; // 'A' = Distributed, 'B' = Static Anchor
 
     let payoutConfig = [
         { id: 's1', label: 'SOLO 1ST PLACE', active: true, pct: 50 },
@@ -440,6 +469,16 @@
         } else {
             el.value = '';
         }
+        persistToVault();
+    }
+
+    function setMobilityMode(m) {
+        mobilityMode = m;
+        document.getElementById('mobModeA').classList.toggle('active', m === 'A');
+        document.getElementById('mobModeB').classList.toggle('active', m === 'B');
+        document.getElementById('modeASetup').style.display = m === 'A' ? 'flex' : 'none';
+        document.getElementById('modeBSetup').style.display = m === 'B' ? 'flex' : 'none';
+        checkTeamClash();
         persistToVault();
     }
 
@@ -533,6 +572,7 @@
         document.getElementById('accPegs1_m2').value = '';
         document.getElementById('accPegs2_m1').value = '';
         document.getElementById('accPegs2_m2').value = '';
+        document.getElementById('accPegsAnchor').value = '';
         document.getElementById('d1v1').value = '';
         document.getElementById('d1v2').value = '';
         document.getElementById('d2v1').value = '';
@@ -540,6 +580,7 @@
         
         appState = []; vacantPool = []; currentZoneSize = 0;
         roundPayoutsTo5 = false;
+        setMobilityMode('A');
         
         payoutConfig = [
             { id: 's1', label: 'SOLO 1ST PLACE', active: true, pct: 50 },
@@ -602,6 +643,11 @@
         document.getElementById('accPegs1_m2').value = entry.safePegs1_m2 || '';
         document.getElementById('accPegs2_m1').value = entry.safePegs2_m1 || entry.safePegs2 || entry.safePegs || '';
         document.getElementById('accPegs2_m2').value = entry.safePegs2_m2 || '';
+        document.getElementById('accPegsAnchor').value = entry.safePegsAnchor || '';
+        if(entry.anchorZone) document.getElementById('anchorZoneSelect').value = entry.anchorZone;
+        
+        setMobilityMode(entry.mobilityMode || 'A');
+
         prizeFee = entry.prize || 10; pairsFee = entry.pairs || 5;
         roundPayoutsTo5 = entry.roundPayoutsTo5 || false;
         
@@ -688,6 +734,33 @@
         persistToVault();
     }
 
+    function checkTeamClash() {
+        let hasClash = false;
+        if (mobilityMode === 'B') {
+            appState.forEach(e => {
+                if (e.isTeam) {
+                    let mCount = e.anglers.filter(a => a.mobility === 1 || a.mobility === 2).length;
+                    if (mCount > 1) hasClash = true;
+                }
+            });
+        }
+        let drawBtn = document.getElementById('mainActionBtn');
+        let warnMsg = document.getElementById('teamClashWarning');
+        if (drawBtn && warnMsg) {
+            if (hasClash) {
+                drawBtn.disabled = true;
+                drawBtn.style.opacity = '0.5';
+                drawBtn.style.pointerEvents = 'none';
+                warnMsg.style.display = 'block';
+            } else {
+                drawBtn.disabled = false;
+                drawBtn.style.opacity = '1';
+                drawBtn.style.pointerEvents = 'auto';
+                warnMsg.style.display = 'none';
+            }
+        }
+    }
+
     function renderStateToScreen() {
         const tb = document.getElementById('entryTeamsBucket'); tb.innerHTML = '';
         const sb = document.getElementById('entrySolosBucket'); sb.innerHTML = '';
@@ -754,6 +827,7 @@
         
         updateTicker();
         checkMerge();
+        checkTeamClash();
     }
 
     function deleteStateEntry(id) {
@@ -873,6 +947,8 @@
         const sPegs1_M2 = (document.getElementById('accPegs1_m2').value || '').match(/\d+/g)?.map(Number) || [];
         const sPegs2_M1 = matchDays == 2 ? ((document.getElementById('accPegs2_m1').value || '').match(/\d+/g)?.map(Number) || []) : [];
         const sPegs2_M2 = matchDays == 2 ? ((document.getElementById('accPegs2_m2').value || '').match(/\d+/g)?.map(Number) || []) : [];
+        const sPegsAnchor = (document.getElementById('accPegsAnchor').value || '').match(/\d+/g)?.map(Number) || [];
+        const anchorZone = document.getElementById('anchorZoneSelect').value;
 
         let occ1 = { RED:[], YELLOW:[], GREEN:[], BLUE:[] }, occ2 = { RED:[], YELLOW:[], GREEN:[], BLUE:[] };
         let totalCompetitors = 0;
@@ -915,78 +991,57 @@
         const pullPeg = (zone, isDay2, mobilityTier) => {
             const pools = isDay2 ? pools2 : pools1;
             const zIdx = zones.indexOf(zone);
-            const m1List = isDay2 ? sPegs2_M1 : sPegs1_M1;
-            const m2List = isDay2 ? sPegs2_M2 : sPegs1_M2;
-            const allSafe = [...m1List, ...m2List];
-            
-            if (mobilityTier === 1) {
-                const s1Idx = pools[zIdx].p.findIndex(peg => m1List.includes(peg));
-                if (s1Idx !== -1) return pools[zIdx].p.splice(s1Idx, 1)[0];
-                const s2Idx = pools[zIdx].p.findIndex(peg => m2List.includes(peg));
-                if (s2Idx !== -1) return pools[zIdx].p.splice(s2Idx, 1)[0];
-            } else if (mobilityTier === 2) {
-                const s2Idx = pools[zIdx].p.findIndex(peg => m2List.includes(peg));
-                if (s2Idx !== -1) return pools[zIdx].p.splice(s2Idx, 1)[0];
-            }
 
-            if (!mobilityTier && allSafe.length > 0) {
-                const nonSafeIdx = pools[zIdx].p.findIndex(peg => !allSafe.includes(peg));
-                if (nonSafeIdx !== -1) return pools[zIdx].p.splice(nonSafeIdx, 1)[0];
+            if (mobilityMode === 'B' && mobilityTier > 0 && zone === anchorZone) {
+                const sIdx = pools[zIdx].p.findIndex(peg => sPegsAnchor.includes(peg));
+                if (sIdx !== -1) return pools[zIdx].p.splice(sIdx, 1)[0];
+            } else if (mobilityMode === 'A') {
+                const m1List = isDay2 ? sPegs2_M1 : sPegs1_M1;
+                const m2List = isDay2 ? sPegs2_M2 : sPegs1_M2;
+                const allSafe = [...m1List, ...m2List];
+                
+                if (mobilityTier === 1) {
+                    const s1Idx = pools[zIdx].p.findIndex(peg => m1List.includes(peg));
+                    if (s1Idx !== -1) return pools[zIdx].p.splice(s1Idx, 1)[0];
+                    const s2Idx = pools[zIdx].p.findIndex(peg => m2List.includes(peg));
+                    if (s2Idx !== -1) return pools[zIdx].p.splice(s2Idx, 1)[0];
+                } else if (mobilityTier === 2) {
+                    const s2Idx = pools[zIdx].p.findIndex(peg => m2List.includes(peg));
+                    if (s2Idx !== -1) return pools[zIdx].p.splice(s2Idx, 1)[0];
+                }
+
+                if (!mobilityTier && allSafe.length > 0) {
+                    const nonSafeIdx = pools[zIdx].p.findIndex(peg => !allSafe.includes(peg));
+                    if (nonSafeIdx !== -1) return pools[zIdx].p.splice(nonSafeIdx, 1)[0];
+                }
+            } else {
+                // Mode B but non-anchor zone / non-mobility angler
+                if (!mobilityTier && sPegsAnchor.length > 0 && zone === anchorZone) {
+                     const nonSafeIdx = pools[zIdx].p.findIndex(peg => !sPegsAnchor.includes(peg));
+                     if (nonSafeIdx !== -1) return pools[zIdx].p.splice(nonSafeIdx, 1)[0];
+                }
             }
             
             return pools[zIdx].p.pop() || 99;
         };
 
-        const pullRandomPeg = (mobilityTier) => {
-            if (vacantPool.length > 0) return vacantPool.shift();
-            let avZ = pools1.map((p, idx) => idx).filter(idx => pools1[idx].p.length > 0);
-            if (avZ.length === 0) return { z1: 'RED', p1: 99, z2: 'BLUE', p2: 99 }; 
+        const checkSafeModeA = (z, day, tier) => {
+            let pPool = day === 1 ? pools1[zones.indexOf(z)].p : pools2[zones.indexOf(z)].p;
+            let m1_1 = sPegs1_M1, m2_1 = sPegs1_M2;
+            let m1_2 = matchDays == 2 ? sPegs2_M1 : [], m2_2 = matchDays == 2 ? sPegs2_M2 : [];
+            let list1 = day === 1 ? m1_1 : m1_2;
+            let list2 = day === 1 ? m2_1 : m2_2;
             
-            let rZ = -1;
-            if (mobilityTier === 1 || mobilityTier === 2) {
-                let m1_1 = sPegs1_M1, m2_1 = sPegs1_M2;
-                let m1_2 = matchDays == 2 ? sPegs2_M1 : [], m2_2 = matchDays == 2 ? sPegs2_M2 : [];
-                
-                let checkSafe = (idx, day, tier) => {
-                    let pPool = day === 1 ? pools1[idx].p : pools2[idx].p;
-                    if (tier === 1) return pPool.some(p => m1_1.includes(p) || m2_1.includes(p));
-                    if (tier === 2) return pPool.some(p => m2_1.includes(p));
-                    return false;
-                };
-
-                let perfectZones = avZ.filter(idx => {
-                    let destIdx = zones.indexOf(rotationMap[zones[idx]]);
-                    let s1 = checkSafe(idx, 1, mobilityTier);
-                    let s2 = matchDays == 2 ? checkSafe(destIdx, 2, mobilityTier) : true;
-                    return s1 && s2;
-                });
-                
-                if (perfectZones.length > 0) {
-                    rZ = perfectZones[Math.floor(Math.random() * perfectZones.length)];
-                } else {
-                    let partialZones = avZ.filter(idx => {
-                        let destIdx = zones.indexOf(rotationMap[zones[idx]]);
-                        let s1 = checkSafe(idx, 1, mobilityTier);
-                        let s2 = matchDays == 2 ? checkSafe(destIdx, 2, mobilityTier) : false;
-                        return s1 || s2;
-                    });
-                    if (partialZones.length > 0) rZ = partialZones[Math.floor(Math.random() * partialZones.length)];
-                }
-            }
-            if (rZ === -1) rZ = avZ[Math.floor(Math.random() * avZ.length)];
-            
-            const destZ2 = rotationMap[zones[rZ]];
-            return { 
-                z1: zones[rZ], p1: pullPeg(zones[rZ], false, mobilityTier), 
-                z2: destZ2, p2: pullPeg(destZ2, true, mobilityTier) 
-            };
+            if (tier === 1) return pPool.some(p => list1.includes(p) || list2.includes(p));
+            if (tier === 2) return pPool.some(p => list2.includes(p));
+            return false;
         };
 
         appState.forEach(entry => {
             let needsDraw = entry.anglers.filter(a => !a.z1);
             if (needsDraw.length === 0) return;
 
-            let drawOrder = needsDraw.map((a, i) => ({ a, i })).sort((x, y) => (y.a.mobility || 0) - (x.a.mobility || 0));
+            let drawOrder = needsDraw.map((a, i) => ({ a, i }));
             drawOrder.sort((x, y) => {
                 let pX = x.a.mobility === 1 ? 2 : x.a.mobility === 2 ? 1 : 0;
                 let pY = y.a.mobility === 1 ? 2 : y.a.mobility === 2 ? 1 : 0;
@@ -994,64 +1049,125 @@
             });
 
             if (entry.isTeam && needsDraw.length === 4) {
-                let zIndexes = [0, 1, 2, 3]; 
-                for (let j = 3; j > 0; j--) { const k = Math.floor(Math.random() * (j + 1)); [zIndexes[j], zIndexes[k]] = [zIndexes[k], zIndexes[j]]; }
+                let hasM = entry.anglers.some(a => a.mobility === 1 || a.mobility === 2);
                 
-                drawOrder.forEach((item, loopIdx) => {
-                    let tier = item.a.mobility;
-                    if (tier === 1 || tier === 2) {
-                        let targetK = -1;
-                        
-                        let checkSafe = (zi, day, t) => {
-                            let pPool = day === 1 ? pools1[zi].p : pools2[zones.indexOf(rotationMap[zones[zi]])].p;
-                            let list1 = day === 1 ? sPegs1_M1 : sPegs2_M1;
-                            let list2 = day === 1 ? sPegs1_M2 : sPegs2_M2;
-                            if (t === 1) return pPool.some(p => list1.includes(p) || list2.includes(p));
-                            if (t === 2) return pPool.some(p => list2.includes(p));
-                            return false;
-                        };
-
-                        for (let k = loopIdx; k < 4; k++) {
-                            let zi = zIndexes[k];
-                            let s1 = checkSafe(zi, 1, tier);
-                            let s2 = matchDays == 2 ? checkSafe(zi, 2, tier) : true;
-                            if (s1 && s2) { targetK = k; break; }
-                        }
-                        
-                        if (targetK === -1) {
-                            for (let k = loopIdx; k < 4; k++) {
-                                let zi = zIndexes[k];
-                                let s1 = checkSafe(zi, 1, tier);
-                                let s2 = matchDays == 2 ? checkSafe(zi, 2, tier) : false;
-                                if (s1 || s2) { targetK = k; break; }
-                            }
-                        }
-
-                        if (targetK !== -1 && targetK !== loopIdx) {
-                            let temp = zIndexes[loopIdx];
-                            zIndexes[loopIdx] = zIndexes[targetK];
-                            zIndexes[targetK] = temp;
+                if (mobilityMode === 'B' && hasM) {
+                    let mIdx = entry.anglers.findIndex(a => a.mobility === 1 || a.mobility === 2);
+                    let mAngler = entry.anglers[mIdx];
+                    
+                    mAngler.z1 = anchorZone; mAngler.p1 = pullPeg(anchorZone, false, mAngler.mobility);
+                    mAngler.z2 = anchorZone; mAngler.p2 = pullPeg(anchorZone, true, mAngler.mobility);
+                    
+                    let otherZones = zones.filter(z => z !== anchorZone);
+                    let d1Zones = [...otherZones];
+                    d1Zones.sort(() => Math.random() - 0.5);
+                    
+                    let d2Zones = [d1Zones[1], d1Zones[2], d1Zones[0]]; // Triangle swap
+                    
+                    let currentO = 0;
+                    for (let i=0; i<4; i++) {
+                        if (i !== mIdx) {
+                            let a = entry.anglers[i];
+                            a.z1 = d1Zones[currentO]; a.p1 = pullPeg(a.z1, false, 0);
+                            a.z2 = d2Zones[currentO]; a.p2 = pullPeg(a.z2, true, 0);
+                            currentO++;
                         }
                     }
-                });
+                } else {
+                    // Free-Flow Mode A or (Mode B without M)
+                    let d1Zones = [0, 1, 2, 3].map(i => zones[i]);
+                    d1Zones.sort(() => Math.random() - 0.5);
+                    
+                    let derangements = [
+                        [1, 2, 3, 0], [1, 3, 0, 2], [2, 0, 3, 1], [2, 3, 1, 0], [3, 0, 1, 2], [3, 2, 0, 1]
+                    ];
+                    let shift = derangements[Math.floor(Math.random() * derangements.length)];
+                    let d2Zones = shift.map(idx => d1Zones[idx]);
 
-                drawOrder.forEach((item, loopIdx) => {
-                    const a = item.a;
+                    if (mobilityMode === 'A' && hasM) {
+                        let mIdxes = entry.anglers.map((a,i) => (a.mobility === 1 || a.mobility === 2) ? i : -1).filter(i => i !== -1);
+                        let bestCol = -1;
+                        let targetTier = entry.anglers[mIdxes[0]].mobility;
+
+                        for(let c=0; c<4; c++) {
+                            let s1 = checkSafeModeA(d1Zones[c], 1, targetTier);
+                            let s2 = matchDays == 2 ? checkSafeModeA(d2Zones[c], 2, targetTier) : true;
+                            if (s1 && s2) { bestCol = c; break; }
+                        }
+                        if (bestCol === -1) {
+                            for(let c=0; c<4; c++) {
+                                let s1 = checkSafeModeA(d1Zones[c], 1, targetTier);
+                                let s2 = matchDays == 2 ? checkSafeModeA(d2Zones[c], 2, targetTier) : false;
+                                if (s1 || s2) { bestCol = c; break; }
+                            }
+                        }
+                        
+                        let colAssignments = [0,1,2,3];
+                        if (bestCol !== -1 && mIdxes.length > 0) {
+                            let targetAnglerLoopIdx = mIdxes[0]; 
+                            let temp = colAssignments[targetAnglerLoopIdx];
+                            colAssignments[targetAnglerLoopIdx] = colAssignments[bestCol];
+                            colAssignments[bestCol] = temp;
+                        }
+
+                        for(let i=0; i<4; i++) {
+                            let a = entry.anglers[i];
+                            let c = colAssignments[i];
+                            a.z1 = d1Zones[c]; a.p1 = pullPeg(a.z1, false, a.mobility);
+                            a.z2 = d2Zones[c]; a.p2 = pullPeg(a.z2, true, a.mobility);
+                        }
+
+                    } else {
+                        for(let i=0; i<4; i++) {
+                            let a = entry.anglers[i];
+                            a.z1 = d1Zones[i]; a.p1 = pullPeg(a.z1, false, a.mobility);
+                            a.z2 = d2Zones[i]; a.p2 = pullPeg(a.z2, true, a.mobility);
+                        }
+                    }
+                }
+            } else {
+                // Solos
+                drawOrder.forEach(item => {
+                    let a = item.a;
                     if (vacantPool.length > 0) {
                         let v = vacantPool.shift();
                         a.z1 = v.z1; a.p1 = v.p1; a.z2 = v.z2; a.p2 = v.p2;
-                    } else {
-                        const zi = zIndexes[loopIdx];
-                        const destZ2 = rotationMap[zones[zi]];
-                        
-                        a.z1 = zones[zi]; a.p1 = pullPeg(zones[zi], false, a.mobility);
-                        a.z2 = destZ2; a.p2 = pullPeg(destZ2, true, a.mobility);
+                        return;
                     }
-                });
-            } else {
-                drawOrder.forEach(item => {
-                    let pd = pullRandomPeg(item.a.mobility);
-                    item.a.z1 = pd.z1; item.a.p1 = pd.p1; item.a.z2 = pd.z2; item.a.p2 = pd.p2;
+
+                    if (mobilityMode === 'B' && a.mobility) {
+                        a.z1 = anchorZone; a.p1 = pullPeg(anchorZone, false, a.mobility);
+                        a.z2 = anchorZone; a.p2 = pullPeg(anchorZone, true, a.mobility);
+                    } else {
+                        let avZ = pools1.map((p, idx) => idx).filter(idx => pools1[idx].p.length > 0);
+                        if (avZ.length === 0) { a.z1 = 'RED'; a.p1=99; a.z2='BLUE'; a.p2=99; return; }
+                        
+                        let rZ = -1;
+                        if (mobilityMode === 'A' && a.mobility) {
+                            let perfectZones = avZ.filter(idx => {
+                                let d1Safe = checkSafeModeA(zones[idx], 1, a.mobility);
+                                let d2Safe = matchDays == 2 ? zones.some((z, z2Idx) => z !== zones[idx] && checkSafeModeA(z, 2, a.mobility)) : true;
+                                return d1Safe && d2Safe;
+                            });
+                            if (perfectZones.length > 0) rZ = perfectZones[Math.floor(Math.random() * perfectZones.length)];
+                            else {
+                                let partialZones = avZ.filter(idx => checkSafeModeA(zones[idx], 1, a.mobility));
+                                if(partialZones.length > 0) rZ = partialZones[Math.floor(Math.random() * partialZones.length)];
+                            }
+                        }
+                        if (rZ === -1) rZ = avZ[Math.floor(Math.random() * avZ.length)];
+                        
+                        a.z1 = zones[rZ]; a.p1 = pullPeg(a.z1, false, a.mobility);
+                        
+                        // Day 2
+                        let avZ2 = zones.filter(z => z !== a.z1);
+                        let rZ2 = avZ2[Math.floor(Math.random() * avZ2.length)];
+                        if (mobilityMode === 'A' && a.mobility && matchDays == 2) {
+                            let safeZ2 = avZ2.filter(z => checkSafeModeA(z, 2, a.mobility));
+                            if (safeZ2.length > 0) rZ2 = safeZ2[Math.floor(Math.random() * safeZ2.length)];
+                        }
+                        a.z2 = rZ2; a.p2 = pullPeg(a.z2, true, a.mobility);
+                    }
                 });
             }
         });
@@ -1061,13 +1177,19 @@
     }
 
     function getPegTier(p, day) {
-        let m1 = day === 1 ? (document.getElementById('accPegs1_m1').value || '') : (document.getElementById('accPegs2_m1').value || '');
-        let m2 = day === 1 ? (document.getElementById('accPegs1_m2').value || '') : (document.getElementById('accPegs2_m2').value || '');
-        let m1List = m1.split(',').map(n => parseInt(n.trim())).filter(n => !isNaN(n));
-        let m2List = m2.split(',').map(n => parseInt(n.trim())).filter(n => !isNaN(n));
-        if (m1List.includes(parseInt(p))) return 1;
-        if (m2List.includes(parseInt(p))) return 2;
-        return 0;
+        if (mobilityMode === 'B') {
+            const anchorList = (document.getElementById('accPegsAnchor').value || '').match(/\d+/g)?.map(Number) || [];
+            if (anchorList.includes(parseInt(p))) return 1;
+            return 0;
+        } else {
+            let m1 = day === 1 ? (document.getElementById('accPegs1_m1').value || '') : (document.getElementById('accPegs2_m1').value || '');
+            let m2 = day === 1 ? (document.getElementById('accPegs1_m2').value || '') : (document.getElementById('accPegs2_m2').value || '');
+            let m1List = m1.match(/\d+/g)?.map(Number) || [];
+            let m2List = m2.match(/\d+/g)?.map(Number) || [];
+            if (m1List.includes(parseInt(p))) return 1;
+            if (m2List.includes(parseInt(p))) return 2;
+            return 0;
+        }
     }
 
     const getVenueName = (z, day) => {
@@ -1101,10 +1223,13 @@
             prize: prizeFee, 
             pairs: pairsFee, 
             zoneSize: currentZoneSize,
+            mobilityMode: mobilityMode,
             safePegs1_m1: document.getElementById('accPegs1_m1').value,
             safePegs1_m2: document.getElementById('accPegs1_m2').value,
             safePegs2_m1: document.getElementById('accPegs2_m1').value,
             safePegs2_m2: document.getElementById('accPegs2_m2').value,
+            safePegsAnchor: document.getElementById('accPegsAnchor').value,
+            anchorZone: document.getElementById('anchorZoneSelect').value,
             payoutConfig: payoutConfig,
             roundPayoutsTo5: roundPayoutsTo5,
             venueConfig: {
