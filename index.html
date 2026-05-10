@@ -3,103 +3,117 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ZONEDRAW v10.47.0</title>
+    <title>ZONEDRAW v10.48.0</title>
     <link rel="manifest" href="manifest.json">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
     <style>
         :root {
-            --bg: #0f172a; --card: rgba(30, 41, 59, 0.9); --text: #f8fafc;
-            --accent: #6366f1; --accent-glow: rgba(99, 102, 241, 0.6);
-            --border: rgba(148, 163, 184, 0.2);
-            --red-g: linear-gradient(135deg, #ef4444, #7f1d1d);
-            --yellow-g: linear-gradient(135deg, #f59e0b, #78350f);
-            --green-g: linear-gradient(135deg, #10b981, #064e3b);
-            --blue-g: linear-gradient(135deg, #3b82f6, #1e3a8a);
-            --pending: #f59e0b; --pending-glow: rgba(245, 158, 11, 0.3);
-            --m2-color: #f59e0b; --m1-color: #fde047;
+            /* MODERN PAPER LIGHT THEME */
+            --bg: #f8fafc; 
+            --card: rgba(255, 255, 255, 0.95); 
+            --text: #0f172a;
+            --accent: #4f46e5; 
+            --accent-glow: rgba(79, 70, 229, 0.3);
+            --border: rgba(15, 23, 42, 0.15);
+            
+            /* Vibrant Zone Gradients for White Background */
+            --red-g: linear-gradient(135deg, #ef4444, #b91c1c);
+            --yellow-g: linear-gradient(135deg, #f59e0b, #b45309);
+            --green-g: linear-gradient(135deg, #10b981, #047857);
+            --blue-g: linear-gradient(135deg, #3b82f6, #1d4ed8);
+            
+            --pending: #f59e0b; 
+            --pending-glow: rgba(245, 158, 11, 0.3);
+            
+            /* Darkened M-Tags for contrast on white */
+            --m1-color: #ca8a04; 
+            --m2-color: #d97706; 
         }
         
         body { font-family: 'Inter', system-ui, sans-serif; background: var(--bg); color: var(--text); margin: 0; padding: 0; text-transform: uppercase; line-height: 1.1; overflow-x: hidden; }
-        input { text-transform: uppercase; font-weight: 900 !important; color: white; background: rgba(255,255,255,0.05); border: 1px solid var(--border); border-radius: 8px; padding: 10px 12px; outline: none; transition: 0.2s; width: 100%; box-sizing: border-box; }
-        input:focus { border-color: var(--accent); box-shadow: 0 0 15px var(--accent-glow); background: rgba(255,255,255,0.1); }
+        
+        input { text-transform: uppercase; font-weight: 900 !important; color: var(--text); background: rgba(0,0,0,0.03); border: 1px solid var(--border); border-radius: 8px; padding: 10px 12px; outline: none; transition: 0.2s; width: 100%; box-sizing: border-box; }
+        input:focus { border-color: var(--accent); box-shadow: 0 0 15px var(--accent-glow); background: rgba(0,0,0,0.05); }
 
-        .fixed-header { position: fixed; top: 0; left: 0; right: 0; z-index: 5000; background: rgba(15, 23, 42, 0.98); backdrop-filter: blur(15px); border-bottom: 1px solid var(--border); padding: 12px 20px; }
+        .fixed-header { position: fixed; top: 0; left: 0; right: 0; z-index: 5000; background: rgba(248, 250, 252, 0.95); backdrop-filter: blur(15px); border-bottom: 1px solid var(--border); padding: 12px 20px; box-shadow: 0 4px 20px rgba(0,0,0,0.05); }
         .header-content { display: flex; justify-content: space-between; align-items: center; max-width: 1400px; margin: 0 auto; }
         .brand-name { font-size: 18px; font-weight: 900; letter-spacing: -1px; color: var(--text); display: flex; align-items: center; }
         .v-tag { font-size: 14px; color: var(--accent); margin-left: 8px; letter-spacing: 0.5px; font-weight: 900; }
         
-        .home-btn { background: rgba(255,255,255,0.05); border: 2px solid rgba(255,255,255,0.2); color: white; padding: 10px 20px; border-radius: 10px; cursor: pointer; font-size: 14px; font-weight: 900; transition: 0.2s; box-shadow: 0 4px 10px rgba(0,0,0,0.3); }
-        .home-btn:hover { background: rgba(255,255,255,0.1); border-color: var(--accent); color: var(--accent); box-shadow: 0 4px 15px var(--accent-glow); transform: translateY(-1px); }
+        .home-btn { background: white; border: 2px solid var(--border); color: var(--text); padding: 10px 20px; border-radius: 10px; cursor: pointer; font-size: 14px; font-weight: 900; transition: 0.2s; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
+        .home-btn:hover { border-color: var(--accent); color: var(--accent); box-shadow: 0 4px 15px var(--accent-glow); transform: translateY(-1px); }
 
         #hubSection { max-width: 1000px; margin: 120px auto 40px; display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 30px; padding: 20px; }
-        .hub-tile { background: var(--card); border: 1px solid var(--border); padding: 50px 20px; border-radius: 24px; text-align: center; cursor: pointer; transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1); box-shadow: 0 10px 40px rgba(0,0,0,0.4); position: relative; }
+        .hub-tile { background: var(--card); border: 1px solid var(--border); padding: 50px 20px; border-radius: 24px; text-align: center; cursor: pointer; transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1); box-shadow: 0 10px 40px rgba(0,0,0,0.05); position: relative; }
         .hub-tile:hover { transform: translateY(-10px); border-color: var(--accent); box-shadow: 0 20px 50px var(--accent-glow); }
         .hub-icon { font-size: 44px; margin-bottom: 20px; display: block; filter: drop-shadow(0 0 10px var(--accent-glow)); }
-        .hub-title { font-size: 18px; font-weight: 900; letter-spacing: 1px; }
+        .hub-title { font-size: 18px; font-weight: 900; letter-spacing: 1px; color: var(--text); }
 
-        .glass-tile { background: rgba(30, 41, 59, 0.4) !important; backdrop-filter: blur(16px) !important; -webkit-backdrop-filter: blur(16px) !important; border: 1px solid rgba(255, 255, 255, 0.1) !important; box-shadow: 0 10px 40px rgba(0,0,0,0.5) !important; }
-        .glass-tile:hover { background: rgba(30, 41, 59, 0.7) !important; border-color: var(--accent) !important; box-shadow: 0 15px 50px var(--accent-glow) !important; }
+        /* LIGHT GLASS AESTHETIC */
+        .glass-tile { background: rgba(255, 255, 255, 0.6) !important; backdrop-filter: blur(16px) !important; -webkit-backdrop-filter: blur(16px) !important; border: 1px solid rgba(0, 0, 0, 0.1) !important; box-shadow: 0 10px 40px rgba(0,0,0,0.05) !important; }
+        .glass-tile:hover { background: rgba(255, 255, 255, 0.9) !important; border-color: var(--accent) !important; box-shadow: 0 15px 40px var(--accent-glow) !important; }
 
         #entrySection, #resultsSection, #stewardSection, #historySection, #dispatchSection, #rosterSection { max-width: 1400px; margin: 0 auto; padding: 110px 20px 140px; display: none; }
-        .control-panel { background: var(--card); border-radius: 24px; padding: 30px; border: 1px solid var(--border); text-align: center; margin-bottom: 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.2); }
+        .control-panel { background: var(--card); border-radius: 24px; padding: 30px; border: 1px solid var(--border); text-align: center; margin-bottom: 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); }
         
         .bucket-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(400px, 1fr)); gap: 18px; }
 
-        .duration-toggle { display: grid; grid-template-columns: 1fr 1fr; gap: 5px; background: rgba(0,0,0,0.3); padding: 5px; border-radius: 12px; width: 200px; margin: 0 auto; }
-        .dt-opt { padding: 12px 0; border-radius: 8px; cursor: pointer; font-weight: 900; font-size: 12px; transition: 0.2s; display: flex; align-items: center; justify-content: center; }
+        .duration-toggle { display: grid; grid-template-columns: 1fr 1fr; gap: 5px; background: rgba(0,0,0,0.05); padding: 5px; border-radius: 12px; width: 200px; margin: 0 auto; }
+        .dt-opt { padding: 12px 0; border-radius: 8px; cursor: pointer; font-weight: 900; font-size: 12px; transition: 0.2s; display: flex; align-items: center; justify-content: center; color: var(--text); }
         .dt-opt.active { background: var(--accent); color: white; box-shadow: 0 4px 10px var(--accent-glow); }
 
-        .zone-card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 12px; backdrop-filter: blur(10px); position: relative; transition: 0.3s; break-inside: avoid; page-break-inside: avoid; }
+        .zone-card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 12px; backdrop-filter: blur(10px); position: relative; transition: 0.3s; break-inside: avoid; page-break-inside: avoid; box-shadow: 0 4px 15px rgba(0,0,0,0.03); }
         .zone-card.solo-card { height: fit-content; align-self: start; }
         .zone-card.selected { border-color: var(--accent); box-shadow: 0 0 20px var(--accent-glow); }
         .zone-card.pending { border-color: var(--pending); box-shadow: 0 0 15px var(--pending-glow); }
         
-        .pending-tag { position: absolute; top: -10px; right: 15px; background: var(--pending); color: #0f172a; font-size: 9px; font-weight: 900; padding: 4px 10px; border-radius: 6px; box-shadow: 0 4px 10px rgba(0,0,0,0.4); z-index: 10; letter-spacing: 1px; }
+        .pending-tag { position: absolute; top: -10px; right: 15px; background: var(--pending); color: white; font-size: 9px; font-weight: 900; padding: 4px 10px; border-radius: 6px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); z-index: 10; letter-spacing: 1px; }
         .zone-header { font-size: 10px; font-weight: 900; color: var(--accent); margin-bottom: 8px; border-bottom: 1px solid var(--border); padding-bottom: 6px; display: flex; justify-content: space-between; align-items: center; }
 
-        .res-row { display: grid; grid-template-columns: 1fr 100px 100px; gap: 6px; align-items: center; padding: 6px 0; border-bottom: 1px solid rgba(255,255,255,0.05); }
+        .res-row { display: grid; grid-template-columns: 1fr 100px 100px; gap: 6px; align-items: center; padding: 6px 0; border-bottom: 1px solid rgba(0,0,0,0.05); }
+        .res-row:last-child { border-bottom: none; }
         .angler-name { font-size: 13px; font-weight: 900; letter-spacing: 0.5px; pointer-events: none; }
-        .draw-pill { padding: 4px 8px; border-radius: 6px; font-size: 9px; font-weight: 900; color: white; text-align: center; line-height: 1; border: 1px solid rgba(255,255,255,0.1); pointer-events: none; }
+        .draw-pill { padding: 4px 8px; border-radius: 6px; font-size: 9px; font-weight: 900; color: white; text-align: center; line-height: 1; border: 1px solid rgba(255,255,255,0.2); pointer-events: none; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
         .peg-num { font-size: 16px; font-weight: 900; margin-left: 5px; vertical-align: middle; }
 
         .res-row.swap-active { cursor: pointer; transition: 0.2s; border-radius: 8px; padding: 6px; pointer-events: auto; }
-        .res-row.swap-active:hover { background: rgba(139, 92, 246, 0.2); box-shadow: 0 0 10px rgba(139, 92, 246, 0.4); }
-        .res-row.swap-selected { background: rgba(139, 92, 246, 0.4) !important; border-left: 4px solid #8b5cf6 !important; border-radius: 8px; }
+        .res-row.swap-active:hover { background: rgba(79, 70, 229, 0.1); box-shadow: 0 0 10px rgba(79, 70, 229, 0.2); }
+        .res-row.swap-selected { background: rgba(79, 70, 229, 0.2) !important; border-left: 4px solid var(--accent) !important; border-radius: 8px; }
         @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.6; } 100% { opacity: 1; } }
 
         .m1-name { color: var(--m1-color); }
         .m2-name { color: var(--m2-color); }
-        .m1-tag { color: var(--m1-color); font-weight: 900; margin-left: 4px; text-shadow: 0 0 5px rgba(253, 224, 71, 0.5); font-size: 12px; }
-        .m2-tag { color: var(--m2-color); font-weight: 900; margin-left: 4px; text-shadow: 0 0 5px rgba(245, 158, 11, 0.5); font-size: 12px; }
-        .m1-peg { border: 2px solid var(--m1-color) !important; box-shadow: 0 0 10px rgba(253, 224, 71, 0.5) !important; }
-        .m2-peg { border: 2px solid var(--m2-color) !important; box-shadow: 0 0 10px rgba(245, 158, 11, 0.5) !important; }
+        .m1-tag { color: var(--m1-color); font-weight: 900; margin-left: 4px; font-size: 12px; }
+        .m2-tag { color: var(--m2-color); font-weight: 900; margin-left: 4px; font-size: 12px; }
+        .m1-peg { border: 2px solid var(--m1-color) !important; box-shadow: 0 0 10px rgba(202, 138, 4, 0.3) !important; }
+        .m2-peg { border: 2px solid var(--m2-color) !important; box-shadow: 0 0 10px rgba(217, 119, 6, 0.3) !important; }
 
         .check-sheet-table { width: 100%; border-collapse: collapse; }
         .check-sheet-table th { padding: 14px; font-size: 12px; color: var(--accent); border-bottom: 2px solid var(--border); letter-spacing: 1px; }
         .check-sheet-table td { padding: 12px 14px; border-bottom: 1px solid var(--border); font-size: 14px; font-weight: 800; vertical-align: middle; }
-        .cb-custom { width: 26px; height: 26px; border: 2px solid var(--accent); border-radius: 6px; cursor: pointer; display: inline-block; position: relative; vertical-align: middle; transition: 0.2s; margin: 0 auto; }
+        .cb-custom { width: 26px; height: 26px; border: 2px solid var(--accent); border-radius: 6px; cursor: pointer; display: inline-block; position: relative; vertical-align: middle; transition: 0.2s; margin: 0 auto; background: white; }
         .cb-custom.active { background: var(--accent); box-shadow: 0 0 15px var(--accent-glow); }
         .cb-custom.active::after { content: '✓'; position: absolute; left: 4px; top: -3px; color: white; font-size: 20px; font-weight: 900; }
 
-        .steward-input { width: 100%; max-width: 160px; font-size: 12px !important; padding: 8px 10px !important; background: rgba(0,0,0,0.2) !important; border-color: rgba(255,255,255,0.1) !important; margin: 0; }
-        .steward-input:focus { background: rgba(255,255,255,0.1) !important; border-color: var(--accent) !important; }
+        .steward-input { width: 100%; max-width: 160px; font-size: 12px !important; padding: 8px 10px !important; background: rgba(0,0,0,0.03) !important; border-color: rgba(0,0,0,0.1) !important; margin: 0; color: var(--text) !important; }
+        .steward-input:focus { background: white !important; border-color: var(--accent) !important; }
 
-        .btn-action { background: var(--accent); border: none; color: white; font-weight: 900; padding: 16px 32px; border-radius: 12px; cursor: pointer; transition: 0.2s; font-size: 13px; box-shadow: 0 4px 0 #312e81; }
-        .btn-action:active { transform: translateY(2px); box-shadow: 0 0px 0 #312e81; }
-        .btn-tool { background: rgba(255,255,255,0.1); border: 1px solid var(--border); color: var(--accent); font-size: 10px; font-weight: 900; padding: 6px 12px; border-radius: 6px; cursor: pointer; transition: 0.2s; }
-        .btn-tool:hover { background: var(--accent); color: white; }
-        .btn-jumbo { padding: 15px 25px; font-size: 12px; background: #1e293b; border: 2px solid var(--accent); color: white; border-radius: 12px; font-weight: 900; cursor: pointer; transition: 0.2s; white-space: nowrap; }
-        .btn-jumbo:hover { background: var(--accent); }
+        .btn-action { background: var(--accent); border: none; color: white; font-weight: 900; padding: 16px 32px; border-radius: 12px; cursor: pointer; transition: 0.2s; font-size: 13px; box-shadow: 0 4px 0 #3730a3; }
+        .btn-action:active { transform: translateY(2px); box-shadow: 0 0px 0 #3730a3; }
+        .btn-tool { background: white; border: 1px solid var(--border); color: var(--text); font-size: 10px; font-weight: 900; padding: 6px 12px; border-radius: 6px; cursor: pointer; transition: 0.2s; }
+        .btn-tool:hover { background: var(--accent); color: white; border-color: var(--accent); }
+        .btn-jumbo { padding: 15px 25px; font-size: 12px; background: white; border: 2px solid var(--accent); color: var(--text); border-radius: 12px; font-weight: 900; cursor: pointer; transition: 0.2s; white-space: nowrap; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
+        .btn-jumbo:hover { background: var(--accent); color: white; }
 
-        .command-bar { position: fixed; bottom: 0; left: 0; right: 0; z-index: 5000; background: rgba(30, 41, 59, 0.98); backdrop-filter: blur(20px); border-top: 2px solid var(--accent); padding: 15px 35px; display: none; justify-content: space-between; align-items: center; box-shadow: 0 -10px 30px rgba(0,0,0,0.5); }
+        .command-bar { position: fixed; bottom: 0; left: 0; right: 0; z-index: 5000; background: rgba(255, 255, 255, 0.98); backdrop-filter: blur(20px); border-top: 2px solid var(--accent); padding: 15px 35px; display: none; justify-content: space-between; align-items: center; box-shadow: 0 -10px 30px rgba(0,0,0,0.1); }
         
         .group-label { grid-column: 1 / -1; font-size: 1.4rem; font-weight: 900; color: var(--accent); border-left: 5px solid var(--accent); padding-left: 15px; margin: 40px 0 20px; letter-spacing: 1px; }
-        .entry-group-label { font-size: 1.1rem; font-weight: 900; color: var(--border); margin: 30px 0 15px; letter-spacing: 1px; text-align: left; }
+        .entry-group-label { font-size: 1.1rem; font-weight: 900; color: #64748b; margin: 30px 0 15px; letter-spacing: 1px; text-align: left; }
         
         .horizontal-legend { display: flex; justify-content: center; gap: 20px; flex-wrap: wrap; margin: -15px 0 30px 0; font-size: 12px; font-weight: 900; letter-spacing: 1px; }
-        .legend-item { display: flex; align-items: center; gap: 8px; background: rgba(255,255,255,0.05); padding: 6px 12px; border-radius: 8px; border: 1px solid var(--border); }
+        .legend-item { display: flex; align-items: center; gap: 8px; background: white; padding: 6px 12px; border-radius: 8px; border: 1px solid var(--border); box-shadow: 0 2px 5px rgba(0,0,0,0.02); }
         .legend-swatch { width: 14px; height: 14px; border-radius: 4px; }
 
         /* Legacy Dispatch Slip Print Styles */
@@ -116,7 +130,7 @@
         /* High-Density Zone Roster Print Styles */
         .roster-page { page-break-after: always; background: white; min-height: 100vh; padding: 20px; box-sizing: border-box; font-family: 'Inter', sans-serif; color: black; text-transform: uppercase; }
         .roster-header { background: #0f172a; color: white; padding: 15px 20px; border-radius: 8px 8px 0 0; text-align: center; margin-bottom: 0; border-bottom: 4px solid; } 
-        .roster-header h1 { font-size: 18px; margin: 0 0 5px 0; color: #94a3b8; letter-spacing: 1px;}
+        .roster-header h1 { font-size: 18px; margin: 0 0 5px 0; color: #f8fafc; letter-spacing: 1px;}
         .roster-header h2 { font-size: 24px; margin: 0; font-weight: 900; letter-spacing: 1px;}
         .roster-body { background: white; border-radius: 0 0 8px 8px; padding: 15px 20px; border: 2px solid #e2e8f0; border-top: none; }
         .roster-table { width: 100%; border-collapse: collapse; text-transform: uppercase; }
@@ -125,16 +139,16 @@
         .roster-table tr:nth-child(even) { background-color: #f8fafc; }
 
         /* Payout Dashboard Styles */
-        .payout-dashboard { display: flex; flex-wrap: wrap; gap: 15px; justify-content: center; margin-top: 25px; padding-top: 25px; border-top: 1px solid rgba(255,255,255,0.1); width: 100%; }
-        .payout-card { background: rgba(0,0,0,0.3); border: 1px solid var(--border); padding: 12px 20px; border-radius: 12px; display: flex; flex-direction: column; align-items: center; min-width: 120px; }
+        .payout-dashboard { display: flex; flex-wrap: wrap; gap: 15px; justify-content: center; margin-top: 25px; padding-top: 25px; border-top: 1px solid var(--border); width: 100%; }
+        .payout-card { background: white; border: 1px solid var(--border); padding: 12px 20px; border-radius: 12px; display: flex; flex-direction: column; align-items: center; min-width: 120px; box-shadow: 0 4px 10px rgba(0,0,0,0.02); }
         .payout-label { font-size: 10px; color: var(--accent); letter-spacing: 1px; margin-bottom: 5px; font-weight: 900; text-align: center; }
-        .payout-val { font-size: 18px; font-weight: 900; color: white; }
+        .payout-val { font-size: 18px; font-weight: 900; color: var(--text); }
 
         /* Payout Modal Styles */
-        .modal-overlay { position: fixed; inset: 0; background: rgba(15, 23, 42, 0.8); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); z-index: 9999; display: none; align-items: center; justify-content: center; }
-        .modal-content { background: var(--card); border: 1px solid var(--accent); border-radius: 24px; padding: 30px; width: 90%; max-width: 500px; box-shadow: 0 20px 50px rgba(0,0,0,0.5); position: relative; max-height: 90vh; display: flex; flex-direction: column; }
+        .modal-overlay { position: fixed; inset: 0; background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(5px); -webkit-backdrop-filter: blur(5px); z-index: 9999; display: none; align-items: center; justify-content: center; }
+        .modal-content { background: var(--card); border: 1px solid var(--border); border-radius: 24px; padding: 30px; width: 90%; max-width: 500px; box-shadow: 0 20px 50px rgba(0,0,0,0.2); position: relative; max-height: 90vh; display: flex; flex-direction: column; }
         #payoutRowsContainer { overflow-y: auto; flex-grow: 1; margin-bottom: 15px; padding-right: 5px; }
-        .payout-row { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid rgba(255,255,255,0.05); }
+        .payout-row { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid rgba(0,0,0,0.05); }
         .payout-row:last-child { border-bottom: none; }
         .payout-toggle { display: flex; align-items: center; gap: 10px; cursor: pointer; }
         .payout-toggle input { width: 18px; height: 18px; accent-color: var(--accent); cursor: pointer; }
@@ -142,22 +156,22 @@
         .payout-input-group.active { opacity: 1; pointer-events: auto; }
         .payout-pct { width: 60px !important; text-align: center; font-size: 16px !important; }
         
-        .total-bar-container { background: rgba(0,0,0,0.5); border-radius: 12px; padding: 15px; margin-top: 10px; display: flex; justify-content: space-between; align-items: center; border: 1px solid var(--border); transition: 0.3s; flex-shrink: 0; }
-        .total-bar-container.valid { border-color: #10b981; box-shadow: 0 0 15px rgba(16, 185, 129, 0.2); }
-        .total-bar-container.invalid { border-color: #ef4444; box-shadow: 0 0 15px rgba(239, 68, 68, 0.2); }
+        .total-bar-container { background: rgba(0,0,0,0.03); border-radius: 12px; padding: 15px; margin-top: 10px; display: flex; justify-content: space-between; align-items: center; border: 1px solid var(--border); transition: 0.3s; flex-shrink: 0; }
+        .total-bar-container.valid { border-color: #10b981; background: rgba(16, 185, 129, 0.05); box-shadow: 0 0 15px rgba(16, 185, 129, 0.1); }
+        .total-bar-container.invalid { border-color: #ef4444; background: rgba(239, 68, 68, 0.05); box-shadow: 0 0 15px rgba(239, 68, 68, 0.1); }
         .total-text { font-size: 18px; font-weight: 900; }
-        .total-text.valid { color: #10b981; }
-        .total-text.invalid { color: #ef4444; }
+        .total-text.valid { color: #047857; }
+        .total-text.invalid { color: #b91c1c; }
 
-        /* Digital PDF Export Rules */
-        body.full-color-share { background-color: #0f172a !important; color: #f8fafc !important; }
-        body.full-color-share #resultsSection { max-width: 600px !important; margin: 0 auto !important; padding: 20px !important; background-color: #0f172a !important; }
-        body.full-color-share #resTitle { color: #f8fafc !important; font-size: 2.2rem !important; margin-bottom: 20px !important; }
-        body.full-color-share .horizontal-legend { color: #f8fafc !important; font-size: 11px !important; gap: 10px !important; }
-        body.full-color-share .legend-item { color: #f8fafc !important; border-color: rgba(255,255,255,0.2) !important; padding: 6px 10px !important; }
+        /* Digital PDF Export Rules (Now tuned for Light Mode Paper) */
+        body.full-color-share { background-color: #ffffff !important; color: #000000 !important; }
+        body.full-color-share #resultsSection { max-width: 600px !important; margin: 0 auto !important; padding: 20px !important; background-color: #ffffff !important; }
+        body.full-color-share #resTitle { color: #000000 !important; font-size: 2.2rem !important; margin-bottom: 20px !important; }
+        body.full-color-share .horizontal-legend { color: #000000 !important; font-size: 11px !important; gap: 10px !important; }
+        body.full-color-share .legend-item { color: #000000 !important; border-color: #ccc !important; padding: 6px 10px !important; background: #fff !important; }
         body.full-color-share .bucket-grid { display: grid !important; grid-template-columns: 1fr !important; gap: 12px !important; }
-        body.full-color-share .zone-card { break-inside: avoid !important; page-break-inside: avoid !important; margin-bottom: 0 !important; }
-        body.full-color-share .res-row { grid-template-columns: 1fr 75px 75px !important; gap: 4px !important; }
+        body.full-color-share .zone-card { break-inside: avoid !important; page-break-inside: avoid !important; margin-bottom: 0 !important; background: #fff !important; border-color: #ccc !important; }
+        body.full-color-share .res-row { grid-template-columns: 1fr 75px 75px !important; gap: 4px !important; border-color: #eee !important; }
         body.full-color-share .no-print { display: none !important; }
 
         /* Printer Rules */
@@ -201,7 +215,7 @@
 <div class="fixed-header no-print">
     <div class="header-content">
         <button class="home-btn" onclick="showHub()" tabindex="-1">🏠 RETURN TO HOMEPAGE</button>
-        <div class="brand-name">ZONEDRAW <span id="vTag" class="v-tag">v10.47.0</span></div>
+        <div class="brand-name">ZONEDRAW <span id="vTag" class="v-tag">v10.48.0</span></div>
         <div style="width: 180px; text-align:right;">
             <button class="btn-tool" onclick="showHistory()" style="font-size: 12px; padding: 8px 15px;">📜 ARCHIVES</button>
         </div>
@@ -292,7 +306,7 @@
         <button onclick="archiveTournament()" id="archiveBtn" class="btn-action" style="background:#10b981;">📦 ARCHIVE TOURNAMENT</button>
     </div>
     
-    <div id="exportMenu" class="no-print" data-html2canvas-ignore="true" style="display:none; gap:12px; justify-content:center; margin-bottom:20px; padding:15px; background:rgba(255,255,255,0.05); border-radius:12px; flex-wrap:wrap;">
+    <div id="exportMenu" class="no-print" data-html2canvas-ignore="true" style="display:none; gap:12px; justify-content:center; margin-bottom:20px; padding:15px; background:white; border-radius:12px; flex-wrap:wrap; border:1px solid var(--border); box-shadow:0 4px 15px rgba(0,0,0,0.05);">
         <button onclick="shareDraw()" class="btn-action" style="background:#64748b; font-size:11px; padding: 12px 20px;">SHARE DIGITAL DRAW (PDF)</button>
         <button onclick="generateDispatchSlips()" class="btn-action" style="background:#0ea5e9; font-size:11px; padding: 12px 20px;">PRINT TEAM SLIPS</button>
         <button onclick="printZoneRosters()" class="btn-action" style="background:#0ea5e9; font-size:11px; padding: 12px 20px;">PRINT ZONE ROSTERS</button>
@@ -334,7 +348,7 @@
 
 <div id="commandBar" class="command-bar no-print">
     <div style="display:flex; gap:30px; align-items:center;">
-        <div style="display:flex; flex-direction:column; margin-right:20px;"><span id="lblAnglers" style="font-size:10px; color:var(--accent);">ANGLERS</span><span id="tkAnglers" style="font-size:24px; font-weight:900;">0 / 0</span></div>
+        <div style="display:flex; flex-direction:column; margin-right:20px;"><span id="lblAnglers" style="font-size:10px; color:var(--accent);">ANGLERS</span><span id="tkAnglers" style="font-size:24px; font-weight:900; color:var(--text);">0 / 0</span></div>
         <div id="cashModule" style="display:none; flex-direction:row; gap:20px;">
             <div style="display:flex; flex-direction:column;">
                 <span style="font-size:10px; color:#10b981;">PRIZE POOL</span>
@@ -357,25 +371,24 @@
     </div>
 </div>
 
-<div id="shuffleOverlay" style="position:fixed; inset:0; background:rgba(15,23,42,0.98); z-index:9000; display:none; flex-direction:column; align-items:center; justify-content:center;">
-    <h2 style="font-size:2.5rem; font-weight:900; letter-spacing:5px;">LOCKING INTEGRITY ENGINE...</h2>
-    <div style="width:350px; height:6px; background:rgba(255,255,255,0.1); border-radius:10px; overflow:hidden; margin-top:25px;"><div id="pBar" style="height:100%; width:0%; background:var(--accent); transition:0.1s;"></div></div>
+<div id="shuffleOverlay" style="position:fixed; inset:0; background:rgba(248, 250, 252, 0.98); z-index:9000; display:none; flex-direction:column; align-items:center; justify-content:center;">
+    <h2 style="font-size:2.5rem; font-weight:900; letter-spacing:5px; color:var(--text);">LOCKING INTEGRITY ENGINE...</h2>
+    <div style="width:350px; height:6px; background:rgba(0,0,0,0.1); border-radius:10px; overflow:hidden; margin-top:25px;"><div id="pBar" style="height:100%; width:0%; background:var(--accent); transition:0.1s;"></div></div>
 </div>
 
-<div id="pdfOverlay" data-html2canvas-ignore="true" style="position:fixed; inset:0; background:rgba(15,23,42,0.98); z-index:9999; display:none; flex-direction:column; align-items:center; justify-content:center;">
-    <h2 style="font-size:2.5rem; font-weight:900; letter-spacing:3px; color:#f8fafc; text-align:center;">FORMATTING SECURE PDF...</h2>
+<div id="pdfOverlay" data-html2canvas-ignore="true" style="position:fixed; inset:0; background:rgba(248, 250, 252, 0.98); z-index:9999; display:none; flex-direction:column; align-items:center; justify-content:center;">
+    <h2 style="font-size:2.5rem; font-weight:900; letter-spacing:3px; color:var(--text); text-align:center;">FORMATTING SECURE PDF...</h2>
     <p style="color:var(--accent); font-weight:900; margin-top:10px; font-size:1.2rem;">PLEASE DO NOT CLOSE THE APP</p>
 </div>
 
-<!-- PAYOUT CONFIGURATOR MODAL -->
 <div id="payoutModal" class="modal-overlay no-print" data-html2canvas-ignore="true" onclick="if(event.target === this) closePayoutModal()">
     <div class="modal-content">
         <span onclick="closePayoutModal()" style="position:absolute; top:20px; right:25px; font-size:28px; color:#ef4444; cursor:pointer; font-weight:900; line-height:1;" title="Close">×</span>
         <h2 style="margin: 0 0 20px 0; color: var(--accent); text-align: center; letter-spacing: 1px;">🏆 CONFIGURE PAYOUTS</h2>
         <div id="payoutRowsContainer"></div>
         
-        <div style="margin-top: 15px; padding: 12px; background: rgba(0,0,0,0.3); border-radius: 8px; border: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; flex-shrink: 0;">
-            <span style="font-weight: 900; font-size: 13px; color: #10b981;">💷 ROUND ALL PAYOUTS TO NEAREST £5</span>
+        <div style="margin-top: 15px; padding: 12px; background: rgba(0,0,0,0.03); border-radius: 8px; border: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; flex-shrink: 0;">
+            <span style="font-weight: 900; font-size: 13px; color: #047857;">💷 ROUND ALL PAYOUTS TO NEAREST £5</span>
             <input type="checkbox" id="cb_round5" style="width: 18px; height: 18px; accent-color: #10b981; cursor: pointer;" onchange="updatePayoutTotal()">
         </div>
 
@@ -434,7 +447,6 @@
         document.querySelectorAll('body > div[id$="Section"]').forEach(s => s.style.display = 'none');
         document.getElementById('hubSection').style.display = 'grid';
         document.getElementById('commandBar').style.display = 'none';
-        document.body.classList.remove('full-color-share');
         isSwapMode = false; swapObj1 = null;
         isStewardMode = false;
         document.getElementById('exportMenu').style.display = 'none';
@@ -567,7 +579,7 @@
                     <button onclick="event.stopPropagation(); deleteHistoryItem('${title}')" style="background:none; border:none; color:#ef4444; font-size:22px; cursor:pointer; padding:0; line-height:0.5;" title="Delete Record">✖</button>
                 </div>
                 <strong style="color:var(--accent); font-size:20px; display:block; margin-top:-5px;">${title}</strong>
-                <small style="text-transform:none; opacity:0.6; margin-top:10px; display:block;">${e.time}</small>
+                <small style="text-transform:none; opacity:0.6; margin-top:10px; display:block; color:var(--text);">${e.time}</small>
             `;
             div.onclick = () => loadMatch(title, e);
             grid.appendChild(div);
@@ -710,8 +722,8 @@
                 h += `<label style="font-size:10px; opacity:0.6;">TEAM NAME</label><input type="text" class="t-name" value="${entry.tName}" style="width:95%; margin-bottom:12px; font-size:14px;">`;
                 for(let i=0; i<4; i++) {
                     let mText = entry.anglers[i].mobility === 1 ? '[M1]' : entry.anglers[i].mobility === 2 ? '[M2]' : '[M]';
-                    let mBg = entry.anglers[i].mobility === 1 ? 'var(--m1-color)' : entry.anglers[i].mobility === 2 ? 'var(--m2-color)' : 'rgba(255,255,255,0.1)';
-                    let mColor = entry.anglers[i].mobility ? '#0f172a' : 'var(--accent)';
+                    let mBg = entry.anglers[i].mobility === 1 ? 'var(--m1-color)' : entry.anglers[i].mobility === 2 ? 'var(--m2-color)' : 'rgba(0,0,0,0.05)';
+                    let mColor = entry.anglers[i].mobility ? 'white' : 'var(--text)';
 
                     h += `<div style="display:flex; align-items:center; gap:5px; margin-bottom:6px;">
                             <input type="text" class="a-name" value="${entry.anglers[i].name || ''}" placeholder="ANGLER ${i+1}" style="width:100%; margin:0; font-size:13px;">
@@ -721,8 +733,8 @@
             } else {
                 h += `<label style="font-size:10px; opacity:0.6;">SOLO NAME</label>`;
                 let mText = entry.anglers[0].mobility === 1 ? '[M1]' : entry.anglers[0].mobility === 2 ? '[M2]' : '[M]';
-                let mBg = entry.anglers[0].mobility === 1 ? 'var(--m1-color)' : entry.anglers[0].mobility === 2 ? 'var(--m2-color)' : 'rgba(255,255,255,0.1)';
-                let mColor = entry.anglers[0].mobility ? '#0f172a' : 'var(--accent)';
+                let mBg = entry.anglers[0].mobility === 1 ? 'var(--m1-color)' : entry.anglers[0].mobility === 2 ? 'var(--m2-color)' : 'rgba(0,0,0,0.05)';
+                let mColor = entry.anglers[0].mobility ? 'white' : 'var(--text)';
 
                 h += `<div style="display:flex; align-items:center; gap:5px;">
                         <input type="text" class="a-name" value="${entry.anglers[0].name || ''}" style="width:100%; margin:0; font-size:14px;">
@@ -1345,7 +1357,7 @@
         });
         
         let h = `<div class="control-panel no-print">
-                    <h2>STEWARD REGISTRATION & ACCOUNTING</h2>
+                    <h2 style="color:var(--text);">STEWARD REGISTRATION & ACCOUNTING</h2>
                     <div style="display:flex; gap:25px; justify-content:center; align-items:center; flex-wrap:wrap; margin-bottom:25px;">
                         <div style="display:flex; align-items:center; gap:10px;"><label>PRIZE (£)</label><input type="number" id="sPrize" value="${prizeFee}" oninput="prizeFee=this.value; updateCash(); persistToVault();" style="width:75px;"></div>
                         <div style="display:flex; align-items:center; gap:10px;"><label>PAIRS (£)</label><input type="number" id="sPairs" value="${pairsFee}" oninput="pairsFee=this.value; updateCash(); persistToVault();" style="width:75px;"></div>
@@ -1451,7 +1463,7 @@
             row.innerHTML = `
                 <label class="payout-toggle">
                     <input type="checkbox" id="cb_${cfg.id}" ${cfg.active ? 'checked' : ''} onchange="togglePayoutInput(${idx})">
-                    <span style="font-weight:900; font-size:14px;">${cfg.label}</span>
+                    <span style="font-weight:900; font-size:14px; color:var(--text);">${cfg.label}</span>
                 </label>
                 <div class="payout-input-group ${cfg.active ? 'active' : ''}" id="grp_${cfg.id}">
                     <input type="number" id="val_${cfg.id}" class="payout-pct" value="${cfg.pct}" oninput="updatePayoutTotal()">
@@ -1561,7 +1573,7 @@
         });
 
         if(!hasActive) {
-            dash.innerHTML = `<div style="font-size:12px; color:rgba(255,255,255,0.4); font-weight:900;">NO PAYOUT STRUCTURE CONFIGURED</div>`;
+            dash.innerHTML = `<div style="font-size:12px; color:rgba(0,0,0,0.4); font-weight:900;">NO PAYOUT STRUCTURE CONFIGURED</div>`;
         } else {
             if (roundPayoutsTo5) {
                 let leftover = totalPot - totalAllocatedCash;
@@ -1569,7 +1581,7 @@
                 let leftoverText = leftover >= 0 ? `CLUB FUNDS / REMAINING: £${leftover.toFixed(2)}` : `⚠️ SHORTFALL (ADJUST ENVELOPES): £${Math.abs(leftover).toFixed(2)}`;
                 
                 dashHTML += `
-                    <div style="width: 100%; margin-top: 15px; padding: 12px; background: rgba(0,0,0,0.4); border: 1px solid ${leftoverColor}; border-radius: 12px; text-align: center;">
+                    <div style="width: 100%; margin-top: 15px; padding: 12px; background: rgba(0,0,0,0.03); border: 1px solid ${leftoverColor}; border-radius: 12px; text-align: center;">
                         <span style="font-size: 14px; font-weight: 900; color: ${leftoverColor};">${leftoverText}</span>
                     </div>
                 `;
@@ -1748,11 +1760,12 @@
         
         const finSummary = document.createElement('div');
         finSummary.id = 'tempFinSummary';
-        finSummary.innerHTML = `<h2 style="text-align:center; color:#10b981; margin-bottom: 25px; font-size:1.4rem;">ENTRY FEES: PRIZE POOL [£${prizeFee}] | SECRET PAIRS [£${pairsFee}]</h2>`;
+        finSummary.innerHTML = `<h2 style="text-align:center; color:#047857; margin-bottom: 25px; font-size:1.4rem;">ENTRY FEES: PRIZE POOL [£${prizeFee}] | SECRET PAIRS [£${pairsFee}]</h2>`;
         
         const resTitle = document.getElementById('resTitle');
         element.insertBefore(finSummary, resTitle.nextSibling);
 
+        // Native Light Theme for Sharing
         document.body.classList.add('full-color-share');
         
         element.querySelectorAll('.bucket-grid').forEach(grid => {
@@ -1767,7 +1780,7 @@
                 margin:       0.2,
                 filename:     `${matchName.replace(/[^a-z0-9]/gi, '_')}_Digital_Draw_${ts}.pdf`,
                 image:        { type: 'jpeg', quality: 0.98 },
-                html2canvas:  { scale: 2, useCORS: true, backgroundColor: '#0f172a', scrollY: 0 },
+                html2canvas:  { scale: 2, useCORS: true, backgroundColor: '#ffffff', scrollY: 0 },
                 jsPDF:        { unit: 'in', format: 'a4', orientation: 'portrait' } 
             };
 
