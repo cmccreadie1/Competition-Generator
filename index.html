@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ZONEDRAW v10.60.0</title>
+    <title>ZONEDRAW v10.61.0</title>
     <link rel="manifest" href="manifest.json">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
@@ -233,7 +233,7 @@
 <div class="fixed-header no-print">
     <div class="header-content">
         <button class="home-btn" onclick="showHub()" tabindex="-1">🏠 RETURN TO HOMEPAGE</button>
-        <div class="brand-name">ZONEDRAW <span id="vTag" class="v-tag">v10.60.0</span></div>
+        <div class="brand-name">ZONEDRAW <span id="vTag" class="v-tag">v10.61.0</span></div>
         <div style="width: 180px; text-align:right;">
             <button class="btn-tool" onclick="showHistory()" style="font-size: 11px; padding: 6px 12px;">📜 ARCHIVES</button>
         </div>
@@ -721,7 +721,6 @@
     }
 
     function syncScreenToState() {
-        /* FIXED: Only reads inputs safely from the specific entry section */
         document.querySelectorAll('#entrySection .zone-card').forEach(card => {
             const id = card.dataset.id;
             const entry = appState.find(e => e.id === id);
@@ -853,6 +852,7 @@
         
         appState.splice(idx, 1);
         renderStateToScreen();
+        persistToVault(); 
     }
 
     function breakStateTeam(id) {
@@ -866,6 +866,7 @@
         });
         
         renderStateToScreen();
+        persistToVault(); 
     }
 
     function mergeSelected() {
@@ -885,6 +886,7 @@
         
         appState.push({ id: genId(), isTeam: true, tName: '', anglers: newTeamAnglers });
         renderStateToScreen();
+        persistToVault(); 
     }
 
     function checkMerge() {
@@ -1041,8 +1043,10 @@
                 
                 if (mobilityMode === 'B' && hasM) {
                     let d1Zones = [];
+                    let d2Zones = [];
                     let tempPools1 = pools1.map(p => p.p.length);
-                    
+                    let tempPools2 = pools2.map(p => p.p.length);
+
                     for(let i=0; i<4; i++) {
                         let a = entry.anglers[i];
                         if (a.mobility) {
@@ -1061,9 +1065,6 @@
                         }
                     }
 
-                    let d2Zones = new Array(4);
-                    let tempPools2 = pools2.map(p => p.p.length);
-                    
                     let standardAnglerIndices = [];
                     let standardZonesD1 = [];
                     
@@ -1151,7 +1152,6 @@
                     }
 
                 } else {
-                    /* FIX APPLIED: Bulletproof arrays for Standard Teams to prevent null crash */
                     let d1Zones = [];
                     let tempPools1 = pools1.map(p => p.p.length);
                     for(let i=0; i<4; i++) {
@@ -1159,7 +1159,7 @@
                         if (zIdx === -1) {
                             let maxVal = Math.max(...tempPools1);
                             zIdx = tempPools1.indexOf(maxVal);
-                            if (zIdx === -1) zIdx = Math.floor(Math.random() * 4); // Failsafe
+                            if (zIdx === -1) zIdx = Math.floor(Math.random() * 4); 
                         }
                         d1Zones.push(zones[zIdx]);
                         tempPools1[zIdx]--;
@@ -1178,7 +1178,7 @@
                             } else {
                                 let maxVal = Math.max(...tempPools2);
                                 zIdx = tempPools2.indexOf(maxVal);
-                                if (zIdx === -1) zIdx = Math.floor(Math.random() * 4); // Failsafe
+                                if (zIdx === -1) zIdx = Math.floor(Math.random() * 4); 
                             }
                         }
                         d2Zones.push(zones[zIdx]);
@@ -1404,8 +1404,9 @@
             let nameClass = a.mobility ? 'angler-name a-name' : 'angler-name';
             let mIcon = a.mobility ? '<span class="a-tag">[A]</span>' : '';
             
-            let p1Icon = p1Safe ? '<span class="a-tag" style="font-size:10px;">[A PEG]</span>' : '';
-            let p2Icon = p2Safe ? '<span class="a-tag" style="font-size:10px;">[A PEG]</span>' : '';
+            /* FIXED: The A PEG text is strictly set to white inside the pill */
+            let p1Icon = p1Safe ? '<span style="color: white; font-weight: 900; margin-left: 4px; font-size: 10px;">[A PEG]</span>' : '';
+            let p2Icon = p2Safe ? '<span style="color: white; font-weight: 900; margin-left: 4px; font-size: 10px;">[A PEG]</span>' : '';
 
             h += `<div class="${rowClass}" ${clickEvt}>
                     <span class="${nameClass}">${dispName}${mIcon}</span>
