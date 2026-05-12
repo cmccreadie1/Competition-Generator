@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ZONEDRAW v10.53.0</title>
+    <title>ZONEDRAW v10.54.0</title>
     <link rel="manifest" href="manifest.json">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
@@ -214,7 +214,7 @@
 <div class="fixed-header no-print">
     <div class="header-content">
         <button class="home-btn" onclick="showHub()" tabindex="-1">🏠 RETURN TO HOMEPAGE</button>
-        <div class="brand-name">ZONEDRAW <span id="vTag" class="v-tag">v10.53.0</span></div>
+        <div class="brand-name">ZONEDRAW <span id="vTag" class="v-tag">v10.54.0</span></div>
         <div style="width: 180px; text-align:right;">
             <button class="btn-tool" onclick="showHistory()" style="font-size: 12px; padding: 8px 15px;">📜 ARCHIVES</button>
         </div>
@@ -243,34 +243,39 @@
         <input type="text" id="matchTitle" style="font-size:22px; text-align:center; margin-top:10px;" placeholder="e.g. SCOTTISH SHORE CHAMPIONSHIP 2026" onblur="persistToVault()">
         
         <div style="margin-top:25px; display:flex; flex-direction:column; align-items:center; gap:10px;">
-            <label style="font-size: 10px; opacity: 0.6; letter-spacing: 1px; color:var(--accent);">ACCESS PROTOCOL</label>
+            <div style="display:flex; flex-direction:column; align-items:center; gap:5px;">
+                <button class="btn-tool" onclick="let p = document.getElementById('accPanelWrapper'); p.style.display = p.style.display === 'none' ? 'flex' : 'none';" style="font-size: 12px; padding: 10px 20px; border-color: var(--accent); color: var(--text); background: rgba(0,0,0,0.05); box-shadow: 0 4px 10px rgba(0,0,0,0.05);" type="button" tabindex="-1">⚙️ CONFIGURE ACCESS PROTOCOL</button>
+                <span style="font-size:10px; opacity:0.6; max-width: 400px; text-transform:none;">Toggle to assign specific safe pegs for anglers requiring easier access or flatter terrain.</span>
+            </div>
             
-            <div style="display:flex; justify-content:center; gap:10px; width:100%; max-width:600px;">
-                <div id="mobModeA" class="dt-opt active" style="flex:1; flex-direction:column;" onclick="setMobilityMode('A')">
-                    <span>DISTRIBUTED PEGS</span>
-                    <span style="font-size:8px; opacity:0.7; margin-top:3px; text-transform:none;">For multiple access points. A-Anglers switch zones on Day 2.</span>
+            <div id="accPanelWrapper" style="display:none; flex-direction:column; align-items:center; gap:10px; width:100%; max-width:600px; padding: 20px; background: #f8fafc; border-radius: 12px; border: 1px solid var(--border);">
+                <div style="display:flex; justify-content:center; gap:10px; width:100%;">
+                    <div id="mobModeA" class="dt-opt active" style="flex:1; flex-direction:column;" onclick="setMobilityMode('A')">
+                        <span>DISTRIBUTED PEGS</span>
+                        <span style="font-size:8px; opacity:0.7; margin-top:3px; text-transform:none;">For multiple access points. A-Anglers switch zones on Day 2.</span>
+                    </div>
+                    <div id="mobModeB" class="dt-opt" style="flex:1; flex-direction:column;" onclick="setMobilityMode('B')">
+                        <span>STATIC ZONE ANCHOR</span>
+                        <span style="font-size:8px; opacity:0.7; margin-top:3px; text-transform:none;">For single access points. Pins A-Anglers to one zone all weekend.</span>
+                    </div>
                 </div>
-                <div id="mobModeB" class="dt-opt" style="flex:1; flex-direction:column;" onclick="setMobilityMode('B')">
-                    <span>STATIC ZONE ANCHOR</span>
-                    <span style="font-size:8px; opacity:0.7; margin-top:3px; text-transform:none;">For single access points. Pins A-Anglers to one zone all weekend.</span>
-                </div>
-            </div>
 
-            <div id="modeASetup" style="display:flex; flex-direction:column; gap:10px; width:100%; max-width:600px; margin-top:10px;">
-                <input type="text" id="accPegs1_a" style="font-size:14px; text-align:center; border-color:var(--a-color);" placeholder="DAY 1 SAFE PEGS (1, 2...)" onblur="formatPegs(this)">
-                <div id="day2PegsContainer" style="display:none; width:100%;">
-                    <input type="text" id="accPegs2_a" style="font-size:14px; text-align:center; border-color:var(--a-color);" placeholder="DAY 2 SAFE PEGS (1, 2...)" onblur="formatPegs(this)">
+                <div id="modeASetup" style="display:flex; flex-direction:column; gap:10px; width:100%; margin-top:10px;">
+                    <input type="text" id="accPegs1_a" style="font-size:14px; text-align:center; border-color:var(--a-color);" placeholder="DAY 1 SAFE PEGS (1, 2...)" onblur="formatPegs(this)">
+                    <div id="day2PegsContainer" style="display:none; width:100%;">
+                        <input type="text" id="accPegs2_a" style="font-size:14px; text-align:center; border-color:var(--a-color);" placeholder="DAY 2 SAFE PEGS (1, 2...)" onblur="formatPegs(this)">
+                    </div>
                 </div>
-            </div>
 
-            <div id="modeBSetup" style="display:none; flex-direction:column; gap:10px; width:100%; max-width:600px; margin-top:10px;">
-                <select id="anchorZoneSelect" onchange="persistToVault()">
-                    <option value="RED">ANCHOR ZONE: RED</option>
-                    <option value="YELLOW">ANCHOR ZONE: YELLOW</option>
-                    <option value="GREEN">ANCHOR ZONE: GREEN</option>
-                    <option value="BLUE">ANCHOR ZONE: BLUE</option>
-                </select>
-                <input type="text" id="accPegsAnchor" style="font-size:14px; text-align:center; border-color:var(--a-color);" placeholder="ANCHOR ZONE SAFE PEGS (1, 2, 3...)" onblur="formatPegs(this)">
+                <div id="modeBSetup" style="display:none; flex-direction:column; gap:10px; width:100%; margin-top:10px;">
+                    <select id="anchorZoneSelect" onchange="persistToVault()">
+                        <option value="RED">ANCHOR ZONE: RED</option>
+                        <option value="YELLOW">ANCHOR ZONE: YELLOW</option>
+                        <option value="GREEN">ANCHOR ZONE: GREEN</option>
+                        <option value="BLUE">ANCHOR ZONE: BLUE</option>
+                    </select>
+                    <input type="text" id="accPegsAnchor" style="font-size:14px; text-align:center; border-color:var(--a-color);" placeholder="ANCHOR ZONE SAFE PEGS (1, 2, 3...)" onblur="formatPegs(this)">
+                </div>
             </div>
         </div>
 
@@ -596,7 +601,6 @@
         }
     }
 
-    // THE UNIVERSAL DATA TRANSLATOR (Handles Legacy Merging)
     function loadMatch(title, entry) {
         document.getElementById('matchTitle').value = title;
         
