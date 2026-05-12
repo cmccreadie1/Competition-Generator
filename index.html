@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ZONEDRAW v10.50.0</title>
+    <title>ZONEDRAW v10.51.0</title>
     <link rel="manifest" href="manifest.json">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
@@ -201,7 +201,7 @@
 <div class="fixed-header no-print">
     <div class="header-content">
         <button class="home-btn" onclick="showHub()" tabindex="-1">🏠 RETURN TO HOMEPAGE</button>
-        <div class="brand-name">ZONEDRAW <span id="vTag" class="v-tag">v10.50.0</span></div>
+        <div class="brand-name">ZONEDRAW <span id="vTag" class="v-tag">v10.51.0</span></div>
         <div style="width: 180px; text-align:right;">
             <button class="btn-tool" onclick="showHistory()" style="font-size: 12px; padding: 8px 15px;">📜 ARCHIVES</button>
         </div>
@@ -584,13 +584,16 @@
         }
     }
 
+    // THE UNIVERSAL DATA TRANSLATOR - Protects against older or modified data variables 
     function loadMatch(title, entry) {
         document.getElementById('matchTitle').value = title;
         document.getElementById('accPegs1_a1').value = entry.safePegs1_a1 || entry.safePegs1_m1 || entry.safePegs1 || entry.safePegs || '';
         document.getElementById('accPegs1_a2').value = entry.safePegs1_a2 || entry.safePegs1_m2 || '';
         document.getElementById('accPegs2_a1').value = entry.safePegs2_a1 || entry.safePegs2_m1 || entry.safePegs2 || entry.safePegs || '';
         document.getElementById('accPegs2_a2').value = entry.safePegs2_a2 || entry.safePegs2_m2 || '';
-        prizeFee = entry.prize || 10; pairsFee = entry.pairs || 5;
+        
+        prizeFee = entry.prize || 10; 
+        pairsFee = entry.pairs || 5;
         roundPayoutsTo5 = entry.roundPayoutsTo5 || false;
         
         let vc = entry.venueConfig || { venues: 1, d1v1: '', d1v2: '', d2v1: '', d2v2: '' };
@@ -599,14 +602,46 @@
         document.getElementById('d2v1').value = vc.d2v1 || '';
         document.getElementById('d2v2').value = vc.d2v2 || '';
         
-        if (entry.payoutConfig) {
-            payoutConfig = JSON.parse(JSON.stringify(entry.payoutConfig));
-        }
+        if (entry.payoutConfig) payoutConfig = JSON.parse(JSON.stringify(entry.payoutConfig));
 
         setVenues(vc.venues || 1);
         setDays(entry.days || 2); 
         currentZoneSize = entry.zoneSize || 0;
-        appState = JSON.parse(JSON.stringify(entry.data)); 
+
+        // Auto-Translates any legacy variable names into the strict modern format
+        let rawData = entry.data || entry.appState || [];
+        if (!Array.isArray(rawData)) rawData = Object.values(rawData);
+
+        appState = rawData.map(e => {
+            let isT = e.isTeam !== undefined ? e.isTeam : (e.type === 'team' || (e.anglers && e.anglers.length > 1));
+            let tN = e.tName || e.teamName || e.name || '';
+            let angs = e.anglers || e.members || e.competitors || [{}];
+
+            let mappedAngs = angs.map(a => {
+                let mVal = 0;
+                if (a.mobility !== undefined) mVal = typeof a.mobility === 'boolean' ? (a.mobility ? 1 : 0) : a.mobility;
+                else if (a.m1) mVal = 1;
+                else if (a.m2) mVal = 2;
+
+                return {
+                    ...a,
+                    name: a.name || a.anglerName || '',
+                    z1: a.z1 || a.zone1 || a.zone || undefined,
+                    p1: a.p1 || a.peg1 || a.peg || undefined,
+                    z2: a.z2 || a.zone2 || undefined,
+                    p2: a.p2 || a.peg2 || undefined,
+                    mobility: mVal,
+                    present: a.present || false,
+                    captain: a.captain || false,
+                    phone: a.phone || '',
+                    prize: a.prize || false,
+                    pairs: a.pairs || false
+                };
+            });
+
+            return { ...e, id: e.id || genId(), isTeam: isT, tName: tN, anglers: mappedAngs };
+        });
+
         displayDraw();
     }
 
@@ -1206,7 +1241,9 @@
               </div>`;
 
         g.anglers.forEach((a, aIdx) => { 
-            if(!a.name || !a.z1) return;
+            // FAILSAFE: If a user didn't enter a name, don't hide the peg! Default to "ANGLER X"
+            let dispName = a.name ? a.name : (g.isTeam ? `ANGLER ${aIdx + 1}` : `SOLO ANGLER`);
+            if(!a.z1) return; // Only skip if they genuinely have NO peg drawn
             
             let rowClass = 'res-row';
             let clickEvt = '';
@@ -1234,7 +1271,7 @@
             let p2Icon = p2Tier === 1 ? '<span class="a1-tag" style="font-size:10px;">[A1 PEG]</span>' : p2Tier === 2 ? '<span class="a2-tag" style="font-size:10px;">[A2 PEG]</span>' : '';
 
             h += `<div class="${rowClass}" ${clickEvt}>
-                    <span class="${nameClass}">${a.name}${mIcon}</span>
+                    <span class="${nameClass}">${dispName}${mIcon}</span>
                     <div style="display:flex; flex-direction:column; align-items:center; justify-content:center; pointer-events:none;">
                         ${vA1}
                         <div class="${pill1Class}" style="background:${zoneGradients[a.z1]}">${a.z1}<span class="peg-num">${a.p1}</span>${p1Icon}</div>
@@ -1261,11 +1298,12 @@
                 let zoneAnglers = [];
                 appState.forEach(team => {
                     team.anglers.forEach(a => {
-                        if (a.name) {
+                        let dispName = a.name ? a.name : 'ANGLER'; // Support blank names in archive
+                        if (a.z1) {
                             if (day === 1 && a.z1 === zone) {
-                                zoneAnglers.push({ name: a.name, team: team.tName || 'SOLO', peg: a.p1, mobility: a.mobility });
+                                zoneAnglers.push({ name: dispName, team: team.tName || 'SOLO', peg: a.p1, mobility: a.mobility });
                             } else if (day === 2 && a.z2 === zone) {
-                                zoneAnglers.push({ name: a.name, team: team.tName || 'SOLO', peg: a.p2, mobility: a.mobility });
+                                zoneAnglers.push({ name: dispName, team: team.tName || 'SOLO', peg: a.p2, mobility: a.mobility });
                             }
                         }
                     });
@@ -1328,7 +1366,7 @@
         
         appState.forEach(g => {
             g.anglers.forEach((a, idx) => { 
-                if(a.name || g.isTeam) { 
+                if(a.name || g.isTeam || a.z1) { // Will now show blank named anglers if they drew a peg
                     list.push({ entryId: g.id, aIdx: idx, isTeam: g.isTeam, team: g.tName, angler: a }); 
                 } 
             });
@@ -1582,7 +1620,7 @@
         let csv = "NAME,TEAM,PRESENT,CAPTAIN,PHONE,PRIZE POOL,SECRET PAIRS\n";
         
         let list = []; 
-        appState.forEach(g => g.anglers.forEach(a => { if(a.name || g.isTeam) list.push({ isTeam: g.isTeam, team: g.tName, angler: a }); }));
+        appState.forEach(g => g.anglers.forEach(a => { if(a.name || g.isTeam || a.z1) list.push({ isTeam: g.isTeam, team: g.tName, angler: a }); }));
         list.sort((a,b) => {
             if (a.isTeam && !b.isTeam) return -1;
             if (!a.isTeam && b.isTeam) return 1;
@@ -1622,7 +1660,7 @@
 
     function exportToCSV() {
         let csv = "NAME,TEAM,DAY 1 ZONE,DAY 2 ZONE\n";
-        appState.forEach(g => g.anglers.forEach(a => { if(a.name) csv += `${a.name},${g.tName || ""},${a.z1},${matchDays==2?a.z2:""}\n`; }));
+        appState.forEach(g => g.anglers.forEach(a => { if(a.name || a.z1) csv += `${a.name || 'ANGLER'},${g.tName || ""},${a.z1},${matchDays==2?a.z2:""}\n`; }));
         const blob = new Blob([csv], {type: 'text/csv'});
         const lnk = document.createElement('a'); lnk.href = URL.createObjectURL(blob); 
         
@@ -1670,7 +1708,7 @@
                         let aMob = a.mobility === 1 ? '<b style="font-size:14px;">[A1]</b>' : a.mobility === 2 ? '<b style="font-size:14px;">[A2]</b>' : '';
                         return `
                         <tr>
-                            <td>${a.name || '---'} ${aMob}</td>
+                            <td>${a.name || 'ANGLER'} ${aMob}</td>
                             <td><b>[${vA1}${a.z1} ZONE]</b> PEG ${a.p1}${p1Safe}</td>
                             <td>${matchDays == 2 ? `<b>[${vA2}${a.z2} ZONE]</b> PEG ${a.p2}${p2Safe}` : '---'}</td>
                             <td style="text-align:center;"><div style="width:24px; height:24px; border:2px solid black; margin: 0 auto;"></div></td>
@@ -1711,7 +1749,7 @@
                 slip.style.marginBottom = '20px';
                 slip.innerHTML = `
                     <div class="dispatch-header" style="padding-bottom:10px; margin-bottom:15px; border-bottom-width:4px;">
-                        <div><h1 style="font-size:20px;">${title}</h1><h2 style="font-size:16px;">SOLO COMPETITOR: ${a.name} ${aMob}</h2></div>
+                        <div><h1 style="font-size:20px;">${title}</h1><h2 style="font-size:16px;">SOLO COMPETITOR: ${a.name || 'SOLO ANGLER'} ${aMob}</h2></div>
                     </div>
                     <table class="dispatch-table" style="margin-top:10px; font-size:14px;">
                         <tr>
