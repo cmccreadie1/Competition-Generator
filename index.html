@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ZONEDRAW v10.61.0</title>
+    <title>ZONEDRAW v11.0.0</title>
     <link rel="manifest" href="manifest.json">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
@@ -90,6 +90,7 @@
         .res-row.swap-selected { background: rgba(79, 70, 229, 0.2) !important; border-left: 4px solid var(--accent) !important; border-radius: 8px; }
         @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.6; } 100% { opacity: 1; } }
 
+        /* VISIBILITY FIXES FOR LABELS */
         .a-name { color: var(--a-color); }
         .a-tag { color: #0f172a; font-weight: 900; margin-left: 4px; font-size: 12px; }
         .a-peg { border: 2px solid var(--a-color) !important; box-shadow: 0 0 10px rgba(202, 138, 4, 0.3) !important; }
@@ -233,7 +234,7 @@
 <div class="fixed-header no-print">
     <div class="header-content">
         <button class="home-btn" onclick="showHub()" tabindex="-1">🏠 RETURN TO HOMEPAGE</button>
-        <div class="brand-name">ZONEDRAW <span id="vTag" class="v-tag">v10.61.0</span></div>
+        <div class="brand-name">ZONEDRAW <span id="vTag" class="v-tag">v11.0.0</span></div>
         <div style="width: 180px; text-align:right;">
             <button class="btn-tool" onclick="showHistory()" style="font-size: 11px; padding: 6px 12px;">📜 ARCHIVES</button>
         </div>
@@ -941,6 +942,7 @@
 
     function runDraw() {
         syncScreenToState(); 
+        /* Filtering completely removed here to ensure initialized anglers are never auto-deleted */
 
         appState.sort((a, b) => {
             let getPriority = (entry) => {
@@ -1043,10 +1045,8 @@
                 
                 if (mobilityMode === 'B' && hasM) {
                     let d1Zones = [];
-                    let d2Zones = [];
                     let tempPools1 = pools1.map(p => p.p.length);
-                    let tempPools2 = pools2.map(p => p.p.length);
-
+                    
                     for(let i=0; i<4; i++) {
                         let a = entry.anglers[i];
                         if (a.mobility) {
@@ -1065,6 +1065,9 @@
                         }
                     }
 
+                    let d2Zones = new Array(4);
+                    let tempPools2 = pools2.map(p => p.p.length);
+                    
                     let standardAnglerIndices = [];
                     let standardZonesD1 = [];
                     
@@ -1404,7 +1407,6 @@
             let nameClass = a.mobility ? 'angler-name a-name' : 'angler-name';
             let mIcon = a.mobility ? '<span class="a-tag">[A]</span>' : '';
             
-            /* FIXED: The A PEG text is strictly set to white inside the pill */
             let p1Icon = p1Safe ? '<span style="color: white; font-weight: 900; margin-left: 4px; font-size: 10px;">[A PEG]</span>' : '';
             let p2Icon = p2Safe ? '<span style="color: white; font-weight: 900; margin-left: 4px; font-size: 10px;">[A PEG]</span>' : '';
 
@@ -1505,15 +1507,26 @@
             });
         });
         
-        list.sort((a,b) => {
-            if (a.isTeam && !b.isTeam) return -1;
-            if (!a.isTeam && b.isTeam) return 1;
-            if (a.isTeam && b.isTeam) {
-                const cmp = (a.team || '').localeCompare(b.team || '');
-                if (cmp !== 0) return cmp;
-            }
-            return (a.angler.name || '').localeCompare(b.angler.name || '');
+        let teams = list.filter(item => item.isTeam);
+        let solos = list.filter(item => !item.isTeam);
+
+        let teamGroups = {};
+        teams.forEach(item => {
+            if(!teamGroups[item.entryId]) teamGroups[item.entryId] = [];
+            teamGroups[item.entryId].push(item);
         });
+
+        Object.values(teamGroups).forEach(grp => {
+            grp.sort((a,b) => (a.angler.name || '').localeCompare(b.angler.name || ''));
+        });
+        
+        let sortedTeamIds = Object.keys(teamGroups).sort((a,b) => {
+            let tA = teamGroups[a][0].team || '';
+            let tB = teamGroups[b][0].team || '';
+            return tA.localeCompare(tB);
+        });
+
+        solos.sort((a,b) => (a.angler.name || '').localeCompare(b.angler.name || ''));
         
         let h = `<div class="control-panel no-print">
                     <h2 style="color:var(--text);">STEWARD REGISTRATION & ACCOUNTING</h2>
@@ -1541,16 +1554,15 @@
                         <th>PRIZE POOL</th>
                         <th>SECRET PAIRS</th>
                     </tr>`;
-                    
-        list.forEach(item => {
+
+        function generateStewardRow(item) {
             const a = item.angler;
             const eId = item.entryId;
             const i = item.aIdx;
             const mTag = a.mobility ? ' [A]' : '';
             let dispName = a.name ? a.name : (item.isTeam ? `ANGLER ${i + 1}` : `SOLO ANGLER`);
-            
-            h += `<tr>
-                <td><input type="text" class="steward-input" value="${dispName}" oninput="updateStewardField('${eId}', ${i}, 'name', this.value)" placeholder="NAME..."><span style="color:#8b5cf6; font-size:10px; font-weight:900;">${mTag}</span></td>
+            return `<tr>
+                <td><input type="text" class="steward-input" value="${dispName}" oninput="updateStewardField('${eId}', ${i}, 'name', this.value)" placeholder="NAME..."><span style="color:#0f172a; font-size:10px; font-weight:900;">${mTag}</span></td>
                 <td style="font-size:12px;">${item.team || '-'}</td>
                 <td style="text-align:center;"><div class="cb-custom ${a.present ? 'active' : ''}" onclick="toggleStewardCB('${eId}', ${i}, 'present', this)"></div></td>
                 <td style="text-align:center;"><div class="cb-custom ${a.captain ? 'active' : ''}" onclick="toggleStewardCB('${eId}', ${i}, 'captain', this)"></div></td>
@@ -1558,7 +1570,19 @@
                 <td style="text-align:center;"><div class="cb-custom ${a.prize ? 'active' : ''}" onclick="toggleStewardCB('${eId}', ${i}, 'prize', this)"></div></td>
                 <td style="text-align:center;"><div class="cb-custom ${a.pairs ? 'active' : ''}" onclick="toggleStewardCB('${eId}', ${i}, 'pairs', this)"></div></td>
             </tr>`;
+        }
+                    
+        sortedTeamIds.forEach(id => {
+            let grp = teamGroups[id];
+            let tName = grp[0].team || "UNNAMED TEAM";
+            h += `<tr style="background: rgba(0,0,0,0.02);"><td colspan="7" style="font-size:13px; font-weight:900; color:var(--accent); padding-top:15px; border-bottom: 2px solid var(--accent);">TEAM: ${tName}</td></tr>`;
+            grp.forEach(item => { h += generateStewardRow(item); });
         });
+
+        if(solos.length > 0) {
+            h += `<tr style="background: rgba(0,0,0,0.02);"><td colspan="7" style="font-size:13px; font-weight:900; color:var(--accent); padding-top:15px; border-bottom: 2px solid var(--accent);">SOLO ANGLERS</td></tr>`;
+            solos.forEach(item => { h += generateStewardRow(item); });
+        }
         
         area.innerHTML = h + `</table>`; 
         
