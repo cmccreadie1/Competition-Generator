@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ZONEDRAW v10.55.0</title>
+    <title>ZONEDRAW v10.56.0</title>
     <link rel="manifest" href="manifest.json">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
@@ -16,7 +16,7 @@
             --text: #0f172a;
             --accent: #4f46e5; 
             --accent-glow: rgba(79, 70, 229, 0.3);
-            --border: rgba(15, 23, 42, 0.15);
+            --border: rgba(15, 23, 42, 0.12);
             
             /* Vibrant Zone Gradients for White Background */
             --red-g: linear-gradient(135deg, #ef4444, #b91c1c);
@@ -39,15 +39,16 @@
         select { text-transform: uppercase; font-weight: 900; color: var(--text); background: rgba(0,0,0,0.03); border: 1px solid var(--border); border-radius: 8px; padding: 10px 12px; outline: none; transition: 0.2s; width: 100%; box-sizing: border-box; }
         select:focus { border-color: var(--accent); box-shadow: 0 0 15px var(--accent-glow); }
 
-        .fixed-header { position: fixed; top: 0; left: 0; right: 0; z-index: 5000; background: rgba(248, 250, 252, 0.95); backdrop-filter: blur(15px); border-bottom: 1px solid var(--border); padding: 12px 20px; box-shadow: 0 4px 20px rgba(0,0,0,0.05); }
+        /* TIGHTENED HEADER */
+        .fixed-header { position: fixed; top: 0; left: 0; right: 0; z-index: 5000; background: rgba(248, 250, 252, 0.95); backdrop-filter: blur(15px); border-bottom: 1px solid var(--border); padding: 8px 20px; box-shadow: 0 4px 20px rgba(0,0,0,0.03); }
         .header-content { display: flex; justify-content: space-between; align-items: center; max-width: 1400px; margin: 0 auto; }
         .brand-name { font-size: 18px; font-weight: 900; letter-spacing: -1px; color: var(--text); display: flex; align-items: center; }
         .v-tag { font-size: 14px; color: var(--accent); margin-left: 8px; letter-spacing: 0.5px; font-weight: 900; }
         
-        .home-btn { background: white; border: 2px solid var(--border); color: var(--text); padding: 10px 20px; border-radius: 10px; cursor: pointer; font-size: 14px; font-weight: 900; transition: 0.2s; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
+        .home-btn { background: white; border: 2px solid var(--border); color: var(--text); padding: 8px 16px; border-radius: 8px; cursor: pointer; font-size: 13px; font-weight: 900; transition: 0.2s; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
         .home-btn:hover { border-color: var(--accent); color: var(--accent); box-shadow: 0 4px 15px var(--accent-glow); transform: translateY(-1px); }
 
-        #hubSection { max-width: 1000px; margin: 120px auto 40px; display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 30px; padding: 20px; }
+        #hubSection { max-width: 1000px; margin: 100px auto 40px; display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 30px; padding: 20px; }
         .hub-tile { background: var(--card); border: 1px solid var(--border); padding: 50px 20px; border-radius: 24px; text-align: center; cursor: pointer; transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1); box-shadow: 0 10px 40px rgba(0,0,0,0.05); position: relative; }
         .hub-tile:hover { transform: translateY(-10px); border-color: var(--accent); box-shadow: 0 20px 50px var(--accent-glow); }
         .hub-icon { font-size: 44px; margin-bottom: 20px; display: block; filter: drop-shadow(0 0 10px var(--accent-glow)); }
@@ -57,28 +58,32 @@
         .glass-tile { background: rgba(255, 255, 255, 0.6) !important; backdrop-filter: blur(16px) !important; -webkit-backdrop-filter: blur(16px) !important; border: 1px solid rgba(0, 0, 0, 0.1) !important; box-shadow: 0 10px 40px rgba(0,0,0,0.05) !important; }
         .glass-tile:hover { background: rgba(255, 255, 255, 0.9) !important; border-color: var(--accent) !important; box-shadow: 0 15px 40px var(--accent-glow) !important; }
 
-        #entrySection, #resultsSection, #stewardSection, #historySection, #dispatchSection, #rosterSection { max-width: 1400px; margin: 0 auto; padding: 110px 20px 140px; display: none; }
-        .control-panel { background: var(--card); border-radius: 24px; padding: 30px; border: 1px solid var(--border); text-align: center; margin-bottom: 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); }
+        /* TIGHTENED MAIN PADDING */
+        #entrySection, #resultsSection, #stewardSection, #historySection, #dispatchSection, #rosterSection { max-width: 1400px; margin: 0 auto; padding: 80px 15px 80px; display: none; }
+        .control-panel { background: var(--card); border-radius: 24px; padding: 25px; border: 1px solid var(--border); text-align: center; margin-bottom: 25px; box-shadow: 0 8px 25px rgba(0,0,0,0.04); }
         
-        .bucket-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(400px, 1fr)); gap: 18px; }
+        .bucket-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(380px, 1fr)); gap: 15px; }
 
         .duration-toggle { display: grid; grid-template-columns: 1fr 1fr; gap: 5px; background: rgba(0,0,0,0.05); padding: 5px; border-radius: 12px; width: 100%; margin: 0 auto; }
-        .dt-opt { padding: 12px 10px; border-radius: 8px; cursor: pointer; font-weight: 900; font-size: 12px; transition: 0.2s; display: flex; align-items: center; justify-content: center; color: var(--text); }
+        .dt-opt { padding: 10px 8px; border-radius: 8px; cursor: pointer; font-weight: 900; font-size: 12px; transition: 0.2s; display: flex; align-items: center; justify-content: center; color: var(--text); }
         .dt-opt.active { background: var(--accent); color: white; box-shadow: 0 4px 10px var(--accent-glow); }
 
-        .zone-card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 12px; backdrop-filter: blur(10px); position: relative; transition: 0.3s; break-inside: avoid; page-break-inside: avoid; box-shadow: 0 4px 15px rgba(0,0,0,0.03); }
+        /* MODERNIZED ZONE CARDS */
+        .zone-card { background: var(--card); border: 1px solid rgba(15, 23, 42, 0.08); border-radius: 12px; padding: 10px 14px; backdrop-filter: blur(10px); position: relative; transition: 0.3s; break-inside: avoid; page-break-inside: avoid; box-shadow: 0 4px 12px rgba(0,0,0,0.04); }
         .zone-card.solo-card { height: fit-content; align-self: start; }
         .zone-card.selected { border-color: var(--accent); box-shadow: 0 0 20px var(--accent-glow); }
         .zone-card.pending { border-color: var(--pending); box-shadow: 0 0 15px var(--pending-glow); }
         
         .pending-tag { position: absolute; top: -10px; right: 15px; background: var(--pending); color: white; font-size: 9px; font-weight: 900; padding: 4px 10px; border-radius: 6px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); z-index: 10; letter-spacing: 1px; }
-        .zone-header { font-size: 10px; font-weight: 900; color: var(--accent); margin-bottom: 8px; border-bottom: 1px solid var(--border); padding-bottom: 6px; display: flex; justify-content: space-between; align-items: center; }
+        .zone-header { font-size: 10px; font-weight: 900; color: var(--accent); margin-bottom: 6px; border-bottom: 1px solid var(--border); padding-bottom: 6px; display: flex; justify-content: space-between; align-items: center; }
 
-        .res-row { display: grid; grid-template-columns: 1fr 100px 100px; gap: 6px; align-items: center; padding: 6px 0; border-bottom: 1px solid rgba(0,0,0,0.05); }
+        /* STANDARDIZED COLUMNS & PILLS */
+        .res-row { display: grid; grid-template-columns: 1fr 95px 95px; gap: 6px; align-items: center; padding: 4px 0; border-bottom: 1px solid rgba(0,0,0,0.05); }
         .res-row:last-child { border-bottom: none; }
         .angler-name { font-size: 13px; font-weight: 900; letter-spacing: 0.5px; pointer-events: none; }
-        .draw-pill { padding: 4px 8px; border-radius: 6px; font-size: 9px; font-weight: 900; color: white; text-align: center; line-height: 1; border: 1px solid rgba(255,255,255,0.2); pointer-events: none; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
-        .peg-num { font-size: 16px; font-weight: 900; margin-left: 5px; vertical-align: middle; }
+        
+        .draw-pill { width: 100%; box-sizing: border-box; display: flex; justify-content: center; align-items: center; gap: 4px; padding: 5px; border-radius: 6px; font-size: 10px; font-weight: 900; color: white; line-height: 1; border: 1px solid rgba(0,0,0,0.1); pointer-events: none; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        .peg-num { font-size: 16px; font-weight: 900; }
 
         .res-row.swap-active { cursor: pointer; transition: 0.2s; border-radius: 8px; padding: 6px; pointer-events: auto; }
         .res-row.swap-active:hover { background: rgba(79, 70, 229, 0.1); box-shadow: 0 0 10px rgba(79, 70, 229, 0.2); }
@@ -99,20 +104,20 @@
         .steward-input { width: 100%; max-width: 160px; font-size: 12px !important; padding: 8px 10px !important; background: rgba(0,0,0,0.03) !important; border-color: rgba(0,0,0,0.1) !important; margin: 0; color: var(--text) !important; }
         .steward-input:focus { background: white !important; border-color: var(--accent) !important; }
 
-        .btn-action { background: var(--accent); border: none; color: white; font-weight: 900; padding: 16px 32px; border-radius: 12px; cursor: pointer; transition: 0.2s; font-size: 13px; box-shadow: 0 4px 0 #3730a3; }
+        .btn-action { background: var(--accent); border: none; color: white; font-weight: 900; padding: 14px 28px; border-radius: 10px; cursor: pointer; transition: 0.2s; font-size: 13px; box-shadow: 0 4px 0 #3730a3; }
         .btn-action:active { transform: translateY(2px); box-shadow: 0 0px 0 #3730a3; }
         .btn-action:disabled { background: #94a3b8; box-shadow: 0 4px 0 #475569; cursor: not-allowed; }
         .btn-tool { background: white; border: 1px solid var(--border); color: var(--text); font-size: 10px; font-weight: 900; padding: 6px 12px; border-radius: 6px; cursor: pointer; transition: 0.2s; }
         .btn-tool:hover { background: var(--accent); color: white; border-color: var(--accent); }
-        .btn-jumbo { padding: 15px 25px; font-size: 12px; background: white; border: 2px solid var(--accent); color: var(--text); border-radius: 12px; font-weight: 900; cursor: pointer; transition: 0.2s; white-space: nowrap; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
+        .btn-jumbo { padding: 12px 20px; font-size: 12px; background: white; border: 2px solid var(--accent); color: var(--text); border-radius: 10px; font-weight: 900; cursor: pointer; transition: 0.2s; white-space: nowrap; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
         .btn-jumbo:hover { background: var(--accent); color: white; }
 
-        .command-bar { position: fixed; bottom: 0; left: 0; right: 0; z-index: 5000; background: rgba(255, 255, 255, 0.98); backdrop-filter: blur(20px); border-top: 2px solid var(--accent); padding: 15px 35px; display: none; justify-content: space-between; align-items: center; box-shadow: 0 -10px 30px rgba(0,0,0,0.1); }
+        .command-bar { position: fixed; bottom: 0; left: 0; right: 0; z-index: 5000; background: rgba(255, 255, 255, 0.98); backdrop-filter: blur(20px); border-top: 2px solid var(--accent); padding: 12px 30px; display: none; justify-content: space-between; align-items: center; box-shadow: 0 -10px 30px rgba(0,0,0,0.08); }
         
-        .group-label { grid-column: 1 / -1; font-size: 1.4rem; font-weight: 900; color: var(--accent); border-left: 5px solid var(--accent); padding-left: 15px; margin: 40px 0 20px; letter-spacing: 1px; }
+        .group-label { grid-column: 1 / -1; font-size: 1.3rem; font-weight: 900; color: var(--accent); border-left: 5px solid var(--accent); padding-left: 12px; margin: 30px 0 15px; letter-spacing: 1px; }
         .entry-group-label { font-size: 1.1rem; font-weight: 900; color: #64748b; margin: 30px 0 15px; letter-spacing: 1px; text-align: left; }
         
-        .horizontal-legend { display: flex; justify-content: center; gap: 20px; flex-wrap: wrap; margin: -15px 0 30px 0; font-size: 12px; font-weight: 900; letter-spacing: 1px; }
+        .horizontal-legend { display: flex; justify-content: center; gap: 20px; flex-wrap: wrap; margin: -15px 0 25px 0; font-size: 12px; font-weight: 900; letter-spacing: 1px; }
         .legend-item { display: flex; align-items: center; gap: 8px; background: white; padding: 6px 12px; border-radius: 8px; border: 1px solid var(--border); box-shadow: 0 2px 5px rgba(0,0,0,0.02); }
         .legend-swatch { width: 14px; height: 14px; border-radius: 4px; }
 
@@ -171,7 +176,7 @@
         body.full-color-share .legend-item { color: #000000 !important; border-color: #ccc !important; padding: 6px 10px !important; background: #fff !important; }
         body.full-color-share .bucket-grid { display: grid !important; grid-template-columns: 1fr !important; gap: 12px !important; }
         body.full-color-share .zone-card { break-inside: avoid !important; page-break-inside: avoid !important; margin-bottom: 0 !important; background: #fff !important; border-color: #ccc !important; }
-        body.full-color-share .res-row { grid-template-columns: 1fr 75px 75px !important; gap: 4px !important; border-color: #eee !important; }
+        body.full-color-share .res-row { grid-template-columns: 1fr 85px 85px !important; gap: 4px !important; border-color: #eee !important; }
         body.full-color-share .no-print { display: none !important; }
 
         /* Printer Rules */
@@ -207,6 +212,20 @@
             body:not(.printing-rosters):not(.printing-dispatch) .payout-card { background: white !important; border: 2px solid black !important; color: black !important; }
             body:not(.printing-rosters):not(.printing-dispatch) .payout-label, body:not(.printing-rosters):not(.printing-dispatch) .payout-val { color: black !important; }
         }
+
+        /* MOBILE OPTIMIZATION */
+        @media (max-width: 600px) {
+            #entrySection, #resultsSection, #stewardSection, #historySection, #dispatchSection, #rosterSection { padding: 70px 10px 80px; }
+            .bucket-grid { gap: 10px; }
+            .res-row { grid-template-columns: 1fr 85px 85px; gap: 4px; }
+            .draw-pill { padding: 5px 2px; font-size: 8.5px; }
+            .peg-num { font-size: 14px; margin-left: 3px; }
+            .angler-name { font-size: 11px; }
+            .zone-header { font-size: 9px; margin-bottom: 5px; }
+            .zone-card { padding: 8px 10px; }
+            .command-bar { padding: 10px 15px; }
+            .btn-jumbo, .btn-action { font-size: 11px; padding: 10px 15px; }
+        }
     </style>
 </head>
 <body>
@@ -214,9 +233,9 @@
 <div class="fixed-header no-print">
     <div class="header-content">
         <button class="home-btn" onclick="showHub()" tabindex="-1">🏠 RETURN TO HOMEPAGE</button>
-        <div class="brand-name">ZONEDRAW <span id="vTag" class="v-tag">v10.55.0</span></div>
+        <div class="brand-name">ZONEDRAW <span id="vTag" class="v-tag">v10.56.0</span></div>
         <div style="width: 180px; text-align:right;">
-            <button class="btn-tool" onclick="showHistory()" style="font-size: 12px; padding: 8px 15px;">📜 ARCHIVES</button>
+            <button class="btn-tool" onclick="showHistory()" style="font-size: 11px; padding: 6px 12px;">📜 ARCHIVES</button>
         </div>
     </div>
 </div>
@@ -244,7 +263,7 @@
         
         <div style="margin-top:25px; display:flex; flex-direction:column; align-items:center; gap:10px;">
             <div style="display:flex; flex-direction:column; align-items:center; gap:5px;">
-                <button class="btn-tool" onclick="let p = document.getElementById('accPanelWrapper'); p.style.display = p.style.display === 'none' ? 'flex' : 'none';" style="font-size: 12px; padding: 10px 20px; border-color: var(--accent); color: var(--text); background: rgba(0,0,0,0.05); box-shadow: 0 4px 10px rgba(0,0,0,0.05);" type="button" tabindex="-1">⚙️ CONFIGURE ACCESS PROTOCOL</button>
+                <button class="btn-tool" onclick="let p = document.getElementById('accPanelWrapper'); p.style.display = p.style.display === 'none' ? 'flex' : 'none';" style="font-size: 11px; padding: 8px 16px; border-color: var(--accent); color: var(--text); background: rgba(0,0,0,0.03); box-shadow: 0 2px 5px rgba(0,0,0,0.05);" type="button" tabindex="-1">⚙️ CONFIGURE ACCESS PROTOCOL</button>
                 <span style="font-size:10px; opacity:0.6; max-width: 400px; text-transform:none;">Toggle to assign specific safe pegs for anglers requiring easier access or flatter terrain.</span>
             </div>
             
@@ -432,7 +451,7 @@
     let isSwapMode = false;
     let swapObj1 = null;
     let roundPayoutsTo5 = false;
-    let mobilityMode = 'A'; // 'A' = Distributed, 'B' = Static Anchor
+    let mobilityMode = 'A'; 
 
     let payoutConfig = [
         { id: 's1', label: 'SOLO 1ST PLACE', active: true, pct: 50 },
@@ -1280,6 +1299,7 @@
         document.querySelectorAll('body > div[id$="Section"]').forEach(s => s.style.display = 'none');
         document.getElementById('resultsSection').style.display = 'block';
         document.getElementById('resTitle').innerText = document.getElementById('matchTitle').value || "MATCH RESULTS";
+        document.getElementById('commandBar').style.display = 'none'; // Hides bar to save screen real estate
         isStewardMode = false; updateTicker();
         
         const legend = document.getElementById('horizontalLegend');
@@ -1358,11 +1378,11 @@
             h += `<div class="${rowClass}" ${clickEvt}>
                     <span class="${nameClass}">${dispName}${mIcon}</span>
                     <div style="display:flex; flex-direction:column; align-items:center; justify-content:center; pointer-events:none;">
-                        <div class="${pill1Class}" style="background:${zoneGradients[a.z1]}">${a.z1}<span class="peg-num">${a.p1}</span>${p1Icon}</div>
+                        <div class="${pill1Class}" style="background:${zoneGradients[a.z1]}"><span>${a.z1}</span> <span class="peg-num">${a.p1}</span>${p1Icon}</div>
                     </div>
                     ${matchDays == 2 && a.z2 ? `
                     <div style="display:flex; flex-direction:column; align-items:center; justify-content:center; pointer-events:none;">
-                        <div class="${pill2Class}" style="background:${zoneGradients[a.z2]}">${a.z2}<span class="peg-num">${a.p2}</span>${p2Icon}</div>
+                        <div class="${pill2Class}" style="background:${zoneGradients[a.z2]}"><span>${a.z2}</span> <span class="peg-num">${a.p2}</span>${p2Icon}</div>
                     </div>` : '<div></div>'}
                   </div>`;
         });
