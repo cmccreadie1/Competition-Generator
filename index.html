@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ZONEDRAW v10.52.0</title>
+    <title>ZONEDRAW v10.51.0</title>
     <link rel="manifest" href="manifest.json">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
@@ -53,6 +53,7 @@
         .hub-icon { font-size: 44px; margin-bottom: 20px; display: block; filter: drop-shadow(0 0 10px var(--accent-glow)); }
         .hub-title { font-size: 18px; font-weight: 900; letter-spacing: 1px; color: var(--text); }
 
+        /* LIGHT GLASS AESTHETIC */
         .glass-tile { background: rgba(255, 255, 255, 0.6) !important; backdrop-filter: blur(16px) !important; -webkit-backdrop-filter: blur(16px) !important; border: 1px solid rgba(0, 0, 0, 0.1) !important; box-shadow: 0 10px 40px rgba(0,0,0,0.05) !important; }
         .glass-tile:hover { background: rgba(255, 255, 255, 0.9) !important; border-color: var(--accent) !important; box-shadow: 0 15px 40px var(--accent-glow) !important; }
 
@@ -85,7 +86,7 @@
         @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.6; } 100% { opacity: 1; } }
 
         .a-name { color: var(--a-color); }
-        .a-tag { color: #0f172a; font-weight: 900; margin-left: 4px; font-size: 12px; }
+        .a-tag { color: var(--a-color); font-weight: 900; margin-left: 4px; font-size: 12px; }
         .a-peg { border: 2px solid var(--a-color) !important; box-shadow: 0 0 10px rgba(202, 138, 4, 0.3) !important; }
 
         .check-sheet-table { width: 100%; border-collapse: collapse; }
@@ -213,7 +214,7 @@
 <div class="fixed-header no-print">
     <div class="header-content">
         <button class="home-btn" onclick="showHub()" tabindex="-1">🏠 RETURN TO HOMEPAGE</button>
-        <div class="brand-name">ZONEDRAW <span id="vTag" class="v-tag">v10.52.0</span></div>
+        <div class="brand-name">ZONEDRAW <span id="vTag" class="v-tag">v10.51.0</span></div>
         <div style="width: 180px; text-align:right;">
             <button class="btn-tool" onclick="showHistory()" style="font-size: 12px; padding: 8px 15px;">📜 ARCHIVES</button>
         </div>
@@ -918,6 +919,11 @@
     function runDraw() {
         syncScreenToState(); 
 
+        appState = appState.filter(e => {
+            if (e.isTeam) return e.anglers.some(a => a.name.trim() !== '' || a.z1) || e.tName.trim() !== '';
+            return e.anglers[0].name.trim() !== '' || e.anglers[0].z1;
+        });
+
         appState.sort((a, b) => {
             let getPriority = (entry) => {
                 let mCount = entry.anglers.filter(ang => ang.mobility > 0).length;
@@ -1021,76 +1027,49 @@
                 let hasM = entry.anglers.some(a => a.mobility > 0);
                 
                 if (mobilityMode === 'B' && hasM) {
-                    let d1Zones = new Array(4);
-                    let d2Zones = new Array(4);
+                    let d1Zones = [];
                     let tempPools1 = pools1.map(p => p.p.length);
-                    let tempPools2 = pools2.map(p => p.p.length);
 
-                    // PASS 1: Guarantee A-Anglers get the Anchor Zone first
                     for(let i=0; i<4; i++) {
-                        if(entry.anglers[i].mobility) {
-                            d1Zones[i] = anchorZone;
-                            d2Zones[i] = anchorZone;
+                        let a = entry.anglers[i];
+                        if (a.mobility) {
+                            d1Zones.push(anchorZone);
                             tempPools1[zones.indexOf(anchorZone)]--;
-                            tempPools2[zones.indexOf(anchorZone)]--;
-                        }
-                    }
-
-                    // PASS 2: Assign Standard Anglers Day 1 (Excluding Anchor Zone)
-                    for(let i=0; i<4; i++) {
-                        if(!entry.anglers[i].mobility) {
+                        } else {
                             let valid = zones.map((z, idx) => ({z, count: tempPools1[idx]})).filter(v => v.z !== anchorZone && !d1Zones.includes(v.z) && v.count > 0);
                             if (valid.length === 0) valid = zones.map((z, idx) => ({z, count: tempPools1[idx]})).filter(v => v.z !== anchorZone && v.count > 0);
                             if (valid.length > 0) {
                                 valid.sort((a,b) => b.count - a.count);
-                                d1Zones[i] = valid[0].z;
+                                d1Zones.push(valid[0].z);
                                 tempPools1[zones.indexOf(valid[0].z)]--;
                             } else {
-                                d1Zones[i] = zones.find(z => z !== anchorZone) || zones[0];
+                                d1Zones.push(zones[Math.floor(Math.random()*4)]);
                             }
                         }
                     }
 
-                    // PASS 3: Assign Standard Anglers Day 2 (Perfect Derangement excluding Anchor Zone)
-                    let standardIndices = [];
-                    let standardZonesD1 = [];
+                    let d2Zones = [];
+                    let tempPools2 = pools2.map(p => p.p.length);
+
                     for(let i=0; i<4; i++) {
-                        if(!entry.anglers[i].mobility) {
-                            standardIndices.push(i);
-                            standardZonesD1.push(d1Zones[i]);
+                        let a = entry.anglers[i];
+                        let z1 = d1Zones[i];
+                        if (a.mobility) {
+                            d2Zones.push(anchorZone);
+                            tempPools2[zones.indexOf(anchorZone)]--;
+                        } else {
+                            let valid = zones.map((z, idx) => ({z, count: tempPools2[idx]})).filter(v => v.z !== z1 && !d2Zones.includes(v.z) && v.count > 0);
+                            if (valid.length === 0) valid = zones.map((z, idx) => ({z, count: tempPools2[idx]})).filter(v => v.z !== z1 && v.count > 0);
+                            if (valid.length > 0) {
+                                valid.sort((a,b) => b.count - a.count);
+                                d2Zones.push(valid[0].z);
+                                tempPools2[zones.indexOf(valid[0].z)]--;
+                            } else {
+                                d2Zones.push(zones.find(z => z !== z1) || zones[0]);
+                            }
                         }
                     }
 
-                    if (standardIndices.length === 3) {
-                        let shifts = [[1, 2, 0], [2, 0, 1]];
-                        let chosenShift = shifts[Math.floor(Math.random() * shifts.length)];
-                        for(let k=0; k<3; k++) {
-                            let targetZ = standardZonesD1[chosenShift[k]];
-                            d2Zones[standardIndices[k]] = targetZ;
-                            tempPools2[zones.indexOf(targetZ)]--;
-                        }
-                    } else if (standardIndices.length === 2) {
-                        d2Zones[standardIndices[0]] = standardZonesD1[1];
-                        d2Zones[standardIndices[1]] = standardZonesD1[0];
-                        tempPools2[zones.indexOf(standardZonesD1[1])]--;
-                        tempPools2[zones.indexOf(standardZonesD1[0])]--;
-                    } else {
-                         for(let k=0; k<standardIndices.length; k++) {
-                             let idx = standardIndices[k];
-                             let z1 = d1Zones[idx];
-                             let valid = zones.map((z, i) => ({z, count: tempPools2[i]})).filter(v => v.z !== z1 && v.z !== anchorZone && !d2Zones.includes(v.z) && v.count > 0);
-                             if (valid.length === 0) valid = zones.map((z, i) => ({z, count: tempPools2[i]})).filter(v => v.z !== z1 && v.z !== anchorZone && v.count > 0);
-                             if (valid.length > 0) {
-                                 valid.sort((a,b) => b.count - a.count);
-                                 d2Zones[idx] = valid[0].z;
-                                 tempPools2[zones.indexOf(valid[0].z)]--;
-                             } else {
-                                 d2Zones[idx] = zones.find(z => z !== z1 && z !== anchorZone) || zones[0];
-                             }
-                         }
-                    }
-
-                    // Assign the mapped zones
                     for(let i=0; i<4; i++) {
                         let a = entry.anglers[i];
                         a.z1 = d1Zones[i]; a.p1 = pullPeg(a.z1, false, a.mobility);
