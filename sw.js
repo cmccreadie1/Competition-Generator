@@ -1,4 +1,4 @@
-const CACHE_NAME = 'zonedraw-v10.51.0-master-archive-v1';
+const CACHE_NAME = 'zonedraw-v10.53.0-declutter-v1';
 const ASSETS_TO_CACHE = [
     './',
     './index.html',
