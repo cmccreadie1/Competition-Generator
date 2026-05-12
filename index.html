@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ZONEDRAW v10.50.0</title>
+    <title>ZONEDRAW v10.51.0</title>
     <link rel="manifest" href="manifest.json">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
@@ -27,9 +27,8 @@
             --pending: #f59e0b; 
             --pending-glow: rgba(245, 158, 11, 0.3);
             
-            /* Darkened M-Tags for contrast on white */
-            --m1-color: #ca8a04; 
-            --m2-color: #d97706; 
+            /* Unified Access Color */
+            --a-color: #ca8a04; 
         }
         
         body { font-family: 'Inter', system-ui, sans-serif; background: var(--bg); color: var(--text); margin: 0; padding: 0; text-transform: uppercase; line-height: 1.1; overflow-x: hidden; }
@@ -86,12 +85,9 @@
         .res-row.swap-selected { background: rgba(79, 70, 229, 0.2) !important; border-left: 4px solid var(--accent) !important; border-radius: 8px; }
         @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.6; } 100% { opacity: 1; } }
 
-        .m1-name { color: var(--m1-color); }
-        .m2-name { color: var(--m2-color); }
-        .m1-tag { color: var(--m1-color); font-weight: 900; margin-left: 4px; font-size: 12px; }
-        .m2-tag { color: var(--m2-color); font-weight: 900; margin-left: 4px; font-size: 12px; }
-        .m1-peg { border: 2px solid var(--m1-color) !important; box-shadow: 0 0 10px rgba(202, 138, 4, 0.3) !important; }
-        .m2-peg { border: 2px solid var(--m2-color) !important; box-shadow: 0 0 10px rgba(217, 119, 6, 0.3) !important; }
+        .a-name { color: var(--a-color); }
+        .a-tag { color: var(--a-color); font-weight: 900; margin-left: 4px; font-size: 12px; }
+        .a-peg { border: 2px solid var(--a-color) !important; box-shadow: 0 0 10px rgba(202, 138, 4, 0.3) !important; }
 
         .check-sheet-table { width: 100%; border-collapse: collapse; }
         .check-sheet-table th { padding: 14px; font-size: 12px; color: var(--accent); border-bottom: 2px solid var(--border); letter-spacing: 1px; }
@@ -204,10 +200,9 @@
             body:not(.printing-rosters):not(.printing-dispatch) .steward-input::placeholder { color: transparent !important; }
             body:not(.printing-rosters):not(.printing-dispatch) .cb-custom { border: 2px solid black !important; background: white !important; box-shadow: none !important; }
             body:not(.printing-rosters):not(.printing-dispatch) .cb-custom.active::after { color: black !important; }
-            body:not(.printing-rosters):not(.printing-dispatch) .m1-name { color: black !important; font-weight: 900 !important; }
-            body:not(.printing-rosters):not(.printing-dispatch) .m2-name { color: black !important; font-weight: 900 !important; }
-            body:not(.printing-rosters):not(.printing-dispatch) .m1-tag, body:not(.printing-rosters):not(.printing-dispatch) .m2-tag { color: black !important; text-shadow: none !important; }
-            body:not(.printing-rosters):not(.printing-dispatch) .m1-peg, body:not(.printing-rosters):not(.printing-dispatch) .m2-peg { border: 2px solid black !important; box-shadow: none !important; }
+            body:not(.printing-rosters):not(.printing-dispatch) .a-name { color: black !important; font-weight: 900 !important; }
+            body:not(.printing-rosters):not(.printing-dispatch) .a-tag { color: black !important; text-shadow: none !important; }
+            body:not(.printing-rosters):not(.printing-dispatch) .a-peg { border: 2px solid black !important; box-shadow: none !important; }
             body:not(.printing-rosters):not(.printing-dispatch) .payout-dashboard { border-top: 2px solid black !important; }
             body:not(.printing-rosters):not(.printing-dispatch) .payout-card { background: white !important; border: 2px solid black !important; color: black !important; }
             body:not(.printing-rosters):not(.printing-dispatch) .payout-label, body:not(.printing-rosters):not(.printing-dispatch) .payout-val { color: black !important; }
@@ -219,7 +214,7 @@
 <div class="fixed-header no-print">
     <div class="header-content">
         <button class="home-btn" onclick="showHub()" tabindex="-1">🏠 RETURN TO HOMEPAGE</button>
-        <div class="brand-name">ZONEDRAW <span id="vTag" class="v-tag">v10.50.0</span></div>
+        <div class="brand-name">ZONEDRAW <span id="vTag" class="v-tag">v10.51.0</span></div>
         <div style="width: 180px; text-align:right;">
             <button class="btn-tool" onclick="showHistory()" style="font-size: 12px; padding: 8px 15px;">📜 ARCHIVES</button>
         </div>
@@ -248,49 +243,43 @@
         <input type="text" id="matchTitle" style="font-size:22px; text-align:center; margin-top:10px;" placeholder="e.g. SCOTTISH SHORE CHAMPIONSHIP 2026" onblur="persistToVault()">
         
         <div style="margin-top:25px; display:flex; flex-direction:column; align-items:center; gap:10px;">
-            <label style="font-size: 10px; opacity: 0.6; letter-spacing: 1px; color:var(--accent);">MOBILITY PROTOCOL</label>
+            <button class="btn-jumbo" onclick="let p = document.getElementById('accPanelWrapper'); p.style.display = p.style.display === 'none' ? 'flex' : 'none';" type="button" tabindex="-1" style="background: rgba(0,0,0,0.03); border-color: var(--accent);">⚙️ CONFIGURE ACCESSIBILITY OPTIONS</button>
+            <span style="font-size:10px; opacity:0.6; max-width: 400px; text-transform:none;">Toggle to assign specific safe pegs for anglers requiring easier access or flatter terrain.</span>
             
-            <div style="display:flex; justify-content:center; gap:10px; width:100%; max-width:600px;">
-                <div id="mobModeA" class="dt-opt active" style="flex:1; flex-direction:column;" onclick="setMobilityMode('A')">
-                    <span>DISTRIBUTED PEGS</span>
-                    <span style="font-size:8px; opacity:0.7; margin-top:3px; text-transform:none;">For multiple access points. M-Anglers switch zones on Day 2.</span>
+            <div id="accPanelWrapper" style="display:none; flex-direction:column; align-items:center; gap:10px; width:100%; max-width:600px; padding: 20px; background: #f8fafc; border-radius: 12px; border: 1px solid var(--border);">
+                <div style="display:flex; justify-content:center; gap:10px; width:100%;">
+                    <div id="mobModeA" class="dt-opt active" style="flex:1; flex-direction:column;" onclick="setMobilityMode('A')">
+                        <span>DISTRIBUTED PEGS</span>
+                        <span style="font-size:8px; opacity:0.7; margin-top:3px; text-transform:none;">For multiple access points. A-Anglers switch zones on Day 2.</span>
+                    </div>
+                    <div id="mobModeB" class="dt-opt" style="flex:1; flex-direction:column;" onclick="setMobilityMode('B')">
+                        <span>STATIC ZONE ANCHOR</span>
+                        <span style="font-size:8px; opacity:0.7; margin-top:3px; text-transform:none;">For single access points. Pins A-Anglers to one zone all weekend.</span>
+                    </div>
                 </div>
-                <div id="mobModeB" class="dt-opt" style="flex:1; flex-direction:column;" onclick="setMobilityMode('B')">
-                    <span>STATIC ZONE ANCHOR</span>
-                    <span style="font-size:8px; opacity:0.7; margin-top:3px; text-transform:none;">For single access points. Pins M-Anglers to one zone all weekend.</span>
-                </div>
-            </div>
 
-            <div id="modeASetup" style="display:flex; flex-direction:column; gap:10px; width:100%; max-width:600px; margin-top:10px;">
-                <div style="display:flex; gap:10px; width:100%;">
-                    <input type="text" id="accPegs1_m1" style="font-size:14px; text-align:center; border-color:var(--m1-color);" placeholder="DAY 1 M1 PEGS (1, 2...)" onblur="formatPegs(this)">
-                    <input type="text" id="accPegs1_m2" style="font-size:14px; text-align:center; border-color:var(--m2-color);" placeholder="DAY 1 M2 PEGS (10, 11...)" onblur="formatPegs(this)">
+                <div id="modeASetup" style="display:flex; flex-direction:column; gap:10px; width:100%; margin-top:10px;">
+                    <div style="display:flex; gap:10px; width:100%;">
+                        <input type="text" id="accPegs1_a" style="font-size:14px; text-align:center; border-color:var(--a-color);" placeholder="DAY 1 SAFE PEGS (1, 2...)" onblur="formatPegs(this)">
+                    </div>
+                    <div id="day2PegsContainer" style="display:none; gap:10px; width:100%;">
+                        <input type="text" id="accPegs2_a" style="font-size:14px; text-align:center; border-color:var(--a-color);" placeholder="DAY 2 SAFE PEGS (1, 2...)" onblur="formatPegs(this)">
+                    </div>
                 </div>
-                <div id="day2PegsContainer" style="display:none; gap:10px; width:100%;">
-                    <input type="text" id="accPegs2_m1" style="font-size:14px; text-align:center; border-color:var(--m1-color);" placeholder="DAY 2 M1 PEGS (1, 2...)" onblur="formatPegs(this)">
-                    <input type="text" id="accPegs2_m2" style="font-size:14px; text-align:center; border-color:var(--m2-color);" placeholder="DAY 2 M2 PEGS (10, 11...)" onblur="formatPegs(this)">
-                </div>
-            </div>
 
-            <div id="modeBSetup" style="display:none; flex-direction:column; gap:10px; width:100%; max-width:600px; margin-top:10px;">
-                <select id="anchorZoneSelect" onchange="persistToVault()">
-                    <option value="RED">ANCHOR ZONE: RED</option>
-                    <option value="YELLOW">ANCHOR ZONE: YELLOW</option>
-                    <option value="GREEN">ANCHOR ZONE: GREEN</option>
-                    <option value="BLUE">ANCHOR ZONE: BLUE</option>
-                </select>
-                <input type="text" id="accPegsAnchor" style="font-size:14px; text-align:center; border-color:var(--m1-color);" placeholder="ANCHOR ZONE SAFE PEGS (1, 2, 3...)" onblur="formatPegs(this)">
+                <div id="modeBSetup" style="display:none; flex-direction:column; gap:10px; width:100%; margin-top:10px;">
+                    <select id="anchorZoneSelect" onchange="persistToVault()">
+                        <option value="RED">ANCHOR ZONE: RED</option>
+                        <option value="YELLOW">ANCHOR ZONE: YELLOW</option>
+                        <option value="GREEN">ANCHOR ZONE: GREEN</option>
+                        <option value="BLUE">ANCHOR ZONE: BLUE</option>
+                    </select>
+                    <input type="text" id="accPegsAnchor" style="font-size:14px; text-align:center; border-color:var(--a-color);" placeholder="ANCHOR ZONE SAFE PEGS (1, 2, 3...)" onblur="formatPegs(this)">
+                </div>
             </div>
         </div>
 
         <div style="display:flex; justify-content:center; gap:20px; margin-top:25px; align-items:flex-end; flex-wrap:wrap;">
-            <div>
-                <label style="display:block; margin-bottom:5px;">VENUES</label>
-                <div class="duration-toggle" style="width: 200px;">
-                    <div id="venOpt1" class="dt-opt active" onclick="setVenues(1)">1 VENUE</div>
-                    <div id="venOpt2" class="dt-opt" onclick="setVenues(2)">2 VENUES</div>
-                </div>
-            </div>
             <div>
                 <label style="display:block; margin-bottom:5px;">DURATION</label>
                 <div class="duration-toggle" style="width: 200px;">
@@ -300,13 +289,6 @@
             </div>
             <div><label style="display:block; margin-bottom:5px;">TEAMS</label><input type="number" id="initTeams" value="0" style="width:80px; text-align:center;"></div>
             <div><label style="display:block; margin-bottom:5px;">SOLOS</label><input type="number" id="initIndivs" value="0" style="width:80px; text-align:center;"></div>
-        </div>
-        
-        <div id="venueNamesConfig" style="margin-top:15px; display:grid; grid-template-columns: 1fr 1fr; gap:10px; max-width: 600px; margin: 20px auto 0;">
-            <input type="text" id="d1v1" placeholder="DAY 1 VENUE..." style="font-size:12px;" onblur="persistToVault()">
-            <input type="text" id="d1v2" placeholder="DAY 1 VENUE B (GREEN/BLUE)..." style="display:none; font-size:12px;" onblur="persistToVault()">
-            <input type="text" id="d2v1" placeholder="DAY 2 VENUE..." style="font-size:12px;" onblur="persistToVault()">
-            <input type="text" id="d2v2" placeholder="DAY 2 VENUE B (GREEN/BLUE)..." style="display:none; font-size:12px;" onblur="persistToVault()">
         </div>
 
         <button id="initMatchBtn" class="btn-action" style="margin-top:40px;" onclick="bulkInit()">INITIALIZE MATCH</button>
@@ -392,7 +374,7 @@
     </div>
     <div id="actionBtnArea" style="display:flex; flex-direction:column; align-items:flex-end;">
         <div id="teamClashWarning" style="display:none; text-align:right; margin-bottom:8px;">
-            <div style="color:#ef4444; font-size:11px; font-weight:900;">⚠️ MAX 1 MOBILITY ANGLER PER TEAM IN STATIC MODE</div>
+            <div style="color:#ef4444; font-size:11px; font-weight:900;">⚠️ MAX 1 A-ANGLER PER TEAM IN STATIC MODE</div>
             <label style="color:var(--text); font-size:10px; font-weight:900; display:flex; align-items:center; justify-content:flex-end; gap:5px; margin-top:4px; cursor:pointer;">
                 <input type="checkbox" id="authClashCb" onchange="checkTeamClash()" style="width:14px; height:14px; margin:0; accent-color:#ef4444;"> AUTHORIZE CLASH
             </label>
@@ -444,7 +426,6 @@
     let appState = []; 
     let vacantPool = []; 
     let matchDays = 2;
-    let matchVenues = 1;
     let prizeFee = 10, pairsFee = 5;
     let currentZoneSize = 0; 
     let isStewardMode = false;
@@ -546,42 +527,20 @@
         startNewDraw();
     }
 
-    function updateVenueInputs() {
-        document.getElementById('d1v2').style.display = matchVenues === 2 ? 'block' : 'none';
-        document.getElementById('d2v1').style.display = matchDays === 2 ? 'block' : 'none';
-        document.getElementById('d2v2').style.display = (matchDays === 2 && matchVenues === 2) ? 'block' : 'none';
-        document.getElementById('d1v1').placeholder = matchVenues === 2 ? "DAY 1: RED/YEL VENUE..." : "DAY 1 VENUE...";
-        document.getElementById('d2v1').placeholder = matchVenues === 2 ? "DAY 2: RED/YEL VENUE..." : "DAY 2 VENUE...";
-    }
-
     function setDays(d) {
         matchDays = d;
         document.getElementById('dayOpt1').classList.toggle('active', d === 1);
         document.getElementById('dayOpt2').classList.toggle('active', d === 2);
         document.getElementById('day2PegsContainer').style.display = d === 2 ? 'flex' : 'none';
-        updateVenueInputs();
-    }
-
-    function setVenues(v) {
-        matchVenues = v;
-        document.getElementById('venOpt1').classList.toggle('active', v === 1);
-        document.getElementById('venOpt2').classList.toggle('active', v === 2);
-        updateVenueInputs();
     }
 
     function startNewDraw() {
         document.getElementById('matchTitle').value = '';
         document.getElementById('initTeams').value = 0;
         document.getElementById('initIndivs').value = 0;
-        document.getElementById('accPegs1_m1').value = '';
-        document.getElementById('accPegs1_m2').value = '';
-        document.getElementById('accPegs2_m1').value = '';
-        document.getElementById('accPegs2_m2').value = '';
+        document.getElementById('accPegs1_a').value = '';
+        document.getElementById('accPegs2_a').value = '';
         document.getElementById('accPegsAnchor').value = '';
-        document.getElementById('d1v1').value = '';
-        document.getElementById('d1v2').value = '';
-        document.getElementById('d2v1').value = '';
-        document.getElementById('d2v2').value = '';
         
         appState = []; vacantPool = []; currentZoneSize = 0;
         roundPayoutsTo5 = false;
@@ -598,7 +557,7 @@
             { id: 'hf', label: 'HEAVIEST FISH', active: false, pct: 0 }
         ];
 
-        setDays(2); setVenues(1);
+        setDays(2);
         isStewardMode = false;
         
         document.getElementById('hubSection').style.display = 'none';
@@ -644,10 +603,13 @@
 
     function loadMatch(title, entry) {
         document.getElementById('matchTitle').value = title;
-        document.getElementById('accPegs1_m1').value = entry.safePegs1_m1 || entry.safePegs1 || entry.safePegs || '';
-        document.getElementById('accPegs1_m2').value = entry.safePegs1_m2 || '';
-        document.getElementById('accPegs2_m1').value = entry.safePegs2_m1 || entry.safePegs2 || entry.safePegs || '';
-        document.getElementById('accPegs2_m2').value = entry.safePegs2_m2 || '';
+        
+        let d1 = entry.safePegs1_a || entry.safePegs1_m1 || entry.safePegs1 || entry.safePegs || '';
+        document.getElementById('accPegs1_a').value = d1;
+
+        let d2 = entry.safePegs2_a || entry.safePegs2_m1 || entry.safePegs2 || entry.safePegs || '';
+        document.getElementById('accPegs2_a').value = d2;
+
         document.getElementById('accPegsAnchor').value = entry.safePegsAnchor || '';
         if(entry.anchorZone) document.getElementById('anchorZoneSelect').value = entry.anchorZone;
         
@@ -656,20 +618,41 @@
         prizeFee = entry.prize || 10; pairsFee = entry.pairs || 5;
         roundPayoutsTo5 = entry.roundPayoutsTo5 || false;
         
-        let vc = entry.venueConfig || { venues: 1, d1v1: '', d1v2: '', d2v1: '', d2v2: '' };
-        document.getElementById('d1v1').value = vc.d1v1 || '';
-        document.getElementById('d1v2').value = vc.d1v2 || '';
-        document.getElementById('d2v1').value = vc.d2v1 || '';
-        document.getElementById('d2v2').value = vc.d2v2 || '';
-        
         if (entry.payoutConfig) {
             payoutConfig = JSON.parse(JSON.stringify(entry.payoutConfig));
         }
 
-        setVenues(vc.venues || 1);
         setDays(entry.days || 2); 
         currentZoneSize = entry.zoneSize || 0;
-        appState = JSON.parse(JSON.stringify(entry.data)); 
+        
+        let rawData = entry.data || entry.appState || [];
+        if (!Array.isArray(rawData)) rawData = Object.values(rawData);
+
+        appState = rawData.map(e => {
+            let isT = e.isTeam !== undefined ? e.isTeam : (e.type === 'team' || (e.anglers && e.anglers.length > 1));
+            let tN = e.tName || e.teamName || e.name || '';
+            let angs = e.anglers || e.members || e.competitors || [{}];
+
+            let mappedAngs = angs.map(a => {
+                let mVal = (a.mobility || a.m1 || a.a1 || a.m2 || a.a2) ? 1 : 0;
+                return {
+                    ...a,
+                    name: a.name || a.anglerName || '',
+                    z1: a.z1 || a.zone1 || a.zone || undefined,
+                    p1: a.p1 || a.peg1 || a.peg || undefined,
+                    z2: a.z2 || a.zone2 || undefined,
+                    p2: a.p2 || a.peg2 || undefined,
+                    mobility: mVal,
+                    present: a.present || false,
+                    captain: a.captain || false,
+                    phone: a.phone || '',
+                    prize: a.prize || false,
+                    pairs: a.pairs || false
+                };
+            });
+            return { ...e, id: e.id || genId(), isTeam: isT, tName: tN, anglers: mappedAngs };
+        });
+
         displayDraw();
     }
 
@@ -712,13 +695,7 @@
         const entry = appState.find(e => e.id === eId);
         if (entry) {
             let a = entry.anglers[aIdx];
-            if (!a.mobility || a.mobility === 0) {
-                a.mobility = 1;
-            } else if (a.mobility === 1) {
-                a.mobility = 2;
-            } else {
-                a.mobility = 0;
-            }
+            a.mobility = a.mobility ? 0 : 1;
             renderStateToScreen();
         }
     }
@@ -744,7 +721,7 @@
         if (mobilityMode === 'B') {
             appState.forEach(e => {
                 if (e.isTeam) {
-                    let mCount = e.anglers.filter(a => a.mobility === 1 || a.mobility === 2).length;
+                    let mCount = e.anglers.filter(a => a.mobility > 0).length;
                     if (mCount > 1) hasClash = true;
                 }
             });
@@ -771,7 +748,7 @@
                 drawBtn.style.opacity = '1';
                 drawBtn.style.pointerEvents = 'auto';
                 warnMsg.style.display = 'none';
-                authCb.checked = false; // Reset when threat is removed
+                authCb.checked = false; 
             }
         }
     }
@@ -809,24 +786,22 @@
             if(entry.isTeam) {
                 h += `<label style="font-size:10px; opacity:0.6;">TEAM NAME</label><input type="text" class="t-name" value="${entry.tName}" style="width:95%; margin-bottom:12px; font-size:14px;">`;
                 for(let i=0; i<4; i++) {
-                    let mText = entry.anglers[i].mobility === 1 ? '[M1]' : entry.anglers[i].mobility === 2 ? '[M2]' : '[M]';
-                    let mBg = entry.anglers[i].mobility === 1 ? 'var(--m1-color)' : entry.anglers[i].mobility === 2 ? 'var(--m2-color)' : 'rgba(0,0,0,0.05)';
+                    let mBg = entry.anglers[i].mobility ? 'var(--a-color)' : 'rgba(0,0,0,0.05)';
                     let mColor = entry.anglers[i].mobility ? 'white' : 'var(--text)';
 
                     h += `<div style="display:flex; align-items:center; gap:5px; margin-bottom:6px;">
                             <input type="text" class="a-name" value="${entry.anglers[i].name || ''}" placeholder="ANGLER ${i+1}" style="width:100%; margin:0; font-size:13px;">
-                            <button class="btn-tool" onclick="toggleMobility('${entry.id}', ${i})" style="padding:10px 12px; font-weight:900; background:${mBg}; color:${mColor}; border-color:${mBg};" title="Toggle Mobility Tier" tabindex="-1">${mText}</button>
+                            <button class="btn-tool" onclick="toggleMobility('${entry.id}', ${i})" style="padding:10px 12px; font-weight:900; background:${mBg}; color:${mColor}; border-color:${mBg};" title="Toggle Accessibility Tier" tabindex="-1">[A]</button>
                           </div>`;
                 }
             } else {
                 h += `<label style="font-size:10px; opacity:0.6;">SOLO NAME</label>`;
-                let mText = entry.anglers[0].mobility === 1 ? '[M1]' : entry.anglers[0].mobility === 2 ? '[M2]' : '[M]';
-                let mBg = entry.anglers[0].mobility === 1 ? 'var(--m1-color)' : entry.anglers[0].mobility === 2 ? 'var(--m2-color)' : 'rgba(0,0,0,0.05)';
+                let mBg = entry.anglers[0].mobility ? 'var(--a-color)' : 'rgba(0,0,0,0.05)';
                 let mColor = entry.anglers[0].mobility ? 'white' : 'var(--text)';
 
                 h += `<div style="display:flex; align-items:center; gap:5px;">
                         <input type="text" class="a-name" value="${entry.anglers[0].name || ''}" style="width:100%; margin:0; font-size:14px;">
-                        <button class="btn-tool" onclick="toggleMobility('${entry.id}', 0)" style="padding:10px 12px; font-weight:900; background:${mBg}; color:${mColor}; border-color:${mBg};" title="Toggle Mobility Tier" tabindex="-1">${mText}</button>
+                        <button class="btn-tool" onclick="toggleMobility('${entry.id}', 0)" style="padding:10px 12px; font-weight:900; background:${mBg}; color:${mColor}; border-color:${mBg};" title="Toggle Accessibility Tier" tabindex="-1">[A]</button>
                       </div>`;
             }
             div.innerHTML = h; 
@@ -949,24 +924,21 @@
             return e.anglers[0].name.trim() !== '' || e.anglers[0].z1;
         });
 
-        // SHOCK ABSORBER HIERARCHY SORT: M-Teams > Solos > Standard Teams
         appState.sort((a, b) => {
             let getPriority = (entry) => {
                 let mCount = entry.anglers.filter(ang => ang.mobility > 0).length;
-                if (mCount > 0) return 3; // Priority 1: M-Entries
-                if (!entry.isTeam) return 2; // Priority 2: Solos (Shock Absorbers)
-                return 1; // Priority 3: Standard Teams
+                if (mCount > 0) return 3; 
+                if (!entry.isTeam) return 2; 
+                return 1; 
             };
             
-            let pA = getPriority(a) * 100 + (a.anglers.some(ang=>ang.mobility===1)?10:a.anglers.some(ang=>ang.mobility===2)?5:0);
-            let pB = getPriority(b) * 100 + (b.anglers.some(ang=>ang.mobility===1)?10:b.anglers.some(ang=>ang.mobility===2)?5:0);
+            let pA = getPriority(a) * 100 + (a.anglers.some(ang=>ang.mobility)?10:0);
+            let pB = getPriority(b) * 100 + (b.anglers.some(ang=>ang.mobility)?10:0);
             return pB - pA;
         });
 
-        const sPegs1_M1 = (document.getElementById('accPegs1_m1').value || '').match(/\d+/g)?.map(Number) || [];
-        const sPegs1_M2 = (document.getElementById('accPegs1_m2').value || '').match(/\d+/g)?.map(Number) || [];
-        const sPegs2_M1 = matchDays == 2 ? ((document.getElementById('accPegs2_m1').value || '').match(/\d+/g)?.map(Number) || []) : [];
-        const sPegs2_M2 = matchDays == 2 ? ((document.getElementById('accPegs2_m2').value || '').match(/\d+/g)?.map(Number) || []) : [];
+        const sPegs1_A = (document.getElementById('accPegs1_a').value || '').match(/\d+/g)?.map(Number) || [];
+        const sPegs2_A = matchDays == 2 ? ((document.getElementById('accPegs2_a').value || '').match(/\d+/g)?.map(Number) || []) : [];
         const sPegsAnchor = (document.getElementById('accPegsAnchor').value || '').match(/\d+/g)?.map(Number) || [];
         const anchorZone = document.getElementById('anchorZoneSelect').value;
 
@@ -1008,34 +980,27 @@
             return { z, p };
         });
 
-        const pullPeg = (zone, isDay2, mobilityTier) => {
+        const pullPeg = (zone, isDay2, isMobility) => {
             const pools = isDay2 ? pools2 : pools1;
             const zIdx = zones.indexOf(zone);
 
-            if (mobilityMode === 'B' && mobilityTier > 0 && zone === anchorZone) {
+            if (mobilityMode === 'B' && isMobility && zone === anchorZone) {
                 const sIdx = pools[zIdx].p.findIndex(peg => sPegsAnchor.includes(peg));
                 if (sIdx !== -1) return pools[zIdx].p.splice(sIdx, 1)[0];
             } else if (mobilityMode === 'A') {
-                const m1List = isDay2 ? sPegs2_M1 : sPegs1_M1;
-                const m2List = isDay2 ? sPegs2_M2 : sPegs1_M2;
-                const allSafe = [...m1List, ...m2List];
+                const safeList = isDay2 ? sPegs2_A : sPegs1_A;
                 
-                if (mobilityTier === 1) {
-                    const s1Idx = pools[zIdx].p.findIndex(peg => m1List.includes(peg));
-                    if (s1Idx !== -1) return pools[zIdx].p.splice(s1Idx, 1)[0];
-                    const s2Idx = pools[zIdx].p.findIndex(peg => m2List.includes(peg));
-                    if (s2Idx !== -1) return pools[zIdx].p.splice(s2Idx, 1)[0];
-                } else if (mobilityTier === 2) {
-                    const s2Idx = pools[zIdx].p.findIndex(peg => m2List.includes(peg));
-                    if (s2Idx !== -1) return pools[zIdx].p.splice(s2Idx, 1)[0];
+                if (isMobility) {
+                    const sIdx = pools[zIdx].p.findIndex(peg => safeList.includes(peg));
+                    if (sIdx !== -1) return pools[zIdx].p.splice(sIdx, 1)[0];
                 }
 
-                if (!mobilityTier && allSafe.length > 0) {
-                    const nonSafeIdx = pools[zIdx].p.findIndex(peg => !allSafe.includes(peg));
+                if (!isMobility && safeList.length > 0) {
+                    const nonSafeIdx = pools[zIdx].p.findIndex(peg => !safeList.includes(peg));
                     if (nonSafeIdx !== -1) return pools[zIdx].p.splice(nonSafeIdx, 1)[0];
                 }
             } else {
-                if (!mobilityTier && sPegsAnchor.length > 0 && zone === anchorZone) {
+                if (!isMobility && sPegsAnchor.length > 0 && zone === anchorZone) {
                      const nonSafeIdx = pools[zIdx].p.findIndex(peg => !sPegsAnchor.includes(peg));
                      if (nonSafeIdx !== -1) return pools[zIdx].p.splice(nonSafeIdx, 1)[0];
                 }
@@ -1044,16 +1009,11 @@
             return pools[zIdx].p.pop() || 99;
         };
 
-        const checkSafeModeA = (z, day, tier) => {
+        const checkSafeModeA = (z, day, isMobility) => {
+            if (!isMobility) return true;
             let pPool = day === 1 ? pools1[zones.indexOf(z)].p : pools2[zones.indexOf(z)].p;
-            let m1_1 = sPegs1_M1, m2_1 = sPegs1_M2;
-            let m1_2 = matchDays == 2 ? sPegs2_M1 : [], m2_2 = matchDays == 2 ? sPegs2_M2 : [];
-            let list1 = day === 1 ? m1_1 : m1_2;
-            let list2 = day === 1 ? m2_1 : m2_2;
-            
-            if (tier === 1) return pPool.some(p => list1.includes(p) || list2.includes(p));
-            if (tier === 2) return pPool.some(p => list2.includes(p));
-            return false;
+            let safeList = day === 1 ? sPegs1_A : sPegs2_A;
+            return pPool.some(p => safeList.includes(p));
         };
 
         appState.forEach(entry => {
@@ -1061,26 +1021,18 @@
             if (needsDraw.length === 0) return;
 
             let drawOrder = needsDraw.map((a, i) => ({ a, i }));
-            drawOrder.sort((x, y) => {
-                let pX = x.a.mobility === 1 ? 2 : x.a.mobility === 2 ? 1 : 0;
-                let pY = y.a.mobility === 1 ? 2 : y.a.mobility === 2 ? 1 : 0;
-                return pY - pX;
-            });
+            drawOrder.sort((x, y) => (y.a.mobility || 0) - (x.a.mobility || 0));
 
             if (entry.isTeam && needsDraw.length === 4) {
-                let hasM = entry.anglers.some(a => a.mobility === 1 || a.mobility === 2);
+                let hasM = entry.anglers.some(a => a.mobility > 0);
                 
                 if (mobilityMode === 'B' && hasM) {
-                    // MODE B: THE STATIC ANCHOR (Handles authorized clashes & dynamic non-M shifting)
                     let d1Zones = [];
-                    let d2Zones = [];
-                    
                     let tempPools1 = pools1.map(p => p.p.length);
-                    let tempPools2 = pools2.map(p => p.p.length);
 
                     for(let i=0; i<4; i++) {
                         let a = entry.anglers[i];
-                        if (a.mobility > 0) {
+                        if (a.mobility) {
                             d1Zones.push(anchorZone);
                             tempPools1[zones.indexOf(anchorZone)]--;
                         } else {
@@ -1096,10 +1048,13 @@
                         }
                     }
 
+                    let d2Zones = [];
+                    let tempPools2 = pools2.map(p => p.p.length);
+
                     for(let i=0; i<4; i++) {
                         let a = entry.anglers[i];
                         let z1 = d1Zones[i];
-                        if (a.mobility > 0) {
+                        if (a.mobility) {
                             d2Zones.push(anchorZone);
                             tempPools2[zones.indexOf(anchorZone)]--;
                         } else {
@@ -1122,7 +1077,6 @@
                     }
 
                 } else if (mobilityMode === 'A' && hasM) {
-                    // MODE A: DISTRIBUTED PEGS
                     let d1Zones = [0, 1, 2, 3].map(i => zones[i]);
                     d1Zones.sort(() => Math.random() - 0.5);
                     
@@ -1130,19 +1084,18 @@
                     let shift = derangements[Math.floor(Math.random() * derangements.length)];
                     let d2Zones = shift.map(idx => d1Zones[idx]);
 
-                    let mIdxes = entry.anglers.map((a,i) => (a.mobility === 1 || a.mobility === 2) ? i : -1).filter(i => i !== -1);
+                    let mIdxes = entry.anglers.map((a,i) => a.mobility ? i : -1).filter(i => i !== -1);
                     let bestCol = -1;
-                    let targetTier = entry.anglers[mIdxes[0]].mobility;
 
                     for(let c=0; c<4; c++) {
-                        let s1 = checkSafeModeA(d1Zones[c], 1, targetTier);
-                        let s2 = matchDays == 2 ? checkSafeModeA(d2Zones[c], 2, targetTier) : true;
+                        let s1 = checkSafeModeA(d1Zones[c], 1, true);
+                        let s2 = matchDays == 2 ? checkSafeModeA(d2Zones[c], 2, true) : true;
                         if (s1 && s2) { bestCol = c; break; }
                     }
                     if (bestCol === -1) {
                         for(let c=0; c<4; c++) {
-                            let s1 = checkSafeModeA(d1Zones[c], 1, targetTier);
-                            let s2 = matchDays == 2 ? checkSafeModeA(d2Zones[c], 2, targetTier) : false;
+                            let s1 = checkSafeModeA(d1Zones[c], 1, true);
+                            let s2 = matchDays == 2 ? checkSafeModeA(d2Zones[c], 2, true) : false;
                             if (s1 || s2) { bestCol = c; break; }
                         }
                     }
@@ -1163,12 +1116,11 @@
                     }
 
                 } else {
-                    // STANDARD TEAMS (The Final Counter-Clash Absorbers)
                     let d1Zones = [];
                     let tempPools1 = pools1.map(p => p.p.length);
                     for(let i=0; i<4; i++) {
                         let zIdx = zones.findIndex(z => !d1Zones.includes(z) && tempPools1[zones.indexOf(z)] > 0);
-                        if (zIdx === -1) zIdx = tempPools1.indexOf(Math.max(...tempPools1)); // Force Counter-Clash
+                        if (zIdx === -1) zIdx = tempPools1.indexOf(Math.max(...tempPools1));
                         d1Zones.push(zones[zIdx]);
                         tempPools1[zIdx]--;
                     }
@@ -1182,7 +1134,7 @@
                             let validZones = zones.map((z, idx) => ({z, idx, count: tempPools2[idx]})).filter(v => v.z !== z1 && v.count > 0);
                             if (validZones.length > 0) {
                                 validZones.sort((a,b) => b.count - a.count);
-                                zIdx = validZones[0].idx; // Force Counter-Clash, respecting z1 !== z2
+                                zIdx = validZones[0].idx; 
                             } else {
                                 zIdx = tempPools2.indexOf(Math.max(...tempPools2));
                             }
@@ -1198,7 +1150,6 @@
                     }
                 }
             } else {
-                // SOLOS (The Primary Shock Absorbers)
                 drawOrder.forEach(item => {
                     let a = item.a;
                     if (vacantPool.length > 0) {
@@ -1211,7 +1162,6 @@
                         a.z1 = anchorZone; a.p1 = pullPeg(anchorZone, false, a.mobility);
                         a.z2 = anchorZone; a.p2 = pullPeg(anchorZone, true, a.mobility);
                     } else {
-                        // Find dynamic open zones to absorb capacity shock
                         let avZ1 = zones.filter(z => pools1[zones.indexOf(z)].p.length > 0);
                         if (avZ1.length === 0) avZ1 = zones;
                         
@@ -1232,7 +1182,6 @@
                         
                         a.z1 = rZ; a.p1 = pullPeg(a.z1, false, a.mobility);
                         
-                        // Day 2
                         let avZ2 = zones.filter(z => z !== a.z1 && pools2[zones.indexOf(z)].p.length > 0);
                         if (avZ2.length === 0) avZ2 = zones.filter(z => z !== a.z1);
 
@@ -1251,42 +1200,16 @@
         displayDraw();
     }
 
-    function getPegTier(p, day) {
+    function isPegSafe(p, day) {
         if (mobilityMode === 'B') {
             const anchorList = (document.getElementById('accPegsAnchor').value || '').match(/\d+/g)?.map(Number) || [];
-            if (anchorList.includes(parseInt(p))) return 1;
-            return 0;
+            return anchorList.includes(parseInt(p));
         } else {
-            let m1 = day === 1 ? (document.getElementById('accPegs1_m1').value || '') : (document.getElementById('accPegs2_m1').value || '');
-            let m2 = day === 1 ? (document.getElementById('accPegs1_m2').value || '') : (document.getElementById('accPegs2_m2').value || '');
-            let m1List = m1.match(/\d+/g)?.map(Number) || [];
-            let m2List = m2.match(/\d+/g)?.map(Number) || [];
-            if (m1List.includes(parseInt(p))) return 1;
-            if (m2List.includes(parseInt(p))) return 2;
-            return 0;
+            let sListStr = day === 1 ? (document.getElementById('accPegs1_a').value || '') : (document.getElementById('accPegs2_a').value || '');
+            let sList = sListStr.match(/\d+/g)?.map(Number) || [];
+            return sList.includes(parseInt(p));
         }
     }
-
-    const getVenueName = (z, day) => {
-        const d1v1 = document.getElementById('d1v1').value.trim();
-        const d1v2 = document.getElementById('d1v2').value.trim();
-        const d2v1 = document.getElementById('d2v1').value.trim();
-        const d2v2 = document.getElementById('d2v2').value.trim();
-
-        let v1 = day === 1 ? d1v1 : (d2v1 || d1v1);
-        let v2 = day === 1 ? d1v2 : (d2v2 || d1v2);
-
-        if (matchVenues === 2) return (z === 'RED' || z === 'YELLOW') ? v1 : v2;
-        return v1;
-    };
-
-    const formatZoneName = (z) => {
-        let d1 = getVenueName(z, 1);
-        let d2 = matchDays == 2 ? getVenueName(z, 2) : '';
-        if(!d1 && !d2) return '';
-        if(matchDays == 1 || d1 === d2) return ` (${d1})`;
-        return ` (D1: ${d1} | D2: ${d2})`;
-    };
 
     function persistToVault() {
         const title = document.getElementById('matchTitle').value || 'UNNAMED_MATCH';
@@ -1299,21 +1222,12 @@
             pairs: pairsFee, 
             zoneSize: currentZoneSize,
             mobilityMode: mobilityMode,
-            safePegs1_m1: document.getElementById('accPegs1_m1').value,
-            safePegs1_m2: document.getElementById('accPegs1_m2').value,
-            safePegs2_m1: document.getElementById('accPegs2_m1').value,
-            safePegs2_m2: document.getElementById('accPegs2_m2').value,
+            safePegs1_a: document.getElementById('accPegs1_a').value,
+            safePegs2_a: document.getElementById('accPegs2_a').value,
             safePegsAnchor: document.getElementById('accPegsAnchor').value,
             anchorZone: document.getElementById('anchorZoneSelect').value,
             payoutConfig: payoutConfig,
-            roundPayoutsTo5: roundPayoutsTo5,
-            venueConfig: {
-                venues: matchVenues,
-                d1v1: document.getElementById('d1v1').value,
-                d1v2: document.getElementById('d1v2').value,
-                d2v1: document.getElementById('d2v1').value,
-                d2v2: document.getElementById('d2v2').value
-            }
+            roundPayoutsTo5: roundPayoutsTo5
         };
         localStorage.setItem('zonedraw_vault_v10', JSON.stringify(vault));
         localStorage.setItem('zonedraw_active_key', title);
@@ -1379,10 +1293,10 @@
         
         const legend = document.getElementById('horizontalLegend');
         if(currentZoneSize > 0) {
-            let lh = `<div class="legend-item"><div class="legend-swatch" style="background:var(--red-g);"></div> RED: 1 - ${currentZoneSize}${formatZoneName('RED')}</div>`;
-            lh += `<div class="legend-item"><div class="legend-swatch" style="background:var(--yellow-g);"></div> YELLOW: ${currentZoneSize + 1} - ${currentZoneSize * 2}${formatZoneName('YELLOW')}</div>`;
-            lh += `<div class="legend-item"><div class="legend-swatch" style="background:var(--green-g);"></div> GREEN: ${currentZoneSize * 2 + 1} - ${currentZoneSize * 3}${formatZoneName('GREEN')}</div>`;
-            lh += `<div class="legend-item"><div class="legend-swatch" style="background:var(--blue-g);"></div> BLUE: ${currentZoneSize * 3 + 1} - ${currentZoneSize * 4}${formatZoneName('BLUE')}</div>`;
+            let lh = `<div class="legend-item"><div class="legend-swatch" style="background:var(--red-g);"></div> RED: 1 - ${currentZoneSize}</div>`;
+            lh += `<div class="legend-item"><div class="legend-swatch" style="background:var(--yellow-g);"></div> YELLOW: ${currentZoneSize + 1} - ${currentZoneSize * 2}</div>`;
+            lh += `<div class="legend-item"><div class="legend-swatch" style="background:var(--green-g);"></div> GREEN: ${currentZoneSize * 2 + 1} - ${currentZoneSize * 3}</div>`;
+            lh += `<div class="legend-item"><div class="legend-swatch" style="background:var(--blue-g);"></div> BLUE: ${currentZoneSize * 3 + 1} - ${currentZoneSize * 4}</div>`;
             legend.innerHTML = lh;
             legend.style.display = 'flex';
         } else {
@@ -1437,31 +1351,26 @@
                 }
             }
 
-            let vA1 = (matchVenues == 2) ? `<div style="font-size:7.5px; opacity:0.8; margin-bottom:3px; letter-spacing:0.5px; font-weight:900;">${getVenueName(a.z1, 1).toUpperCase()}</div>` : '';
-            let vA2 = (matchVenues == 2 && matchDays == 2 && a.z2) ? `<div style="font-size:7.5px; opacity:0.8; margin-bottom:3px; letter-spacing:0.5px; font-weight:900;">${getVenueName(a.z2, 2).toUpperCase()}</div>` : '';
+            let p1Safe = isPegSafe(a.p1, 1);
+            let p2Safe = isPegSafe(a.p2, 2);
 
-            let p1Tier = getPegTier(a.p1, 1);
-            let p2Tier = getPegTier(a.p2, 2);
+            let pill1Class = 'draw-pill' + (p1Safe ? ' a-peg' : '');
+            let pill2Class = 'draw-pill' + (p2Safe ? ' a-peg' : '');
 
-            let pill1Class = 'draw-pill' + (p1Tier === 1 ? ' m1-peg' : p1Tier === 2 ? ' m2-peg' : '');
-            let pill2Class = 'draw-pill' + (p2Tier === 1 ? ' m1-peg' : p2Tier === 2 ? ' m2-peg' : '');
-
-            let nameClass = a.mobility === 1 ? 'angler-name m1-name' : a.mobility === 2 ? 'angler-name m2-name' : 'angler-name';
-            let mIcon = a.mobility === 1 ? '<span class="m1-tag">[M1]</span>' : a.mobility === 2 ? '<span class="m2-tag">[M2]</span>' : '';
+            let nameClass = a.mobility ? 'angler-name a-name' : 'angler-name';
+            let mIcon = a.mobility ? '<span class="a-tag">[A]</span>' : '';
             
-            let p1Icon = p1Tier === 1 ? '<span class="m1-tag" style="font-size:10px;">[M1 PEG]</span>' : p1Tier === 2 ? '<span class="m2-tag" style="font-size:10px;">[M2 PEG]</span>' : '';
-            let p2Icon = p2Tier === 1 ? '<span class="m1-tag" style="font-size:10px;">[M1 PEG]</span>' : p2Tier === 2 ? '<span class="m2-tag" style="font-size:10px;">[M2 PEG]</span>' : '';
+            let p1Icon = p1Safe ? '<span class="a-tag" style="font-size:10px;">[A PEG]</span>' : '';
+            let p2Icon = p2Safe ? '<span class="a-tag" style="font-size:10px;">[A PEG]</span>' : '';
 
             h += `<div class="${rowClass}" ${clickEvt}>
                     <span class="${nameClass}">${a.name}${mIcon}</span>
                     <div style="display:flex; flex-direction:column; align-items:center; justify-content:center; pointer-events:none;">
-                        ${vA1}
-                        <div class="${pill1Class}" style="background:${zoneGradients[a.z1]}">${a.z1}<span class="peg-num">${a.p1}</span>${p1Icon}</div>
+                        <div class="${pill1Class}" style="background:${zoneGradients[a.z1]}"><span>${a.z1}</span> <span class="peg-num">${a.p1}</span>${p1Icon}</div>
                     </div>
                     ${matchDays == 2 && a.z2 ? `
                     <div style="display:flex; flex-direction:column; align-items:center; justify-content:center; pointer-events:none;">
-                        ${vA2}
-                        <div class="${pill2Class}" style="background:${zoneGradients[a.z2]}">${a.z2}<span class="peg-num">${a.p2}</span>${p2Icon}</div>
+                        <div class="${pill2Class}" style="background:${zoneGradients[a.z2]}"><span>${a.z2}</span> <span class="peg-num">${a.p2}</span>${p2Icon}</div>
                     </div>` : '<div></div>'}
                   </div>`;
         });
@@ -1494,9 +1403,6 @@
                 
                 zoneAnglers.sort((a, b) => a.peg - b.peg);
                 
-                const venueName = getVenueName(zone, day);
-                const vText = venueName ? ` (${venueName})` : '';
-                
                 const zGradients = { 'RED': '#ef4444', 'YELLOW': '#f59e0b', 'GREEN': '#10b981', 'BLUE': '#3b82f6' };
                 const zColor = zGradients[zone];
 
@@ -1505,7 +1411,7 @@
                 page.innerHTML = `
                     <div class="roster-header" style="border-bottom-color: ${zColor};">
                         <h1>${title}</h1>
-                        <h2>DAY ${day} - ${zone} ZONE${vText}</h2>
+                        <h2>DAY ${day} - ${zone} ZONE</h2>
                     </div>
                     <div class="roster-body">
                         <table class="roster-table">
@@ -1520,7 +1426,7 @@
                                 ${zoneAnglers.map(ang => `
                                     <tr>
                                         <td style="font-size: 18px; font-weight: 900; text-align: center; color: ${zColor}; border-right: 2px solid #e2e8f0;">${ang.peg}</td>
-                                        <td style="font-size: 14px; font-weight: 800; color: black;">${ang.name} ${ang.mobility === 1 ? '<span style="color:#ca8a04; font-size:12px;">[M1]</span>' : ang.mobility === 2 ? '<span style="color:#d97706; font-size:12px;">[M2]</span>' : ''}</td>
+                                        <td style="font-size: 14px; font-weight: 800; color: black;">${ang.name} ${ang.mobility ? '<span style="color:#ca8a04; font-size:12px;">[A]</span>' : ''}</td>
                                         <td style="font-size: 12px; font-weight: 700; color: #475569;">${ang.team}</td>
                                     </tr>
                                 `).join('')}
@@ -1594,7 +1500,7 @@
             const a = item.angler;
             const eId = item.entryId;
             const i = item.aIdx;
-            const mTag = a.mobility === 1 ? ' [M1]' : a.mobility === 2 ? ' [M2]' : '';
+            const mTag = a.mobility ? ' [A]' : '';
             
             h += `<tr>
                 <td><input type="text" class="steward-input" value="${a.name || ''}" oninput="updateStewardField('${eId}', ${i}, 'name', this.value)" placeholder="NAME..."><span style="color:#8b5cf6; font-size:10px; font-weight:900;">${mTag}</span></td>
@@ -1878,20 +1784,14 @@
                         <th style="text-align:center;">SECRET PAIRS [£${pairsFee}]</th>
                     </tr>
                     ${e.anglers.map(a => {
-                        let vA1 = getVenueName(a.z1, 1);
-                        let vA2 = matchDays == 2 ? getVenueName(a.z2, 2) : '';
-                        vA1 = (matchVenues == 2 && vA1) ? vA1 + ' | ' : '';
-                        vA2 = (matchVenues == 2 && vA2) ? vA2 + ' | ' : '';
-                        let p1Tier = getPegTier(a.p1, 1);
-                        let p2Tier = getPegTier(a.p2, 2);
-                        let p1Safe = p1Tier === 1 ? ' <b style="font-size:14px;">[M1 PEG]</b>' : p1Tier === 2 ? ' <b style="font-size:14px;">[M2 PEG]</b>' : '';
-                        let p2Safe = p2Tier === 1 ? ' <b style="font-size:14px;">[M1 PEG]</b>' : p2Tier === 2 ? ' <b style="font-size:14px;">[M2 PEG]</b>' : '';
-                        let aMob = a.mobility === 1 ? '<b style="font-size:14px;">[M1]</b>' : a.mobility === 2 ? '<b style="font-size:14px;">[M2]</b>' : '';
+                        let p1Safe = isPegSafe(a.p1, 1) ? ' <b style="font-size:14px;">[A PEG]</b>' : '';
+                        let p2Safe = isPegSafe(a.p2, 2) ? ' <b style="font-size:14px;">[A PEG]</b>' : '';
+                        let aMob = a.mobility ? '<b style="font-size:14px;">[A]</b>' : '';
                         return `
                         <tr>
                             <td>${a.name || '---'} ${aMob}</td>
-                            <td><b>[${vA1}${a.z1} ZONE]</b> PEG ${a.p1}${p1Safe}</td>
-                            <td>${matchDays == 2 ? `<b>[${vA2}${a.z2} ZONE]</b> PEG ${a.p2}${p2Safe}` : '---'}</td>
+                            <td><b>[${a.z1} ZONE]</b> PEG ${a.p1}${p1Safe}</td>
+                            <td>${matchDays == 2 ? `<b>[${a.z2} ZONE]</b> PEG ${a.p2}${p2Safe}` : '---'}</td>
                             <td style="text-align:center;"><div style="width:24px; height:24px; border:2px solid black; margin: 0 auto;"></div></td>
                             <td style="text-align:center;"><div style="width:24px; height:24px; border:2px solid black; margin: 0 auto;"></div></td>
                         </tr>
@@ -1913,15 +1813,9 @@
             
             batch.forEach(e => {
                 const a = e.anglers[0];
-                let vA1 = getVenueName(a.z1, 1);
-                let vA2 = matchDays == 2 ? getVenueName(a.z2, 2) : '';
-                vA1 = (matchVenues == 2 && vA1) ? vA1 + ' | ' : '';
-                vA2 = (matchVenues == 2 && vA2) ? vA2 + ' | ' : '';
-                let p1Tier = getPegTier(a.p1, 1);
-                let p2Tier = getPegTier(a.p2, 2);
-                let p1Safe = p1Tier === 1 ? ' <b style="font-size:12px;">[M1 PEG]</b>' : p1Tier === 2 ? ' <b style="font-size:12px;">[M2 PEG]</b>' : '';
-                let p2Safe = p2Tier === 1 ? ' <b style="font-size:12px;">[M1 PEG]</b>' : p2Tier === 2 ? ' <b style="font-size:12px;">[M2 PEG]</b>' : '';
-                let aMob = a.mobility === 1 ? '<b style="font-size:14px;">[M1]</b>' : a.mobility === 2 ? '<b style="font-size:14px;">[M2]</b>' : '';
+                let p1Safe = isPegSafe(a.p1, 1) ? ' <b style="font-size:12px;">[A PEG]</b>' : '';
+                let p2Safe = isPegSafe(a.p2, 2) ? ' <b style="font-size:12px;">[A PEG]</b>' : '';
+                let aMob = a.mobility ? '<b style="font-size:14px;">[A]</b>' : '';
                 
                 const slip = document.createElement('div');
                 slip.className = 'dispatch-slip';
@@ -1940,8 +1834,8 @@
                             <th style="text-align:center;">SECRET PAIRS [£${pairsFee}]</th>
                         </tr>
                         <tr>
-                            <td><b>[${vA1}${a.z1} ZONE]</b> PEG ${a.p1}${p1Safe}</td>
-                            <td>${matchDays == 2 ? `<b>[${vA2}${a.z2} ZONE]</b> PEG ${a.p2}${p2Safe}` : '---'}</td>
+                            <td><b>[${a.z1} ZONE]</b> PEG ${a.p1}${p1Safe}</td>
+                            <td>${matchDays == 2 ? `<b>[${a.z2} ZONE]</b> PEG ${a.p2}${p2Safe}` : '---'}</td>
                             <td style="text-align:center;"><div style="width:20px; height:20px; border:2px solid black; margin: 0 auto;"></div></td>
                             <td style="text-align:center;"><div style="width:20px; height:20px; border:2px solid black; margin: 0 auto;"></div></td>
                         </tr>
@@ -1972,7 +1866,6 @@
         const resTitle = document.getElementById('resTitle');
         element.insertBefore(finSummary, resTitle.nextSibling);
 
-        // Native Light Theme for Sharing
         document.body.classList.add('full-color-share');
         
         element.querySelectorAll('.bucket-grid').forEach(grid => {
@@ -2018,7 +1911,6 @@
         }, 500); 
     }
     
-    // On-Boot Initialization with Legacy Catch-Up Migration
     window.onload = () => {
         let migrated = localStorage.getItem('zonedraw_legacy_migrated');
         let activeKey = localStorage.getItem('zonedraw_active_key');
