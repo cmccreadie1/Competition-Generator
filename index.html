@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ZONEDRAW v10.59.0</title>
+    <title>ZONEDRAW v10.60.0</title>
     <link rel="manifest" href="manifest.json">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
@@ -233,7 +233,7 @@
 <div class="fixed-header no-print">
     <div class="header-content">
         <button class="home-btn" onclick="showHub()" tabindex="-1">🏠 RETURN TO HOMEPAGE</button>
-        <div class="brand-name">ZONEDRAW <span id="vTag" class="v-tag">v10.59.0</span></div>
+        <div class="brand-name">ZONEDRAW <span id="vTag" class="v-tag">v10.60.0</span></div>
         <div style="width: 180px; text-align:right;">
             <button class="btn-tool" onclick="showHistory()" style="font-size: 11px; padding: 6px 12px;">📜 ARCHIVES</button>
         </div>
@@ -721,7 +721,7 @@
     }
 
     function syncScreenToState() {
-        /* FIX APPLIED HERE: Only read input fields from the Entry Section */
+        /* FIXED: Only reads inputs safely from the specific entry section */
         document.querySelectorAll('#entrySection .zone-card').forEach(card => {
             const id = card.dataset.id;
             const entry = appState.find(e => e.id === id);
@@ -1151,11 +1151,16 @@
                     }
 
                 } else {
+                    /* FIX APPLIED: Bulletproof arrays for Standard Teams to prevent null crash */
                     let d1Zones = [];
                     let tempPools1 = pools1.map(p => p.p.length);
                     for(let i=0; i<4; i++) {
                         let zIdx = zones.findIndex(z => !d1Zones.includes(z) && tempPools1[zones.indexOf(z)] > 0);
-                        if (zIdx === -1) zIdx = tempPools1.indexOf(Math.max(...tempPools1)); 
+                        if (zIdx === -1) {
+                            let maxVal = Math.max(...tempPools1);
+                            zIdx = tempPools1.indexOf(maxVal);
+                            if (zIdx === -1) zIdx = Math.floor(Math.random() * 4); // Failsafe
+                        }
                         d1Zones.push(zones[zIdx]);
                         tempPools1[zIdx]--;
                     }
@@ -1171,7 +1176,9 @@
                                 validZones.sort((a,b) => b.count - a.count);
                                 zIdx = validZones[0].idx; 
                             } else {
-                                zIdx = tempPools2.indexOf(Math.max(...tempPools2));
+                                let maxVal = Math.max(...tempPools2);
+                                zIdx = tempPools2.indexOf(maxVal);
+                                if (zIdx === -1) zIdx = Math.floor(Math.random() * 4); // Failsafe
                             }
                         }
                         d2Zones.push(zones[zIdx]);
