@@ -1,4 +1,4 @@
-const CACHE_NAME = 'zonedraw-v12.04.12-intent-gatekeeper-v1';
+const CACHE_NAME = 'zonedraw-v12.04.13-redraw-safety-v1';
 const ASSETS_TO_CACHE = [
     './',
     './index.html',
