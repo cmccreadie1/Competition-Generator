@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ZONEDRAW v12.03.01</title>
+    <title>ZONEDRAW v12.03.02</title>
     <link rel="manifest" href="manifest.json">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
@@ -121,7 +121,7 @@
 
 <div class="fixed-header no-print">
     <div class="header-content">
-        <div class="brand-name">ZONEDRAW <span id="vTag" class="v-tag">v12.03.01</span></div>
+        <div class="brand-name">ZONEDRAW <span id="vTag" class="v-tag">v12.03.02</span></div>
         <div style="display:flex; align-items:center; gap:15px;">
             <span style="font-size: 10px; color: #64748b; max-width: 150px; text-align: right; line-height: 1.2; font-weight: 700; text-transform: none;">Only use this to clear the app for a new competition. This cannot be undone.</span>
             <button class="btn-action" style="background:#ef4444; border-color:#ef4444; padding: 10px 18px; font-size: 12px;" onclick="showWipeModal()" tabindex="-1">⚠️ WIPE ENTIRE BOARD</button>
@@ -339,6 +339,7 @@
         document.getElementById('initMatchBtn').style.display = 'none';
         document.getElementById('commandBar').style.display = 'flex';
         document.getElementById('amendTools').style.display = 'flex'; 
+        document.getElementById('actionBtnArea').style.display = 'flex';
         renderStateToScreen();
     }
 
@@ -432,7 +433,18 @@
         document.getElementById('mainActionBtn').disabled = clash;
         document.getElementById('mainActionBtn').style.opacity = clash ? '0.4' : '1';
     }
-    function updateTicker() { let ent = 0; document.querySelectorAll('.a-name-input').forEach(i => { if(i.value.trim()) ent++; }); document.getElementById('tkAnglers').innerText = ent; }
+    
+    function updateTicker() { 
+        let ent = 0; 
+        document.querySelectorAll('.a-name-input').forEach(i => { if(i.value.trim()) ent++; }); 
+        document.getElementById('tkAnglers').innerText = ent; 
+
+        // Auto-sync initial setup counters
+        let tCount = appState.filter(item => item.isTeam).length;
+        let sCount = appState.filter(item => !item.isTeam).length;
+        document.getElementById('initTeams').value = tCount;
+        document.getElementById('initIndivs').value = sCount;
+    }
 
     function initiateShuffle() {
         syncScreenToState();
@@ -565,7 +577,17 @@
         const b = new Blob([csv], {type: 'text/csv'}); const l = document.createElement('a'); l.href = URL.createObjectURL(b); l.download = "ACCOUNTING.csv"; l.click();
     }
 
-    function handleAmend() { document.querySelectorAll('body > div[id$="Section"]').forEach(s => s.style.display = 'none'); document.getElementById('entrySection').style.display = 'block'; document.getElementById('commandBar').style.display = 'flex'; renderStateToScreen(); }
+    function handleAmend() { 
+        document.querySelectorAll('body > div[id$="Section"]').forEach(s => s.style.display = 'none'); 
+        document.getElementById('entrySection').style.display = 'block'; 
+        document.getElementById('commandBar').style.display = 'flex'; 
+        if(appState.length > 0) {
+            document.getElementById('initMatchBtn').style.display = 'none';
+            document.getElementById('amendTools').style.display = 'flex';
+            document.getElementById('actionBtnArea').style.display = 'flex';
+        }
+        renderStateToScreen(); 
+    }
     
     function shareDraw() {
         const el = document.getElementById('resultsSection'); document.body.classList.add('full-color-share');
@@ -579,7 +601,13 @@
             document.getElementById('accPegs1_a').value = e.safePegs1_a || ''; document.getElementById('accPegs2_a').value = e.safePegs2_a || '';
             document.getElementById('accPegsAnchor').value = e.safePegsAnchor || ''; if(e.anchorZone) document.getElementById('anchorZoneSelect').value = e.anchorZone;
             setMobilityMode(e.mobilityMode || 'A'); setDays(e.days || 2); 
-            appState = e.data || []; if (appState.some(e => e.anglers.some(a => a.z1))) displayDraw(); else handleAmend();
+            appState = e.data || []; 
+            if (appState.length > 0) {
+                document.getElementById('initMatchBtn').style.display = 'none';
+                document.getElementById('commandBar').style.display = 'flex';
+                document.getElementById('amendTools').style.display = 'flex';
+            }
+            if (appState.some(e => e.anglers.some(a => a.z1))) displayDraw(); else handleAmend();
         } else startNewDraw();
     };
 </script>
