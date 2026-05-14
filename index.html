@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ZONEDRAW v12.04.02</title>
+    <title>ZONEDRAW v12.04.03</title>
     <link rel="manifest" href="manifest.json">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
@@ -106,17 +106,17 @@
         #entrySection, #resultsSection, #dispatchSection, #rosterSection, #registrationPrintSection { 
             max-width: 1400px; 
             margin: 0 auto; 
-            padding: 100px 20px 140px; 
+            padding: 85px 20px 140px; 
             display: none; 
         }
         
         .control-panel { 
             background: var(--card); 
             border-radius: 16px; 
-            padding: 30px; 
+            padding: 20px; 
             border: 2px solid var(--border); 
             text-align: center; 
-            margin-bottom: 30px; 
+            margin-bottom: 20px; 
         }
         
         .bucket-grid { 
@@ -369,7 +369,7 @@
             font-size: 1.1rem; 
             font-weight: 900; 
             color: #64748b; 
-            margin: 30px 0 15px; 
+            margin: 15px 0 10px; 
             letter-spacing: 1px; 
             text-align: left; 
         }
@@ -438,7 +438,7 @@
 
 <div class="fixed-header no-print">
     <div class="header-content">
-        <div class="brand-name">ZONEDRAW <span id="vTag" class="v-tag">v12.04.02</span></div>
+        <div class="brand-name">ZONEDRAW <span id="vTag" class="v-tag">v12.04.03</span></div>
         <div style="display:flex; align-items:center; gap:15px;">
             <span style="font-size: 10px; color: #64748b; max-width: 150px; text-align: right; line-height: 1.2; font-weight: 700; text-transform: none;">Only use this to clear the app for a new competition. This cannot be undone.</span>
             <button class="btn-action" style="background:#ef4444; border-color:#ef4444; padding: 10px 18px; font-size: 12px;" onclick="showWipeModal()" tabindex="-1">⚠️ WIPE ENTIRE BOARD</button>
@@ -449,13 +449,13 @@
 <div id="entrySection" class="no-print">
     <div class="control-panel" id="setupPanel">
         <label style="font-size: 12px; opacity: 0.6; letter-spacing: 1px; font-weight: 900;">COMPETITION IDENTITY</label>
-        <input type="text" id="matchTitle" style="font-size:24px; text-align:center; margin-top:10px; border-width: 3px;" placeholder="e.g. SCOTTISH SHORE CHAMPIONSHIP 2026">
+        <input type="text" id="matchTitle" style="font-size:24px; text-align:center; margin-top:5px; border-width: 3px;" placeholder="e.g. SCOTTISH SHORE CHAMPIONSHIP 2026">
         
-        <div style="margin-top:30px; display:flex; flex-direction:column; align-items:center; gap:10px;">
+        <div style="margin-top:15px; display:flex; flex-direction:column; align-items:center; gap:10px;">
             <button class="btn-action-outline" onclick="let p = document.getElementById('accPanelWrapper'); p.style.display = p.style.display === 'none' ? 'flex' : 'none';" type="button" tabindex="-1">⚙️ CONFIGURE ACCESSIBILITY OPTIONS</button>
             <span style="font-size:11px; opacity:0.6; max-width: 450px; text-transform:none; font-weight: 600;">Toggle to restrict anglers with physical requirements to specific safe pegs on the beach.</span>
             
-            <div id="accPanelWrapper" style="display:none; flex-direction:column; align-items:center; gap:15px; width:100%; max-width:600px; padding: 25px; background: #ffffff; border-radius: 12px; border: 3px solid var(--border); margin-top: 10px;">
+            <div id="accPanelWrapper" style="display:none; flex-direction:column; align-items:center; gap:15px; width:100%; max-width:600px; padding: 15px; background: #ffffff; border-radius: 12px; border: 3px solid var(--border); margin-top: 5px;">
                 <div style="display:flex; justify-content:center; gap:10px; width:100%;">
                     <div id="mobModeA" class="dt-opt active" style="flex:1; flex-direction:column; border-width: 2px;" onclick="setMobilityMode('A')">
                         <span>DISTRIBUTED PEGS</span>
@@ -467,14 +467,14 @@
                     </div>
                 </div>
 
-                <div id="modeASetup" style="display:flex; flex-direction:column; gap:10px; width:100%; margin-top:10px;">
+                <div id="modeASetup" style="display:flex; flex-direction:column; gap:10px; width:100%; margin-top:5px;">
                     <input type="text" id="accPegs1_a" style="border-color:var(--a-color); border-width: 2px;" placeholder="DAY 1 SAFE PEGS" oninput="formatPegs(this)">
                     <div id="day2PegsContainer" style="display:none; width:100%;">
                         <input type="text" id="accPegs2_a" style="border-color:var(--a-color); border-width: 2px;" placeholder="DAY 2 SAFE PEGS" oninput="formatPegs(this)">
                     </div>
                 </div>
 
-                <div id="modeBSetup" style="display:none; flex-direction:column; gap:10px; width:100%; margin-top:10px;">
+                <div id="modeBSetup" style="display:none; flex-direction:column; gap:10px; width:100%; margin-top:5px;">
                     <select id="anchorZoneSelect" style="border-width: 2px;">
                         <option value="RED">ANCHOR ZONE: RED</option>
                         <option value="YELLOW">ANCHOR ZONE: YELLOW</option>
@@ -486,7 +486,7 @@
             </div>
         </div>
 
-        <div style="display:flex; justify-content:center; gap:25px; margin-top:35px; align-items:flex-end; flex-wrap:wrap;">
+        <div style="display:flex; justify-content:center; gap:25px; margin-top:15px; align-items:flex-end; flex-wrap:wrap;">
             <div>
                 <label style="display:block; margin-bottom:8px; font-size: 11px; font-weight: 900; color: #64748b;">DURATION</label>
                 <div class="duration-toggle" style="width: 220px;">
@@ -504,7 +504,7 @@
             </div>
         </div>
 
-        <button id="initMatchBtn" class="btn-action" style="margin-top:45px; font-size: 16px; padding: 20px 40px;" onclick="bulkInit()">INITIALIZE ENTRY SHEET</button>
+        <button id="initMatchBtn" class="btn-action" style="margin-top:20px; font-size: 16px; padding: 15px 30px;" onclick="bulkInit()">INITIALIZE ENTRY SHEET</button>
     </div>
     
     <div id="entryList">
@@ -513,7 +513,7 @@
             <div id="entryTeamsBucket" class="bucket-grid"></div>
         </div>
         <div id="entrySolosContainer" style="display:none;">
-            <div class="entry-group-label" style="margin-top: 50px;">SOLO COMPETITORS</div>
+            <div class="entry-group-label" style="margin-top: 30px;">SOLO COMPETITORS</div>
             <div id="entrySolosBucket" class="bucket-grid"></div>
         </div>
     </div>
@@ -732,6 +732,14 @@
         document.getElementById('actionBtnArea').style.display = 'flex';
         
         renderStateToScreen();
+
+        // Auto-focus on the very first input box after initialization
+        setTimeout(() => {
+            const firstInput = document.querySelector('#entryList input[type="text"]');
+            if (firstInput) {
+                firstInput.focus();
+            }
+        }, 50);
     }
 
     function addNewStateItem(isTeam) {
