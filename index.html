@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ZONEDRAW v12.04.12</title>
+    <title>ZONEDRAW v12.04.13</title>
     <link rel="manifest" href="manifest.json">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
@@ -444,7 +444,7 @@
 
 <div class="fixed-header no-print">
     <div class="header-content">
-        <div class="brand-name">ZONEDRAW <span id="vTag" class="v-tag">v12.04.12</span></div>
+        <div class="brand-name">ZONEDRAW <span id="vTag" class="v-tag">v12.04.13</span></div>
     </div>
 </div>
 
@@ -513,7 +513,7 @@
         
         <div style="margin-top: 40px; padding-top: 20px; border-top: 2px dashed #cbd5e1; display:flex; flex-direction:column; align-items:center;">
             <span style="font-size: 10px; color: #64748b; margin-bottom: 10px; font-weight: 700; text-transform: none;">Only use this to clear the app entirely for a new competition.</span>
-            <button class="btn-action-outline" style="color:#ef4444; border-color:#ef4444; padding: 10px 18px; font-size: 12px;" onclick="showWipeModal()" tabindex="-1">⚠️ START NEW COMPETITION (WIPE ALL)</button>
+            <button class="btn-action-outline" style="color:#red-color; border-color:#ef4444; color:#ef4444; padding: 10px 18px; font-size: 12px;" onclick="showWipeModal()" tabindex="-1">⚠️ START NEW COMPETITION (WIPE ALL)</button>
         </div>
     </div>
     
@@ -613,6 +613,17 @@
     </div>
 </div>
 
+<div id="redrawModal" class="modal-overlay no-print">
+    <div class="modal-content">
+        <h2 style="color: #ef4444; font-size: 28px; margin-top: 0;">⚠️ REDRAW CONFIRMATION</h2>
+        <p style="font-size: 16px; font-weight: 700; margin-bottom: 30px; text-transform: none;">Are you sure? This will delete all current pegs and return you to the Entry screen to allow late additions.</p>
+        <div style="display: flex; flex-direction: column; gap: 15px;">
+            <button onclick="closeRedrawModal()" class="btn-action">CANCEL</button>
+            <button onclick="executePegWipe()" class="btn-action-outline" style="color: #ef4444; border-color: #ef4444;">YES, WIPE PEGS & REDRAW</button>
+        </div>
+    </div>
+</div>
+
 <div id="wipeModal" class="modal-overlay no-print">
     <div class="modal-content">
         <h2 style="color: #ef4444; font-size: 28px; margin-top: 0;">⚠️ DANGER ZONE</h2>
@@ -698,6 +709,14 @@
         document.getElementById('manageModal').style.display = 'none';
     }
 
+    function showRedrawModal() {
+        document.getElementById('redrawModal').style.display = 'flex';
+    }
+
+    function closeRedrawModal() {
+        document.getElementById('redrawModal').style.display = 'none';
+    }
+
     function showWipeModal() { 
         document.getElementById('wipeModal').style.display = 'flex'; 
     }
@@ -708,35 +727,24 @@
 
     function handleSafeEdit() {
         closeManageModal();
-        handleAmend(); // Standard edit mode with banner
+        handleAmend(); 
     }
 
     function handleTotalRedraw() {
         closeManageModal();
-        
-        // Strip the pegs to allow a fresh PROCESS DRAW
+        showRedrawModal();
+    }
+
+    function executePegWipe() {
+        closeRedrawModal();
+        // Strip the pegs but keep the names
         appState.forEach(e => {
             e.anglers.forEach(a => {
-                a.z1 = undefined;
-                a.p1 = undefined;
-                a.z2 = undefined;
-                a.p2 = undefined;
+                a.z1 = undefined; a.p1 = undefined;
+                a.z2 = undefined; a.p2 = undefined;
             });
         });
-        
-        // Route directly to setup/entry screen
-        document.querySelectorAll('body > div[id$="Section"]').forEach(s => s.style.display = 'none'); 
-        document.getElementById('entrySection').style.display = 'block'; 
-        document.getElementById('commandBar').style.display = 'flex'; 
-        
-        document.getElementById('setupPanel').style.display = 'block';
-        document.getElementById('editDrawBanner').style.display = 'none';
-        
-        document.getElementById('initMatchBtn').style.display = 'none';
-        document.getElementById('amendTools').style.display = 'flex';
-        document.getElementById('actionBtnArea').style.display = 'flex';
-        
-        renderStateToScreen(); 
+        handleAmend(); // Redirect to entry section which will now show the PROCESS DRAW button
     }
 
     function executeNuclearWipe() {
@@ -1231,6 +1239,9 @@
         document.getElementById('resultsSection').style.display = 'block';
         document.getElementById('resTitle').innerText = document.getElementById('matchTitle').value || "DRAW";
         
+        // Ensure Command Bar is hidden on finalized draw screen
+        document.getElementById('commandBar').style.display = 'none';
+
         const tb = document.getElementById('teamsBucket'); 
         tb.innerHTML = ''; 
         const sb = document.getElementById('solosBucket'); 
