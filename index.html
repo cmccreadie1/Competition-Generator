@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ZONEDRAW v12.04.05</title>
+    <title>ZONEDRAW v12.04.06</title>
     <link rel="manifest" href="manifest.json">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
@@ -34,6 +34,12 @@
             
             /* Unified Access Color */
             --a-color: #ca8a04; 
+        }
+
+        html {
+            scroll-behavior: smooth;
+            scroll-padding-top: 130px;
+            scroll-padding-bottom: 120px;
         }
         
         body { 
@@ -438,7 +444,7 @@
 
 <div class="fixed-header no-print">
     <div class="header-content">
-        <div class="brand-name">ZONEDRAW <span id="vTag" class="v-tag">v12.04.05</span></div>
+        <div class="brand-name">ZONEDRAW <span id="vTag" class="v-tag">v12.04.06</span></div>
         <div style="display:flex; align-items:center; gap:15px;">
             <span style="font-size: 10px; color: #64748b; max-width: 150px; text-align: right; line-height: 1.2; font-weight: 700; text-transform: none;">Only use this to clear the app for a new competition. This cannot be undone.</span>
             <button class="btn-action" style="background:#ef4444; border-color:#ef4444; padding: 10px 18px; font-size: 12px;" onclick="showWipeModal()" tabindex="-1">⚠️ WIPE ENTIRE BOARD</button>
@@ -788,13 +794,13 @@
             let h = `<div class="zone-header"><span>${entry.isTeam ? 'TEAM' : 'SOLO'}</span><div style="display:flex; align-items:center;">`;
             
             if(!entry.isTeam) {
-                h += `<input type="checkbox" class="merge-cb" onchange="checkMerge()" style="width:20px; height:20px;">`;
+                h += `<input type="checkbox" class="merge-cb" onchange="checkMerge()" tabindex="-1" style="width:20px; height:20px;">`;
             }
             
             if(entry.isTeam) {
-                h += `<button class="btn-tool" onclick="breakStateTeam('${entry.id}')" style="margin-left:12px;">🔗 UNLINK</button>`;
+                h += `<button class="btn-tool" onclick="breakStateTeam('${entry.id}')" tabindex="-1" style="margin-left:12px;">🔗 UNLINK</button>`;
             } else {
-                h += `<button onclick="deleteStateEntry('${entry.id}')" style="background:none; border:none; color:#ef4444; font-weight:900; font-size:24px; cursor:pointer; margin-left:12px;">×</button>`;
+                h += `<button onclick="deleteStateEntry('${entry.id}')" tabindex="-1" style="background:none; border:none; color:#ef4444; font-weight:900; font-size:24px; cursor:pointer; margin-left:12px;">×</button>`;
             }
             h += `</div></div>`;
             
@@ -806,7 +812,7 @@
                     let mColor = entry.anglers[i].mobility ? 'white' : 'var(--text)';
                     h += `<div style="display:flex; align-items:center; gap:8px; margin-bottom:8px;">
                             <input type="text" class="a-name-input" value="${entry.anglers[i].name || ''}" placeholder="ANGLER ${i+1}" oninput="updateAnglerName('${entry.id}', ${i}, this.value)">
-                            <button class="btn-tool" onclick="toggleMobility('${entry.id}', ${i})" style="padding:10px 14px; background:${mBg}; color:${mColor}; border-color:${mBg};">[A]</button>
+                            <button class="btn-tool" onclick="toggleMobility('${entry.id}', ${i})" tabindex="-1" style="padding:10px 14px; background:${mBg}; color:${mColor}; border-color:${mBg};">[A]</button>
                           </div>`;
                 }
             } else {
@@ -815,7 +821,7 @@
                 let mColor = entry.anglers[0].mobility ? 'white' : 'var(--text)';
                 h += `<div style="display:flex; align-items:center; gap:8px; margin-top:5px;">
                         <input type="text" class="a-name-input" value="${entry.anglers[0].name || ''}" oninput="updateAnglerName('${entry.id}', 0, this.value)">
-                        <button class="btn-tool" onclick="toggleMobility('${entry.id}', 0)" style="padding:10px 14px; background:${mBg}; color:${mColor}; border-color:${mBg};">[A]</button>
+                        <button class="btn-tool" onclick="toggleMobility('${entry.id}', 0)" tabindex="-1" style="padding:10px 14px; background:${mBg}; color:${mColor}; border-color:${mBg};">[A]</button>
                       </div>`;
             }
             
