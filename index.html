@@ -3,36 +3,28 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ZONEDRAW v12.03.00</title>
+    <title>ZONEDRAW v12.03.01</title>
     <link rel="manifest" href="manifest.json">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
     <style>
         :root {
-            /* MODERN FLAT THEME FOR PRINTING & SCREEN */
             --bg: #f8fafc; 
             --card: #ffffff; 
             --text: #0f172a;
             --accent: #4f46e5; 
             --accent-glow: rgba(79, 70, 229, 0.15);
             --border: #e2e8f0;
-            
-            /* High Contrast Solid Colors for Pills */
             --red-color: #ef4444;
             --yellow-color: #f59e0b;
             --green-color: #10b981;
             --blue-color: #3b82f6;
-
-            /* Soft Pastel Washes for Headers */
             --red-soft: #fef2f2;
             --yellow-soft: #fffbeb;
             --green-soft: #ecfdf5;
             --blue-soft: #eff6ff;
-            
             --pending: #f59e0b; 
-            
-            /* Unified Access Color */
             --a-color: #ca8a04; 
         }
         
@@ -92,26 +84,19 @@
         .group-label { grid-column: 1 / -1; font-size: 1.4rem; font-weight: 900; color: var(--text); border-bottom: 3px solid var(--text); padding-bottom: 10px; margin: 40px 0 20px; letter-spacing: 1px; }
         .entry-group-label { font-size: 1.1rem; font-weight: 900; color: #64748b; margin: 30px 0 15px; letter-spacing: 1px; text-align: left; }
 
-        /* WIPE MODAL STYLES */
         .modal-overlay { position: fixed; inset: 0; background: rgba(15, 23, 42, 0.85); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); z-index: 9999; display: none; align-items: center; justify-content: center; }
         .modal-content { background: var(--card); border-radius: 24px; padding: 40px; width: 90%; max-width: 550px; text-align: center; box-shadow: 0 25px 50px rgba(0,0,0,0.25); }
         
-        /* Printer Rules (Optimized for Paper) */
         @media print { 
             * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
             .no-print { display: none !important; } 
-            
             body.printing-rosters > :not(#rosterSection) { display: none !important; }
             #rosterSection { display: block !important; }
-            
             body.printing-registration > :not(#registrationPrintSection) { display: none !important; }
             #registrationPrintSection { display: block !important; }
-            
             body.printing-dispatch #dispatchSection { display: block !important; }
             body.printing-dispatch > :not(#dispatchSection) { display: none !important; }
-            
             body { background: white !important; margin: 0; color: black !important; }
-            
             .zone-card { border: 3px solid black !important; background: white !important; color: black !important; box-shadow: none !important; }
             .zone-header { background: white !important; border-bottom: 2px solid black !important; color: black !important; }
             .res-row { border-bottom: 1px solid #ccc !important; }
@@ -119,19 +104,14 @@
             .peg-num { color: black !important; }
             .a-name { color: black !important; font-weight: 900 !important; }
             .a-tag { color: black !important; border: 1px solid black !important; padding: 2px 4px !important; border-radius: 4px !important; }
-            
-            /* Clean Table Prints */
             .print-table { width: 100%; border-collapse: collapse; margin-top: 20px; }
             .print-table th { border: 2px solid black; padding: 12px; font-size: 14px; font-weight: 900; text-align: left; background: #f8fafc; }
             .print-table td { border: 1px solid black; padding: 10px 12px; font-size: 14px; font-weight: 800; }
             .print-checkbox { display: inline-block; width: 20px; height: 20px; border: 2px solid black; margin: 0 auto; }
-            
-            /* Dispatch Slips */
             .dispatch-slip { padding: 30px; border: 4px solid black; margin-bottom: 30px; page-break-inside: avoid; }
             .dispatch-header { border-bottom: 4px solid black; padding-bottom: 10px; margin-bottom: 20px; }
             .dispatch-header h1 { font-size: 24px; margin: 0; }
             .dispatch-header h2 { font-size: 18px; margin: 5px 0 0 0; }
-            
             .roster-page { page-break-after: always; padding: 20px; }
             .roster-header { border-bottom: 4px solid black; margin-bottom: 20px; padding-bottom: 10px; text-align: center; }
         }
@@ -141,7 +121,7 @@
 
 <div class="fixed-header no-print">
     <div class="header-content">
-        <div class="brand-name">ZONEDRAW <span id="vTag" class="v-tag">v12.03.00</span></div>
+        <div class="brand-name">ZONEDRAW <span id="vTag" class="v-tag">v12.03.01</span></div>
         <div style="display:flex; align-items:center; gap:15px;">
             <span style="font-size: 10px; color: #64748b; max-width: 150px; text-align: right; line-height: 1.2; font-weight: 700; text-transform: none;">Only use this to clear the app for a new competition. This cannot be undone.</span>
             <button class="btn-action" style="background:#ef4444; border-color:#ef4444; padding: 10px 18px; font-size: 12px;" onclick="showWipeModal()" tabindex="-1">⚠️ WIPE ENTIRE BOARD</button>
@@ -152,7 +132,7 @@
 <div id="entrySection" class="no-print">
     <div class="control-panel" id="setupPanel">
         <label style="font-size: 12px; opacity: 0.6; letter-spacing: 1px; font-weight: 900;">COMPETITION IDENTITY</label>
-        <input type="text" id="matchTitle" style="font-size:24px; text-align:center; margin-top:10px; border-width: 3px;" placeholder="e.g. SCOTTISH SHORE CHAMPIONSHIP 2026" onblur="persistState()">
+        <input type="text" id="matchTitle" style="font-size:24px; text-align:center; margin-top:10px; border-width: 3px;" placeholder="e.g. SCOTTISH SHORE CHAMPIONSHIP 2026" oninput="persistState()">
         
         <div style="margin-top:30px; display:flex; flex-direction:column; align-items:center; gap:10px;">
             <button class="btn-action-outline" onclick="let p = document.getElementById('accPanelWrapper'); p.style.display = p.style.display === 'none' ? 'flex' : 'none';" type="button" tabindex="-1">⚙️ CONFIGURE ACCESSIBILITY OPTIONS</button>
@@ -162,18 +142,18 @@
                 <div style="display:flex; justify-content:center; gap:10px; width:100%;">
                     <div id="mobModeA" class="dt-opt active" style="flex:1; flex-direction:column; border-width: 2px;" onclick="setMobilityMode('A')">
                         <span>DISTRIBUTED PEGS</span>
-                        <span style="font-size:9px; opacity:0.7; margin-top:5px; text-transform:none;">A-Anglers rotate zones on Day 2 to predefined safe pegs.</span>
+                        <span style="font-size:9px; opacity:0.7; margin-top:5px; text-transform:none;">A-Anglers rotate zones on Day 2.</span>
                     </div>
                     <div id="mobModeB" class="dt-opt" style="flex:1; flex-direction:column; border-width: 2px;" onclick="setMobilityMode('B')">
                         <span>STATIC ZONE ANCHOR</span>
-                        <span style="font-size:9px; opacity:0.7; margin-top:5px; text-transform:none;">A-Anglers are pinned to a single specific zone all weekend.</span>
+                        <span style="font-size:9px; opacity:0.7; margin-top:5px; text-transform:none;">A-Anglers pinned to one zone.</span>
                     </div>
                 </div>
 
                 <div id="modeASetup" style="display:flex; flex-direction:column; gap:10px; width:100%; margin-top:10px;">
-                    <input type="text" id="accPegs1_a" style="border-color:var(--a-color); border-width: 2px;" placeholder="DAY 1 SAFE PEGS (e.g. 1, 2, 3)" onblur="formatPegs(this)">
+                    <input type="text" id="accPegs1_a" style="border-color:var(--a-color); border-width: 2px;" placeholder="DAY 1 SAFE PEGS" oninput="formatPegs(this)">
                     <div id="day2PegsContainer" style="display:none; width:100%;">
-                        <input type="text" id="accPegs2_a" style="border-color:var(--a-color); border-width: 2px;" placeholder="DAY 2 SAFE PEGS (e.g. 1, 2, 3)" onblur="formatPegs(this)">
+                        <input type="text" id="accPegs2_a" style="border-color:var(--a-color); border-width: 2px;" placeholder="DAY 2 SAFE PEGS" oninput="formatPegs(this)">
                     </div>
                 </div>
 
@@ -184,7 +164,7 @@
                         <option value="GREEN">ANCHOR ZONE: GREEN</option>
                         <option value="BLUE">ANCHOR ZONE: BLUE</option>
                     </select>
-                    <input type="text" id="accPegsAnchor" style="border-color:var(--a-color); border-width: 2px;" placeholder="ANCHOR ZONE SAFE PEGS (e.g. 1, 2)" onblur="formatPegs(this)">
+                    <input type="text" id="accPegsAnchor" style="border-color:var(--a-color); border-width: 2px;" placeholder="ANCHOR SAFE PEGS" oninput="formatPegs(this)">
                 </div>
             </div>
         </div>
@@ -197,8 +177,8 @@
                     <div id="dayOpt2" class="dt-opt active" onclick="setDays(2)">2 DAYS</div>
                 </div>
             </div>
-            <div><label style="display:block; margin-bottom:8px; font-size: 11px; font-weight: 900; color: #64748b;">TEAMS</label><input type="number" id="initTeams" value="0" style="width:100px; text-align:center; font-size: 18px;"></div>
-            <div><label style="display:block; margin-bottom:8px; font-size: 11px; font-weight: 900; color: #64748b;">SOLOS</label><input type="number" id="initIndivs" value="0" style="width:100px; text-align:center; font-size: 18px;"></div>
+            <div><label style="display:block; margin-bottom:8px; font-size: 11px; font-weight: 900; color: #64748b;">TEAMS</label><input type="number" id="initTeams" value="0" style="width:100px; text-align:center; font-size: 18px;" oninput="updateTicker()"></div>
+            <div><label style="display:block; margin-bottom:8px; font-size: 11px; font-weight: 900; color: #64748b;">SOLOS</label><input type="number" id="initIndivs" value="0" style="width:100px; text-align:center; font-size: 18px;" oninput="updateTicker()"></div>
         </div>
 
         <button id="initMatchBtn" class="btn-action" style="margin-top:45px; font-size: 16px; padding: 20px 40px;" onclick="bulkInit()">INITIALIZE ENTRY SHEET</button>
@@ -206,7 +186,7 @@
     
     <div id="entryList">
         <div id="entryTeamsContainer" style="display:none;">
-            <div class="entry-group-label">TEAM MODULES (4 ANGLERS)</div>
+            <div class="entry-group-label">TEAM MODULES</div>
             <div id="entryTeamsBucket" class="bucket-grid"></div>
         </div>
         <div id="entrySolosContainer" style="display:none;">
@@ -217,82 +197,60 @@
 </div>
 
 <div id="resultsSection">
-    <div class="no-print" data-html2canvas-ignore="true" style="display:flex; gap:12px; justify-content:center; margin-bottom:30px; flex-wrap:wrap;">
+    <div class="no-print" style="display:flex; gap:12px; justify-content:center; margin-bottom:30px; flex-wrap:wrap;">
         <button onclick="handleAmend()" class="btn-action-outline" style="border-color:#f59e0b; color:#f59e0b;">AMEND ANGLERS</button>
         <button onclick="toggleSwapMode()" id="swapBtn" class="btn-action-outline" style="border-color:#8b5cf6; color:#8b5cf6;">SWAP PEGS</button>
-        <button onclick="toggleExportMenu()" id="exportToggleBtn" class="btn-action" style="background:#0f172a; border-color:#0f172a;">🖨️ OUTPUT & PRINT MENU</button>
+        <button onclick="toggleExportMenu()" id="exportToggleBtn" class="btn-action" style="background:#0f172a; border-color:#0f172a;">🖨️ OUTPUT MENU</button>
     </div>
-    
-    <div id="exportMenu" class="no-print" data-html2canvas-ignore="true" style="display:none; gap:12px; justify-content:center; margin-bottom:30px; padding:20px; background:white; border-radius:16px; flex-wrap:wrap; border:3px solid var(--border);">
-        <button onclick="generateRegistrationSheet()" class="btn-action" style="background:#10b981; border-color:#10b981; font-size:12px;">🖨️ PRINT REGISTRATION SHEET</button>
-        <button onclick="shareDraw()" class="btn-action" style="background:#64748b; border-color:#64748b; font-size:12px;">SHARE DIGITAL DRAW (PDF)</button>
-        <button onclick="generateDispatchSlips()" class="btn-action" style="background:#0ea5e9; border-color:#0ea5e9; font-size:12px;">PRINT TEAM DISPATCH SLIPS</button>
-        <button onclick="printZoneRosters()" class="btn-action" style="background:#0ea5e9; border-color:#0ea5e9; font-size:12px;">PRINT ZONE ROSTERS</button>
-        <button onclick="exportToCSV()" class="btn-action-outline" style="border-color:#10b981; color:#10b981; font-size:12px;">EXCEL: COMPETITOR LIST</button>
-        <button onclick="exportAccountingCSV()" class="btn-action-outline" style="border-color:#10b981; color:#10b981; font-size:12px;">EXCEL: ACCOUNTING</button>
+    <div id="exportMenu" class="no-print" style="display:none; gap:12px; justify-content:center; margin-bottom:30px; padding:20px; background:white; border-radius:16px; flex-wrap:wrap; border:3px solid var(--border);">
+        <button onclick="generateRegistrationSheet()" class="btn-action" style="background:#10b981;">PRINT REGISTRATION</button>
+        <button onclick="shareDraw()" class="btn-action" style="background:#64748b;">SHARE PDF</button>
+        <button onclick="generateDispatchSlips()" class="btn-action" style="background:#0ea5e9;">TEAM SLIPS</button>
+        <button onclick="printZoneRosters()" class="btn-action" style="background:#0ea5e9;">ZONE ROSTERS</button>
+        <button onclick="exportToCSV()" class="btn-action-outline" style="border-color:#10b981; color:#10b981;">CSV LIST</button>
+        <button onclick="exportAccountingCSV()" class="btn-action-outline" style="border-color:#10b981; color:#10b981;">CSV ACCOUNTING</button>
     </div>
-    
-    <div id="swapPrompt" class="no-print" data-html2canvas-ignore="true" style="display:none; text-align:center; background:#8b5cf6; color:white; padding:15px; font-weight:900; letter-spacing:2px; margin-bottom:20px; border-radius:12px; animation: pulse 2s infinite;">
-        SWAP MODE ACTIVE: SELECT FIRST ANGLER
-    </div>
-
-    <h1 id="resTitle" style="text-align:center; font-size:2.5rem; margin-bottom:40px; letter-spacing:1px; color: black;"></h1>
-    
+    <div id="swapPrompt" class="no-print" style="display:none; text-align:center; background:#8b5cf6; color:white; padding:15px; font-weight:900; margin-bottom:20px; border-radius:12px;">SWAP MODE ACTIVE</div>
+    <h1 id="resTitle" style="text-align:center; font-size:2.5rem; margin-bottom:40px; color: black;"></h1>
     <div id="resultsArea">
-        <div id="teamsBucketContainer" style="display:none;">
-            <div class="group-label">TEAM STANDINGS</div>
-            <div id="teamsBucket" class="bucket-grid"></div>
-        </div>
-        
-        <div id="solosBucketContainer" style="display:none; margin-top:50px;">
-            <div class="group-label">SOLO COMPETITORS</div>
-            <div id="solosBucket" class="bucket-grid"></div>
-        </div>
+        <div id="teamsBucketContainer" style="display:none;"><div class="group-label">TEAMS</div><div id="teamsBucket" class="bucket-grid"></div></div>
+        <div id="solosBucketContainer" style="display:none; margin-top:50px;"><div class="group-label">SOLOS</div><div id="solosBucket" class="bucket-grid"></div></div>
     </div>
 </div>
 
 <div id="registrationPrintSection" class="no-print"></div>
-
 <div id="dispatchSection" class="no-print"></div>
-
 <div id="rosterSection" class="no-print"></div>
 
 <div id="commandBar" class="command-bar no-print">
     <div style="display:flex; gap:30px; align-items:center;">
-        <div style="display:flex; flex-direction:column; margin-right:20px;"><span style="font-size:11px; font-weight:900; color:#64748b;">TOTAL ANGLERS</span><span id="tkAnglers" style="font-size:28px; font-weight:900; color:var(--text);">0</span></div>
+        <div style="display:flex; flex-direction:column;"><span style="font-size:11px; font-weight:900; color:#64748b;">ANGLERS</span><span id="tkAnglers" style="font-size:28px; font-weight:900; color:var(--text);">0</span></div>
         <div id="amendTools" style="display:none; gap:10px;">
-            <button class="btn-action-outline" onclick="addNewStateItem(true)" tabindex="-1">+ ADD TEAM</button>
-            <button class="btn-action-outline" onclick="addNewStateItem(false)" tabindex="-1">+ ADD SOLO</button>
+            <button class="btn-action-outline" onclick="addNewStateItem(true)">+ TEAM</button>
+            <button class="btn-action-outline" onclick="addNewStateItem(false)">+ SOLO</button>
         </div>
     </div>
     <div id="actionBtnArea" style="display:flex; flex-direction:column; align-items:flex-end;">
-        <div id="teamClashWarning" style="display:none; text-align:right; margin-bottom:8px;">
-            <div style="color:#ef4444; font-size:12px; font-weight:900;">⚠️ IMPOSSIBLE MATH: MAX 1 A-ANGLER PER TEAM IN STATIC MODE</div>
-            <span style="font-size:10px; font-weight:700; color: #64748b;">You must UNLINK the conflicting team into Solos to proceed.</span>
-        </div>
+        <div id="teamClashWarning" style="display:none; color:#ef4444; font-size:12px; font-weight:900; margin-bottom:8px;">⚠️ STATIC MODE CLASH: MAX 1 [A] PER TEAM</div>
         <div style="display:flex; gap:15px;">
-            <button class="btn-action-outline" id="mergeBtn" style="display:none; border-color:#10b981; color:#10b981;" onclick="mergeSelected()" tabindex="-1">LINK TO TEAM (4)</button>
-            <button class="btn-action" id="mainActionBtn" onclick="initiateShuffle()" tabindex="-1" style="font-size: 16px; padding: 20px 40px; box-shadow: 0 6px 0 #3730a3;">PROCESS & RECALCULATE DRAW</button>
+            <button class="btn-action-outline" id="mergeBtn" style="display:none; border-color:#10b981; color:#10b981;" onclick="mergeSelected()">LINK TEAM (4)</button>
+            <button class="btn-action" id="mainActionBtn" onclick="initiateShuffle()" style="font-size: 16px; padding: 20px 40px;">PROCESS DRAW</button>
         </div>
     </div>
 </div>
 
 <div id="shuffleOverlay" style="position:fixed; inset:0; background:rgba(255, 255, 255, 0.98); z-index:9000; display:none; flex-direction:column; align-items:center; justify-content:center;">
-    <h2 style="font-size:2.5rem; font-weight:900; letter-spacing:5px; color:var(--text);">EXECUTING PHASED ENGINE...</h2>
+    <h2 style="font-size:2.5rem; font-weight:900; color:var(--text);">EXECUTING...</h2>
     <div style="width:400px; height:8px; background:#f1f5f9; border-radius:10px; overflow:hidden; margin-top:30px;"><div id="pBar" style="height:100%; width:0%; background:var(--accent); transition:0.1s;"></div></div>
 </div>
 
-<div id="wipeModal" class="modal-overlay no-print" data-html2canvas-ignore="true">
+<div id="wipeModal" class="modal-overlay no-print">
     <div class="modal-content">
-        <h2 style="color: #ef4444; font-size: 28px; margin-top: 0; letter-spacing: 1px;">⚠️ DANGER ZONE</h2>
-        <p style="font-size: 16px; font-weight: 700; color: var(--text); margin-bottom: 30px; line-height: 1.5; text-transform: none;">
-            You are about to permanently delete all anglers, teams, and draw data. 
-            <br><br>
-            If you proceed, an emergency text backup will be automatically downloaded to your device.
-        </p>
+        <h2 style="color: #ef4444; font-size: 28px; margin-top: 0;">⚠️ DANGER ZONE</h2>
+        <p style="font-size: 16px; font-weight: 700; margin-bottom: 30px; text-transform: none;">Permanently delete everything? A backup text file will be downloaded.</p>
         <div style="display: flex; flex-direction: column; gap: 15px;">
-            <button onclick="closeWipeModal()" class="btn-action" style="background: var(--accent); border-color: var(--accent);">RETURN TO CURRENT DRAW</button>
-            <button onclick="executeNuclearWipe()" class="btn-action-outline" style="color: #ef4444; border-color: #ef4444; background: white;">YES, WIPE AND RESTART</button>
+            <button onclick="closeWipeModal()" class="btn-action">RETURN TO CURRENT DRAW</button>
+            <button onclick="executeNuclearWipe()" class="btn-action-outline" style="color: #ef4444; border-color: #ef4444;">YES, WIPE AND RESTART</button>
         </div>
     </div>
 </div>
@@ -307,7 +265,7 @@
     let currentZoneSize = 0; 
     let isSwapMode = false;
     let swapObj1 = null;
-    let mobilityMode = 'A'; // 'A' = Distributed, 'B' = Static Anchor
+    let mobilityMode = 'A'; 
 
     const genId = () => 'id_' + Math.random().toString(36).substr(2, 9);
 
@@ -328,56 +286,21 @@
         persistState();
     }
 
-    function showWipeModal() {
-        document.getElementById('wipeModal').style.display = 'flex';
-    }
-
-    function closeWipeModal() {
-        document.getElementById('wipeModal').style.display = 'none';
-    }
+    function showWipeModal() { document.getElementById('wipeModal').style.display = 'flex'; }
+    function closeWipeModal() { document.getElementById('wipeModal').style.display = 'none'; }
 
     function executeNuclearWipe() {
-        // Step 1: Generate and Download the Emergency Text Backup
-        let txt = "ZONEDRAW EMERGENCY BACKUP\n";
-        txt += "=========================\n";
-        txt += "MATCH: " + (document.getElementById('matchTitle').value || "UNNAMED MATCH") + "\n";
-        txt += "DATE: " + new Date().toLocaleString() + "\n\n";
-        
-        const teams = appState.filter(e => e.isTeam);
-        if(teams.length > 0) {
-            txt += "--- TEAM ROSTERS ---\n";
-            teams.forEach(t => {
-                txt += "TEAM: " + (t.tName || "UNNAMED") + "\n";
-                t.anglers.forEach(a => {
-                    if(a.name) {
-                        let mob = a.mobility ? '[A]' : '';
-                        txt += `  - ${a.name} ${mob} | D1: ${a.z1 || '-'} ${a.p1 || '-'} | D2: ${a.z2 || '-'} ${a.p2 || '-'}\n`;
-                    }
-                });
-                txt += "\n";
-            });
-        }
-        
-        const solos = appState.filter(e => !e.isTeam);
-        if(solos.length > 0) {
-            txt += "--- SOLO COMPETITORS ---\n";
-            solos.forEach(s => {
-                let a = s.anglers[0];
-                if(a && a.name) {
-                    let mob = a.mobility ? '[A]' : '';
-                    txt += `${a.name} ${mob} | D1: ${a.z1 || '-'} ${a.p1 || '-'} | D2: ${a.z2 || '-'} ${a.p2 || '-'}\n`;
-                }
-            });
-        }
-        
+        let txt = "ZONEDRAW BACKUP - " + new Date().toLocaleString() + "\n";
+        appState.forEach(e => {
+            txt += (e.isTeam ? "TEAM: " : "SOLO: ") + (e.tName || "UNNAMED") + "\n";
+            e.anglers.forEach(a => { if(a.name) txt += `  - ${a.name} | D1: ${a.z1 || '-'} ${a.p1 || '-'} | D2: ${a.z2 || '-'} ${a.p2 || '-'}\n`; });
+            txt += "\n";
+        });
         const blob = new Blob([txt], {type: 'text/plain'});
         const lnk = document.createElement('a'); 
         lnk.href = URL.createObjectURL(blob); 
-        let matchName = document.getElementById('matchTitle').value.trim() || "ZONEDRAW_BACKUP";
-        lnk.download = `${matchName.replace(/[^a-z0-9]/gi, '_').toUpperCase()}_${Date.now()}.txt`; 
+        lnk.download = "ZONEDRAW_BACKUP_" + Date.now() + ".txt"; 
         lnk.click();
-
-        // Step 2: Wipe the Board
         localStorage.removeItem('zonedraw_current_state_v12');
         closeWipeModal();
         startNewDraw();
@@ -398,17 +321,11 @@
         document.getElementById('accPegs1_a').value = '';
         document.getElementById('accPegs2_a').value = '';
         document.getElementById('accPegsAnchor').value = '';
-        
         appState = []; currentZoneSize = 0;
-        setMobilityMode('A');
-        setDays(2);
-        
+        setMobilityMode('A'); setDays(2);
         document.querySelectorAll('body > div[id$="Section"]').forEach(s => s.style.display = 'none');
         document.getElementById('entrySection').style.display = 'block';
-        document.getElementById('setupPanel').style.display = 'block';
         document.getElementById('initMatchBtn').style.display = 'inline-block';
-        document.getElementById('entryTeamsContainer').style.display = 'none';
-        document.getElementById('entrySolosContainer').style.display = 'none';
         document.getElementById('commandBar').style.display = 'none';
         updateTicker();
     }
@@ -419,12 +336,9 @@
         const i = parseInt(document.getElementById('initIndivs').value) || 0;
         for(let x=0; x<t; x++) appState.push({ id: genId(), isTeam: true, tName: '', anglers: [{},{},{},{}] });
         for(let y=0; y<i; y++) appState.push({ id: genId(), isTeam: false, tName: '', anglers: [{}] });
-        
         document.getElementById('initMatchBtn').style.display = 'none';
         document.getElementById('commandBar').style.display = 'flex';
         document.getElementById('amendTools').style.display = 'flex'; 
-        document.getElementById('actionBtnArea').style.display = 'flex';
-
         renderStateToScreen();
     }
 
@@ -438,12 +352,10 @@
     function toggleMobility(eId, aIdx) {
         syncScreenToState();
         const entry = appState.find(e => e.id === eId);
-        if (entry) {
-            entry.anglers[aIdx].mobility = entry.anglers[aIdx].mobility ? 0 : 1;
-            renderStateToScreen();
-        }
+        if (entry) { entry.anglers[aIdx].mobility = entry.anglers[aIdx].mobility ? 0 : 1; renderStateToScreen(); }
     }
 
+    // BULLETPROOF PERSISTENCE TRIGGERS
     function syncScreenToState() {
         document.querySelectorAll('#entrySection .zone-card').forEach(card => {
             const id = card.dataset.id;
@@ -460,444 +372,10 @@
         persistState();
     }
 
-    function checkTeamClash() {
-        let hasClash = false;
-        if (mobilityMode === 'B') {
-            appState.forEach(e => {
-                if (e.isTeam) {
-                    let mCount = e.anglers.filter(a => a.mobility > 0).length;
-                    if (mCount > 1) hasClash = true;
-                }
-            });
-        }
-        
-        let drawBtn = document.getElementById('mainActionBtn');
-        let warnMsg = document.getElementById('teamClashWarning');
-
-        if (drawBtn && warnMsg) {
-            if (hasClash) {
-                warnMsg.style.display = 'block';
-                drawBtn.disabled = true;
-                drawBtn.style.opacity = '0.4';
-                drawBtn.style.pointerEvents = 'none';
-            } else {
-                drawBtn.disabled = false;
-                drawBtn.style.opacity = '1';
-                drawBtn.style.pointerEvents = 'auto';
-                warnMsg.style.display = 'none';
-            }
-        }
-    }
-
-    function renderStateToScreen() {
-        const tb = document.getElementById('entryTeamsBucket'); tb.innerHTML = '';
-        const sb = document.getElementById('entrySolosBucket'); sb.innerHTML = '';
-        let hasTeams = false, hasSolos = false;
-        
-        appState.forEach(entry => {
-            const isFrozen = entry.anglers.some(a => a.z1);
-            
-            const div = document.createElement('div');
-            div.className = 'zone-card' + (!entry.isTeam ? ' solo-card' : '');
-            div.dataset.id = entry.id;
-            
-            let h = `<div class="zone-header"><span>${entry.isTeam ? 'TEAM MODULE' : 'SOLO MODULE'}</span>`;
-            h += `<div style="display:flex; align-items:center;">`;
-            
-            if(!entry.isTeam) h += `<input type="checkbox" class="merge-cb" onchange="checkMerge()" tabindex="-1" style="width:20px; height:20px; cursor:pointer; accent-color:var(--accent);">`;
-
-            if(entry.isTeam) {
-                h += `<button class="btn-tool" onclick="breakStateTeam('${entry.id}')" style="margin-left:12px;" tabindex="-1">🔗 UNLINK</button>`;
-            } else {
-                h += `<button onclick="deleteStateEntry('${entry.id}')" style="background:none; border:none; color:#ef4444; font-weight:900; font-size:24px; cursor:pointer; margin-left:12px; line-height:1;" tabindex="-1">×</button>`;
-            }
-            h += `</div></div>`;
-
-            if(entry.isTeam) {
-                h += `<label style="font-size:10px; opacity:0.6; font-weight:900;">TEAM NAME</label><input type="text" class="t-name" value="${entry.tName}" style="width:100%; margin-bottom:15px; font-size:15px;">`;
-                for(let i=0; i<4; i++) {
-                    let mBg = entry.anglers[i].mobility ? 'var(--a-color)' : 'white';
-                    let mColor = entry.anglers[i].mobility ? 'white' : 'var(--text)';
-                    let mBorder = entry.anglers[i].mobility ? 'var(--a-color)' : 'var(--border)';
-
-                    h += `<div style="display:flex; align-items:center; gap:8px; margin-bottom:8px;">
-                            <input type="text" class="a-name-input" value="${entry.anglers[i].name || ''}" placeholder="ANGLER ${i+1}" style="width:100%; margin:0; font-size:14px; padding: 10px;">
-                            <button class="btn-tool" onclick="toggleMobility('${entry.id}', ${i})" style="padding:10px 14px; font-weight:900; font-size: 12px; background:${mBg}; color:${mColor}; border: 2px solid ${mBorder};" tabindex="-1">[A]</button>
-                          </div>`;
-                }
-            } else {
-                h += `<label style="font-size:10px; opacity:0.6; font-weight:900;">SOLO NAME</label>`;
-                let mBg = entry.anglers[0].mobility ? 'var(--a-color)' : 'white';
-                let mColor = entry.anglers[0].mobility ? 'white' : 'var(--text)';
-                let mBorder = entry.anglers[0].mobility ? 'var(--a-color)' : 'var(--border)';
-
-                h += `<div style="display:flex; align-items:center; gap:8px; margin-top:5px;">
-                        <input type="text" class="a-name-input" value="${entry.anglers[0].name || ''}" style="width:100%; margin:0; font-size:14px; padding: 10px;">
-                        <button class="btn-tool" onclick="toggleMobility('${entry.id}', 0)" style="padding:10px 14px; font-weight:900; font-size: 12px; background:${mBg}; color:${mColor}; border: 2px solid ${mBorder};" tabindex="-1">[A]</button>
-                      </div>`;
-            }
-            div.innerHTML = h; 
-            
-            if (entry.isTeam) { tb.appendChild(div); hasTeams = true; }
-            else { sb.appendChild(div); hasSolos = true; }
-            
-            div.querySelectorAll('.a-name-input').forEach(inp => inp.addEventListener('input', updateTicker));
-        });
-        
-        document.getElementById('entryTeamsContainer').style.display = hasTeams ? 'block' : 'none';
-        document.getElementById('entrySolosContainer').style.display = hasSolos ? 'block' : 'none';
-        
-        updateTicker();
-        checkMerge();
-        checkTeamClash();
-    }
-
-    function deleteStateEntry(id) {
-        syncScreenToState();
-        const idx = appState.findIndex(e => e.id === id);
-        if(idx === -1) return;
-        appState.splice(idx, 1);
-        renderStateToScreen();
-        persistState(); 
-    }
-
-    function breakStateTeam(id) {
-        syncScreenToState();
-        const idx = appState.findIndex(e => e.id === id);
-        if(idx === -1) return;
-        
-        const team = appState.splice(idx, 1)[0];
-        team.anglers.forEach(a => {
-            appState.push({ id: genId(), isTeam: false, tName: '', anglers: [{...a}] });
-        });
-        
-        renderStateToScreen();
-        persistState(); 
-    }
-
-    function mergeSelected() {
-        syncScreenToState();
-        const sel = document.querySelectorAll('.merge-cb:checked');
-        if(sel.length !== 4) return;
-        const ids = Array.from(sel).map(cb => cb.closest('.zone-card').dataset.id);
-        
-        const newTeamAnglers = [];
-        ids.forEach(id => {
-            const idx = appState.findIndex(e => e.id === id);
-            if(idx > -1) {
-                const entry = appState.splice(idx, 1)[0]; 
-                newTeamAnglers.push(entry.anglers[0]); 
-            }
-        });
-        
-        appState.push({ id: genId(), isTeam: true, tName: '', anglers: newTeamAnglers });
-        renderStateToScreen();
-        persistState(); 
-    }
-
-    function checkMerge() {
-        const count = document.querySelectorAll('.merge-cb:checked').length;
-        document.getElementById('mergeBtn').style.display = (count === 4) ? 'inline-block' : 'none';
-    }
-
-    function updateTicker() {
-        let ent = 0;
-        document.querySelectorAll('.a-name-input').forEach(i => { if(i.value.trim()) ent++; });
-        document.getElementById('tkAnglers').innerText = ent;
-    }
-
-    // THE MASTER DRAW BUTTON (FULL WIPE & REDRAW)
-    function initiateShuffle() {
-        syncScreenToState();
-        
-        appState = appState.filter(e => {
-            if (e.isTeam) return e.anglers.some(a => a.name.trim() !== '') || e.tName.trim() !== '';
-            return e.anglers[0].name.trim() !== '';
-        });
-
-        // 100% WIPE OF ALL PEGS
-        appState.forEach(entry => {
-            entry.anglers.forEach(a => {
-                a.z1 = undefined; a.p1 = undefined; a.z2 = undefined; a.p2 = undefined;
-            });
-        });
-
-        renderStateToScreen();
-
-        const overlay = document.getElementById('shuffleOverlay'); 
-        const pBar = document.getElementById('pBar');
-        overlay.style.display = 'flex'; let p = 0;
-        const inv = setInterval(() => {
-            p += 5; pBar.style.width = p + '%';
-            if(p >= 100) { clearInterval(inv); overlay.style.display = 'none'; runDraw(); }
-        }, 30);
-    }
-
-    function runDraw() {
-        // The 3-Phase Engine Sort: [A] Teams -> Standard Teams -> Solos
-        appState.sort((a, b) => {
-            let getPriority = (entry) => {
-                let hasA = entry.anglers.some(ang => ang.mobility > 0);
-                if (entry.isTeam && hasA) return 3; // Phase 1
-                if (entry.isTeam && !hasA) return 2; // Phase 2
-                return 1; // Phase 3 (Solos, with or without A)
-            };
-            return getPriority(b) - getPriority(a);
-        });
-
-        const sPegs1_A = (document.getElementById('accPegs1_a').value || '').match(/\d+/g)?.map(Number) || [];
-        const sPegs2_A = matchDays == 2 ? ((document.getElementById('accPegs2_a').value || '').match(/\d+/g)?.map(Number) || []) : [];
-        const sPegsAnchor = (document.getElementById('accPegsAnchor').value || '').match(/\d+/g)?.map(Number) || [];
-        const anchorZone = document.getElementById('anchorZoneSelect').value;
-
-        let totalCompetitors = 0;
-        appState.forEach(entry => { totalCompetitors += entry.isTeam ? 4 : 1; });
-
-        let zoneSize = Math.max(Math.ceil(totalCompetitors / 4), 1);
-        currentZoneSize = zoneSize;
-
-        // Fresh Pools
-        let pools1 = zones.map((z, idx) => {
-            let p = []; for(let i = 1; i <= zoneSize; i++) p.push((idx * zoneSize) + i);
-            for (let j = p.length - 1; j > 0; j--) { const k = Math.floor(Math.random() * (j + 1)); [p[j], p[k]] = [p[k], p[j]]; }
-            return { z, p };
-        });
-
-        let pools2 = zones.map((z, idx) => {
-            let p = []; for(let i = 1; i <= zoneSize; i++) p.push((idx * zoneSize) + i);
-            for (let j = p.length - 1; j > 0; j--) { const k = Math.floor(Math.random() * (j + 1)); [p[j], p[k]] = [p[k], p[j]]; }
-            return { z, p };
-        });
-
-        const pullPeg = (zone, isDay2, isMobility) => {
-            const pools = isDay2 ? pools2 : pools1;
-            const zIdx = zones.indexOf(zone);
-
-            if (mobilityMode === 'B' && isMobility && zone === anchorZone) {
-                const sIdx = pools[zIdx].p.findIndex(peg => sPegsAnchor.includes(peg));
-                if (sIdx !== -1) return pools[zIdx].p.splice(sIdx, 1)[0];
-            } else if (mobilityMode === 'A') {
-                const safeList = isDay2 ? sPegs2_A : sPegs1_A;
-                if (isMobility) {
-                    const sIdx = pools[zIdx].p.findIndex(peg => safeList.includes(peg));
-                    if (sIdx !== -1) return pools[zIdx].p.splice(sIdx, 1)[0];
-                }
-                if (!isMobility && safeList.length > 0) {
-                    const nonSafeIdx = pools[zIdx].p.findIndex(peg => !safeList.includes(peg));
-                    if (nonSafeIdx !== -1) return pools[zIdx].p.splice(nonSafeIdx, 1)[0];
-                }
-            } else {
-                if (!isMobility && sPegsAnchor.length > 0 && zone === anchorZone) {
-                     const nonSafeIdx = pools[zIdx].p.findIndex(peg => !sPegsAnchor.includes(peg));
-                     if (nonSafeIdx !== -1) return pools[zIdx].p.splice(nonSafeIdx, 1)[0];
-                }
-            }
-            return pools[zIdx].p.pop() || 99; // Fallback
-        };
-
-        const checkSafeModeA = (z, day, isMobility) => {
-            if (!isMobility) return true;
-            let pPool = day === 1 ? pools1[zones.indexOf(z)].p : pools2[zones.indexOf(z)].p;
-            let safeList = day === 1 ? sPegs1_A : sPegs2_A;
-            return pPool.some(p => safeList.includes(p));
-        };
-
-        appState.forEach(entry => {
-            let drawOrder = entry.anglers.map((a, i) => ({ a, i }));
-            drawOrder.sort((x, y) => (y.a.mobility || 0) - (x.a.mobility || 0));
-
-            if (entry.isTeam) {
-                let hasM = entry.anglers.some(a => a.mobility > 0);
-                
-                if (mobilityMode === 'B' && hasM) {
-                    // PHASE 1 (MODE B): STATIC ANCHOR DERANGEMENT
-                    let d1Zones = new Array(4);
-                    let d2Zones = new Array(4);
-                    let tempPools1 = pools1.map(p => p.p.length);
-                    let tempPools2 = pools2.map(p => p.p.length);
-
-                    for(let i=0; i<4; i++) {
-                        if(entry.anglers[i].mobility) {
-                            d1Zones[i] = anchorZone; d2Zones[i] = anchorZone;
-                            tempPools1[zones.indexOf(anchorZone)]--; tempPools2[zones.indexOf(anchorZone)]--;
-                        }
-                    }
-
-                    for(let i=0; i<4; i++) {
-                        if(!entry.anglers[i].mobility) {
-                            let valid = zones.map((z, idx) => ({z, count: tempPools1[idx]})).filter(v => v.z !== anchorZone && !d1Zones.includes(v.z) && v.count > 0);
-                            if (valid.length === 0) valid = zones.map((z, idx) => ({z, count: tempPools1[idx]})).filter(v => v.z !== anchorZone && v.count > 0);
-                            if (valid.length > 0) {
-                                valid.sort((a,b) => b.count - a.count);
-                                d1Zones[i] = valid[0].z; tempPools1[zones.indexOf(valid[0].z)]--;
-                            } else {
-                                d1Zones[i] = zones.find(z => z !== anchorZone) || zones[0];
-                            }
-                        }
-                    }
-
-                    let standardIndices = []; let standardZonesD1 = [];
-                    for(let i=0; i<4; i++) {
-                        if(!entry.anglers[i].mobility) { standardIndices.push(i); standardZonesD1.push(d1Zones[i]); }
-                    }
-
-                    if (standardIndices.length === 3) {
-                        let shifts = [[1, 2, 0], [2, 0, 1]];
-                        let chosenShift = shifts[Math.floor(Math.random() * shifts.length)];
-                        for(let k=0; k<3; k++) {
-                            let targetZ = standardZonesD1[chosenShift[k]];
-                            d2Zones[standardIndices[k]] = targetZ; tempPools2[zones.indexOf(targetZ)]--;
-                        }
-                    } else if (standardIndices.length === 2) {
-                        d2Zones[standardIndices[0]] = standardZonesD1[1]; d2Zones[standardIndices[1]] = standardZonesD1[0];
-                        tempPools2[zones.indexOf(standardZonesD1[1])]--; tempPools2[zones.indexOf(standardZonesD1[0])]--;
-                    } else {
-                         for(let k=0; k<standardIndices.length; k++) {
-                             let idx = standardIndices[k]; let z1 = d1Zones[idx];
-                             let valid = zones.map((z, i) => ({z, count: tempPools2[i]})).filter(v => v.z !== z1 && v.z !== anchorZone && !d2Zones.includes(v.z) && v.count > 0);
-                             if (valid.length === 0) valid = zones.map((z, i) => ({z, count: tempPools2[i]})).filter(v => v.z !== z1 && v.z !== anchorZone && v.count > 0);
-                             if (valid.length > 0) {
-                                 valid.sort((a,b) => b.count - a.count);
-                                 d2Zones[idx] = valid[0].z; tempPools2[zones.indexOf(valid[0].z)]--;
-                             } else d2Zones[idx] = zones.find(z => z !== z1 && z !== anchorZone) || zones[0];
-                         }
-                    }
-
-                    for(let i=0; i<4; i++) {
-                        let a = entry.anglers[i];
-                        a.z1 = d1Zones[i]; a.p1 = pullPeg(a.z1, false, a.mobility);
-                        a.z2 = d2Zones[i]; a.p2 = pullPeg(a.z2, true, a.mobility);
-                    }
-
-                } else if (mobilityMode === 'A' && hasM) {
-                    // PHASE 1 (MODE A): DISTRIBUTED PEG DERANGEMENT
-                    let d1Zones = [0, 1, 2, 3].map(i => zones[i]);
-                    d1Zones.sort(() => Math.random() - 0.5);
-                    let derangements = [[1, 2, 3, 0], [1, 3, 0, 2], [2, 0, 3, 1], [2, 3, 1, 0], [3, 0, 1, 2], [3, 2, 0, 1]];
-                    let shift = derangements[Math.floor(Math.random() * derangements.length)];
-                    let d2Zones = shift.map(idx => d1Zones[idx]);
-
-                    let mIdxes = entry.anglers.map((a,i) => a.mobility ? i : -1).filter(i => i !== -1);
-                    let bestCol = -1;
-                    for(let c=0; c<4; c++) {
-                        let s1 = checkSafeModeA(d1Zones[c], 1, true);
-                        let s2 = matchDays == 2 ? checkSafeModeA(d2Zones[c], 2, true) : true;
-                        if (s1 && s2) { bestCol = c; break; }
-                    }
-                    if (bestCol === -1) {
-                        for(let c=0; c<4; c++) {
-                            let s1 = checkSafeModeA(d1Zones[c], 1, true);
-                            let s2 = matchDays == 2 ? checkSafeModeA(d2Zones[c], 2, true) : false;
-                            if (s1 || s2) { bestCol = c; break; }
-                        }
-                    }
-                    
-                    let colAssignments = [0,1,2,3];
-                    if (bestCol !== -1 && mIdxes.length > 0) {
-                        let target = mIdxes[0]; 
-                        let temp = colAssignments[target];
-                        colAssignments[target] = colAssignments[bestCol];
-                        colAssignments[bestCol] = temp;
-                    }
-
-                    for(let i=0; i<4; i++) {
-                        let a = entry.anglers[i]; let c = colAssignments[i];
-                        a.z1 = d1Zones[c]; a.p1 = pullPeg(a.z1, false, a.mobility);
-                        a.z2 = d2Zones[c]; a.p2 = pullPeg(a.z2, true, a.mobility);
-                    }
-
-                } else {
-                    // PHASE 2: STANDARD TEAMS (No A Anglers)
-                    let d1Zones = []; let tempPools1 = pools1.map(p => p.p.length);
-                    for(let i=0; i<4; i++) {
-                        let zIdx = zones.findIndex(z => !d1Zones.includes(z) && tempPools1[zones.indexOf(z)] > 0);
-                        if (zIdx === -1) zIdx = tempPools1.indexOf(Math.max(...tempPools1));
-                        d1Zones.push(zones[zIdx]); tempPools1[zIdx]--;
-                    }
-
-                    let d2Zones = []; let tempPools2 = pools2.map(p => p.p.length);
-                    for(let i=0; i<4; i++) {
-                        let z1 = d1Zones[i];
-                        let zIdx = zones.findIndex(z => !d2Zones.includes(z) && z !== z1 && tempPools2[zones.indexOf(z)] > 0);
-                        if (zIdx === -1) {
-                            let validZones = zones.map((z, idx) => ({z, idx, count: tempPools2[idx]})).filter(v => v.z !== z1 && v.count > 0);
-                            if (validZones.length > 0) {
-                                validZones.sort((a,b) => b.count - a.count); zIdx = validZones[0].idx; 
-                            } else zIdx = tempPools2.indexOf(Math.max(...tempPools2));
-                        }
-                        d2Zones.push(zones[zIdx]); tempPools2[zIdx]--;
-                    }
-
-                    for(let i=0; i<4; i++) {
-                        let a = entry.anglers[i];
-                        a.z1 = d1Zones[i]; a.p1 = pullPeg(a.z1, false, 0);
-                        a.z2 = d2Zones[i]; a.p2 = pullPeg(a.z2, true, 0);
-                    }
-                }
-            } else {
-                // PHASE 3: SOLOS (The Liquid Shock Absorbers)
-                drawOrder.forEach(item => {
-                    let a = item.a;
-                    if (mobilityMode === 'B' && a.mobility) {
-                        a.z1 = anchorZone; a.p1 = pullPeg(anchorZone, false, a.mobility);
-                        a.z2 = anchorZone; a.p2 = pullPeg(anchorZone, true, a.mobility);
-                    } else {
-                        let avZ1 = zones.filter(z => pools1[zones.indexOf(z)].p.length > 0);
-                        if (avZ1.length === 0) avZ1 = zones;
-                        
-                        let rZ = -1;
-                        if (mobilityMode === 'A' && a.mobility) {
-                            let perfectZones = avZ1.filter(z => {
-                                let d1Safe = checkSafeModeA(z, 1, a.mobility);
-                                let d2Safe = matchDays == 2 ? zones.some(z2 => z2 !== z && checkSafeModeA(z2, 2, a.mobility) && pools2[zones.indexOf(z2)].p.length > 0) : true;
-                                return d1Safe && d2Safe;
-                            });
-                            if (perfectZones.length > 0) rZ = perfectZones[Math.floor(Math.random() * perfectZones.length)];
-                            else {
-                                let partialZones = avZ1.filter(z => checkSafeModeA(z, 1, a.mobility));
-                                if(partialZones.length > 0) rZ = partialZones[Math.floor(Math.random() * partialZones.length)];
-                            }
-                        }
-                        if (rZ === -1) rZ = avZ1[Math.floor(Math.random() * avZ1.length)];
-                        a.z1 = rZ; a.p1 = pullPeg(a.z1, false, a.mobility);
-                        
-                        let avZ2 = zones.filter(z => z !== a.z1 && pools2[zones.indexOf(z)].p.length > 0);
-                        if (avZ2.length === 0) avZ2 = zones.filter(z => z !== a.z1);
-                        let rZ2 = avZ2[Math.floor(Math.random() * avZ2.length)];
-                        
-                        if (mobilityMode === 'A' && a.mobility && matchDays == 2) {
-                            let safeZ2 = avZ2.filter(z => checkSafeModeA(z, 2, a.mobility));
-                            if (safeZ2.length > 0) rZ2 = safeZ2[Math.floor(Math.random() * safeZ2.length)];
-                        }
-                        a.z2 = rZ2; a.p2 = pullPeg(a.z2, true, a.mobility);
-                    }
-                });
-            }
-        });
-
-        persistState();
-        displayDraw();
-    }
-
-    function isPegSafe(p, day) {
-        if (mobilityMode === 'B') {
-            const anchorList = (document.getElementById('accPegsAnchor').value || '').match(/\d+/g)?.map(Number) || [];
-            return anchorList.includes(parseInt(p));
-        } else {
-            let sListStr = day === 1 ? (document.getElementById('accPegs1_a').value || '') : (document.getElementById('accPegs2_a').value || '');
-            let sList = sListStr.match(/\d+/g)?.map(Number) || [];
-            return sList.includes(parseInt(p));
-        }
-    }
-
-    // ALWAYS-ON SINGLE SAVE STATE
     function persistState() {
         const stateObj = { 
             title: document.getElementById('matchTitle').value || '',
-            data: appState, 
-            days: matchDays, 
-            zoneSize: currentZoneSize,
-            mobilityMode: mobilityMode,
+            data: appState, days: matchDays, zoneSize: currentZoneSize, mobilityMode: mobilityMode,
             safePegs1_a: document.getElementById('accPegs1_a').value,
             safePegs2_a: document.getElementById('accPegs2_a').value,
             safePegsAnchor: document.getElementById('accPegsAnchor').value,
@@ -906,439 +384,203 @@
         localStorage.setItem('zonedraw_current_state_v12', JSON.stringify(stateObj));
     }
 
-    function loadState() {
-        let saved = localStorage.getItem('zonedraw_current_state_v12');
-        if (saved) {
-            let entry = JSON.parse(saved);
-            document.getElementById('matchTitle').value = entry.title || '';
-            document.getElementById('accPegs1_a').value = entry.safePegs1_a || '';
-            document.getElementById('accPegs2_a').value = entry.safePegs2_a || '';
-            document.getElementById('accPegsAnchor').value = entry.safePegsAnchor || '';
-            if(entry.anchorZone) document.getElementById('anchorZoneSelect').value = entry.anchorZone;
-            
-            setMobilityMode(entry.mobilityMode || 'A');
-            setDays(entry.days || 2); 
-            currentZoneSize = entry.zoneSize || 0;
-            
-            appState = (entry.data || []).map(e => ({
-                ...e, 
-                id: e.id || genId(), 
-                anglers: (e.anglers || [{}]).map(a => ({
-                    ...a, name: a.name || '', mobility: a.mobility ? 1 : 0
-                }))
-            }));
-            
-            if (appState.some(e => e.anglers.some(a => a.z1))) {
-                displayDraw(); 
+    function renderStateToScreen() {
+        const tb = document.getElementById('entryTeamsBucket'); tb.innerHTML = '';
+        const sb = document.getElementById('entrySolosBucket'); sb.innerHTML = '';
+        appState.forEach(entry => {
+            const div = document.createElement('div');
+            div.className = 'zone-card' + (!entry.isTeam ? ' solo-card' : '');
+            div.dataset.id = entry.id;
+            let h = `<div class="zone-header"><span>${entry.isTeam ? 'TEAM' : 'SOLO'}</span><div style="display:flex; align-items:center;">`;
+            if(!entry.isTeam) h += `<input type="checkbox" class="merge-cb" onchange="checkMerge()" style="width:20px; height:20px;">`;
+            if(entry.isTeam) h += `<button class="btn-tool" onclick="breakStateTeam('${entry.id}')" style="margin-left:12px;">🔗 UNLINK</button>`;
+            else h += `<button onclick="deleteStateEntry('${entry.id}')" style="background:none; border:none; color:#ef4444; font-weight:900; font-size:24px; cursor:pointer; margin-left:12px;">×</button>`;
+            h += `</div></div>`;
+            if(entry.isTeam) {
+                h += `<label style="font-size:10px; opacity:0.6;">TEAM NAME</label><input type="text" class="t-name" value="${entry.tName}" oninput="syncScreenToState()" style="margin-bottom:15px;">`;
+                for(let i=0; i<4; i++) {
+                    let mBg = entry.anglers[i].mobility ? 'var(--a-color)' : 'white';
+                    let mColor = entry.anglers[i].mobility ? 'white' : 'var(--text)';
+                    h += `<div style="display:flex; align-items:center; gap:8px; margin-bottom:8px;">
+                            <input type="text" class="a-name-input" value="${entry.anglers[i].name || ''}" placeholder="ANGLER ${i+1}" oninput="syncScreenToState()">
+                            <button class="btn-tool" onclick="toggleMobility('${entry.id}', ${i})" style="padding:10px 14px; background:${mBg}; color:${mColor}; border-color:${mBg};">[A]</button>
+                          </div>`;
+                }
             } else {
-                handleAmend();
+                h += `<label style="font-size:10px; opacity:0.6;">SOLO NAME</label>`;
+                let mBg = entry.anglers[0].mobility ? 'var(--a-color)' : 'white';
+                let mColor = entry.anglers[0].mobility ? 'white' : 'var(--text)';
+                h += `<div style="display:flex; align-items:center; gap:8px; margin-top:5px;">
+                        <input type="text" class="a-name-input" value="${entry.anglers[0].name || ''}" oninput="syncScreenToState()">
+                        <button class="btn-tool" onclick="toggleMobility('${entry.id}', 0)" style="padding:10px 14px; background:${mBg}; color:${mColor}; border-color:${mBg};">[A]</button>
+                      </div>`;
             }
-        } else {
-            startNewDraw();
-        }
+            div.innerHTML = h; if (entry.isTeam) tb.appendChild(div); else sb.appendChild(div);
+        });
+        document.getElementById('entryTeamsContainer').style.display = tb.innerHTML ? 'block' : 'none';
+        document.getElementById('entrySolosContainer').style.display = sb.innerHTML ? 'block' : 'none';
+        updateTicker(); checkMerge(); checkTeamClash();
     }
 
-    function toggleExportMenu() {
-        const menu = document.getElementById('exportMenu');
-        menu.style.display = menu.style.display === 'none' ? 'flex' : 'none';
+    function deleteStateEntry(id) { syncScreenToState(); const idx = appState.findIndex(e => e.id === id); if(idx > -1) { appState.splice(idx,1); renderStateToScreen(); } }
+    function breakStateTeam(id) { syncScreenToState(); const idx = appState.findIndex(e => e.id === id); if(idx > -1) { const t = appState.splice(idx,1)[0]; t.anglers.forEach(a => { appState.push({id:genId(), isTeam:false, tName:'', anglers:[{...a}]}); }); renderStateToScreen(); } }
+    function mergeSelected() { syncScreenToState(); const sel = document.querySelectorAll('.merge-cb:checked'); if(sel.length !== 4) return; const ids = Array.from(sel).map(cb => cb.closest('.zone-card').dataset.id); const angs = []; ids.forEach(id => { const idx = appState.findIndex(e => e.id === id); if(idx > -1) { angs.push(appState.splice(idx,1)[0].anglers[0]); } }); appState.push({id:genId(), isTeam:true, tName:'', anglers:angs}); renderStateToScreen(); }
+    function checkMerge() { document.getElementById('mergeBtn').style.display = (document.querySelectorAll('.merge-cb:checked').length === 4) ? 'inline-block' : 'none'; }
+    function checkTeamClash() {
+        let clash = false; if (mobilityMode === 'B') { appState.forEach(e => { if (e.isTeam && e.anglers.filter(a => a.mobility).length > 1) clash = true; }); }
+        document.getElementById('teamClashWarning').style.display = clash ? 'block' : 'none';
+        document.getElementById('mainActionBtn').disabled = clash;
+        document.getElementById('mainActionBtn').style.opacity = clash ? '0.4' : '1';
+    }
+    function updateTicker() { let ent = 0; document.querySelectorAll('.a-name-input').forEach(i => { if(i.value.trim()) ent++; }); document.getElementById('tkAnglers').innerText = ent; }
+
+    function initiateShuffle() {
+        syncScreenToState();
+        appState = appState.filter(e => e.isTeam ? (e.anglers.some(a => a.name.trim()) || e.tName.trim()) : e.anglers[0].name.trim());
+        appState.forEach(e => e.anglers.forEach(a => { a.z1 = a.p1 = a.z2 = a.p2 = undefined; }));
+        renderStateToScreen();
+        const over = document.getElementById('shuffleOverlay'); const pBar = document.getElementById('pBar');
+        over.style.display = 'flex'; let p = 0;
+        const inv = setInterval(() => { p += 5; pBar.style.width = p + '%'; if(p >= 100) { clearInterval(inv); over.style.display = 'none'; runDraw(); } }, 30);
     }
 
-    function toggleSwapMode() {
-        isSwapMode = !isSwapMode;
-        swapObj1 = null;
-        document.getElementById('swapPrompt').style.display = isSwapMode ? 'block' : 'none';
-        document.getElementById('swapPrompt').innerText = "SWAP MODE ACTIVE: SELECT FIRST ANGLER";
-        document.getElementById('swapBtn').innerText = isSwapMode ? 'CANCEL SWAP' : 'SWAP PEGS';
-        document.getElementById('swapBtn').style.background = isSwapMode ? '#ef4444' : '#ffffff';
-        document.getElementById('swapBtn').style.color = isSwapMode ? 'white' : '#8b5cf6';
-        displayDraw();
-    }
-
-    function handleSwapClick(eId, aIdx) {
-        if(!isSwapMode) return;
-        if(!swapObj1) {
-            swapObj1 = {eId, aIdx};
-            document.getElementById('swapPrompt').innerText = "FIRST ANGLER SELECTED: NOW CLICK SECOND ANGLER TO SWAP";
-            displayDraw(); 
-        } else {
-            if (swapObj1.eId === eId && swapObj1.aIdx === aIdx) {
-                swapObj1 = null;
-                document.getElementById('swapPrompt').innerText = "SWAP MODE ACTIVE: SELECT FIRST ANGLER";
-                displayDraw();
-                return;
+    function runDraw() {
+        appState.sort((a,b) => {
+            let getP = (e) => { let hasA = e.anglers.some(a => a.mobility); if(e.isTeam && hasA) return 3; if(e.isTeam) return 2; return 1; };
+            return getP(b) - getP(a);
+        });
+        const s1A = (document.getElementById('accPegs1_a').value || '').match(/\d+/g)?.map(Number) || [];
+        const s2A = (document.getElementById('accPegs2_a').value || '').match(/\d+/g)?.map(Number) || [];
+        const sAnch = (document.getElementById('accPegsAnchor').value || '').match(/\d+/g)?.map(Number) || [];
+        const ancZ = document.getElementById('anchorZoneSelect').value;
+        let tot = 0; appState.forEach(e => tot += e.isTeam ? 4 : 1);
+        let zSize = Math.max(Math.ceil(tot/4), 1); currentZoneSize = zSize;
+        let p1 = zones.map((z, idx) => { let p = []; for(let i=1; i<=zSize; i++) p.push((idx*zSize)+i); p.sort(()=>Math.random()-0.5); return {z,p}; });
+        let p2 = zones.map((z, idx) => { let p = []; for(let i=1; i<=zSize; i++) p.push((idx*zSize)+i); p.sort(()=>Math.random()-0.5); return {z,p}; });
+        const pull = (z, d2, mob) => {
+            const pools = d2 ? p2 : p1; const zI = zones.indexOf(z);
+            if(mobilityMode === 'B' && mob && z === ancZ) { const sI = pools[zI].p.findIndex(p => sAnch.includes(p)); if(sI>-1) return pools[zI].p.splice(sI,1)[0]; }
+            else if(mobilityMode === 'A') {
+                const sL = d2 ? s2A : s1A;
+                if(mob) { const sI = pools[zI].p.findIndex(p => sL.includes(p)); if(sI>-1) return pools[zI].p.splice(sI,1)[0]; }
+                else if(sL.length) { const nI = pools[zI].p.findIndex(p => !sL.includes(p)); if(nI>-1) return pools[zI].p.splice(nI,1)[0]; }
             }
-            
-            const e1 = appState.find(e => e.id === swapObj1.eId);
-            const e2 = appState.find(e => e.id === eId);
-            
-            const tempZ1 = e1.anglers[swapObj1.aIdx].z1;
-            const tempP1 = e1.anglers[swapObj1.aIdx].p1;
-            const tempZ2 = e1.anglers[swapObj1.aIdx].z2;
-            const tempP2 = e1.anglers[swapObj1.aIdx].p2;
-            
-            e1.anglers[swapObj1.aIdx].z1 = e2.anglers[aIdx].z1;
-            e1.anglers[swapObj1.aIdx].p1 = e2.anglers[aIdx].p1;
-            e1.anglers[swapObj1.aIdx].z2 = e2.anglers[aIdx].z2;
-            e1.anglers[swapObj1.aIdx].p2 = e2.anglers[aIdx].p2;
-            
-            e2.anglers[aIdx].z1 = tempZ1;
-            e2.anglers[aIdx].p1 = tempP1;
-            e2.anglers[aIdx].z2 = tempZ2;
-            e2.anglers[aIdx].p2 = tempP2;
-            
-            persistState();
-            toggleSwapMode(); 
-        }
+            return pools[zI].p.pop() || 99;
+        };
+        const canS = (z, d, mob) => { if(!mob) return true; let sL = d===1?s1A:s2A; return (d===1?p1:p2)[zones.indexOf(z)].p.some(p => sL.includes(p)); };
+        appState.forEach(e => {
+            if(e.isTeam) {
+                let hasA = e.anglers.some(a => a.mobility);
+                if(mobilityMode === 'B' && hasA) {
+                    let d1Z = [], d2Z = []; e.anglers.forEach(a => { if(a.mobility) { d1Z.push(ancZ); d2Z.push(ancZ); } else { d1Z.push(undefined); d2Z.push(undefined); } });
+                    e.anglers.forEach((a,i) => { if(!a.mobility) { let av = zones.filter(z => z !== ancZ && !d1Z.includes(z)); d1Z[i] = av[0]; } });
+                    let sI = e.anglers.map((a,i)=>!a.mobility?i:-1).filter(i=>i>-1);
+                    d2Z[sI[0]] = d1Z[sI[1]]; d2Z[sI[1]] = d1Z[sI[2]]; d2Z[sI[2]] = d1Z[sI[0]];
+                    e.anglers.forEach((a,i) => { a.z1 = d1Z[i]; a.p1 = pull(a.z1,0,a.mobility); a.z2 = d2Z[i]; a.p2 = pull(a.z2,1,a.mobility); });
+                } else if (mobilityMode === 'A' && hasA) {
+                    let d1Z = [...zones].sort(()=>Math.random()-0.5), d2Z = [d1Z[1], d1Z[2], d1Z[3], d1Z[0]];
+                    let mI = e.anglers.findIndex(a => a.mobility), best = 0;
+                    for(let i=0; i<4; i++) { if(canS(d1Z[i],1,1) && canS(d2Z[i],2,1)) { best=i; break; } }
+                    let col = [0,1,2,3]; [col[mI], col[best]] = [col[best], col[mI]];
+                    e.anglers.forEach((a,i) => { a.z1 = d1Z[col[i]]; a.p1 = pull(a.z1,0,a.mobility); a.z2 = d2Z[col[i]]; a.p2 = pull(a.z2,1,a.mobility); });
+                } else {
+                    let d1Z = [...zones].sort(()=>Math.random()-0.5), d2Z = [d1Z[1], d1Z[2], d1Z[3], d1Z[0]];
+                    e.anglers.forEach((a,i) => { a.z1 = d1Z[i]; a.p1 = pull(a.z1,0,0); a.z2 = d2Z[i]; a.p2 = pull(a.z2,1,0); });
+                }
+            } else {
+                let a = e.anglers[0]; if(mobilityMode==='B' && a.mobility) { a.z1 = a.z2 = ancZ; }
+                else { let av = zones.filter(z => p1[zones.indexOf(z)].p.length); a.z1 = av[Math.floor(Math.random()*av.length)]; let av2 = zones.filter(z => z !== a.z1); a.z2 = av2[Math.floor(Math.random()*av2.length)]; }
+                a.p1 = pull(a.z1,0,a.mobility); a.p2 = pull(a.z2,1,a.mobility);
+            }
+        });
+        persistState(); displayDraw();
     }
+
+    function isPegSafe(p, d) { if(mobilityMode==='B') return (document.getElementById('accPegsAnchor').value.match(/\d+/g)||[]).includes(String(p)); let sL = (document.getElementById(d===1?'accPegs1_a':'accPegs2_a').value.match(/\d+/g)||[]); return sL.includes(String(p)); }
+    function toggleExportMenu() { const m = document.getElementById('exportMenu'); m.style.display = m.style.display === 'none' ? 'flex' : 'none'; }
+    function toggleSwapMode() { isSwapMode = !isSwapMode; swapObj1 = null; document.getElementById('swapPrompt').style.display = isSwapMode ? 'block' : 'none'; displayDraw(); }
+    function handleSwapClick(eId, aI) { if(!isSwapMode) return; if(!swapObj1) { swapObj1 = {eId, aI}; displayDraw(); } else { const e1 = appState.find(e => e.id === swapObj1.eId), e2 = appState.find(e => e.id === eId); const a1 = e1.anglers[swapObj1.aI], a2 = e2.anglers[aI]; [a1.z1, a2.z1] = [a2.z1, a1.z1]; [a1.p1, a2.p1] = [a2.p1, a1.p1]; [a1.z2, a2.z2] = [a2.z2, a1.z2]; [a1.p2, a2.p2] = [a2.p2, a1.p2]; persistState(); toggleSwapMode(); } }
 
     function displayDraw() {
         document.querySelectorAll('body > div[id$="Section"]').forEach(s => s.style.display = 'none');
-        document.getElementById('commandBar').style.display = 'none';
         document.getElementById('resultsSection').style.display = 'block';
-        document.getElementById('resTitle').innerText = document.getElementById('matchTitle').value || "TOURNAMENT DRAW";
-        
-        const tb = document.getElementById('teamsBucket'); tb.innerHTML = '';
-        const sb = document.getElementById('solosBucket'); sb.innerHTML = '';
-        
-        const teams = appState.filter(e => e.isTeam);
-        const solos = appState.filter(e => !e.isTeam);
-
-        document.getElementById('teamsBucketContainer').style.display = teams.length > 0 ? 'block' : 'none';
-        document.getElementById('solosBucketContainer').style.display = solos.length > 0 ? 'block' : 'none';
-
-        teams.forEach(g => renderResultCard(tb, g));
-        solos.forEach(g => renderResultCard(sb, g));
-        
-        if(!isSwapMode) window.scrollTo(0,0);
-    }
-
-    function renderResultCard(container, g) {
-        const div = document.createElement('div'); div.className = 'zone-card visible';
-        const firstZ1 = g.anglers[0] && g.anglers[0].z1 ? g.anglers[0].z1 : '';
-        let headerBg = firstZ1 ? zSofts[firstZ1] : 'transparent';
-        let borderColor = firstZ1 ? zColors[firstZ1] : 'var(--border)';
-
-        div.style.borderTopColor = borderColor;
-        
-        let h = `<div class="zone-header" style="background-color: ${headerBg};"><span>${g.tName || 'SOLO ANGLER'}</span></div>`;
-        
-        h += `<div class="res-row" style="border:none; padding-top:0; padding-bottom:4px; pointer-events:none;">
-                <span></span>
-                <span style="font-size:10px; color:#64748b; text-align:center; letter-spacing:1px; font-weight: 900;">DAY 1</span>
-                ${matchDays == 2 ? `<span style="font-size:10px; color:#64748b; text-align:center; letter-spacing:1px; font-weight: 900;">DAY 2</span>` : '<span></span>'}
-              </div>`;
-
-        g.anglers.forEach((a, aIdx) => { 
-            if(!a.name || !a.z1) return;
-            
-            let rowClass = 'res-row';
-            let clickEvt = '';
-            if(isSwapMode) {
-                rowClass += ' swap-active';
-                clickEvt = `onclick="handleSwapClick('${g.id}', ${aIdx})"`;
-                if(swapObj1 && swapObj1.eId === g.id && swapObj1.aIdx === aIdx) {
-                    rowClass += ' swap-selected';
-                }
-            }
-
-            let p1Safe = isPegSafe(a.p1, 1);
-            let p2Safe = isPegSafe(a.p2, 2);
-
-            let aMob = a.mobility ? '<span class="a-tag">[A]</span>' : '';
-            
-            let p1Color = zColors[a.z1] || '#94a3b8';
-            let p2Color = zColors[a.z2] || '#94a3b8';
-
-            let p1Icon = p1Safe ? '<br><span style="font-size:9px; color:white; display:block; margin-top:3px; opacity: 0.9;">[A PEG]</span>' : '';
-            let p2Icon = p2Safe ? '<br><span style="font-size:9px; color:white; display:block; margin-top:3px; opacity: 0.9;">[A PEG]</span>' : '';
-
-            h += `<div class="${rowClass}" ${clickEvt}>
-                    <span class="angler-name">${a.name}${aMob}</span>
-                    <div style="display:flex; flex-direction:column; align-items:center; justify-content:center; pointer-events:none;">
-                        <div class="draw-pill" style="background-color:${p1Color};"><span style="color:white; opacity: 0.9;">${a.z1}</span> <span class="peg-num" style="color:white;">${a.p1}</span>${p1Icon}</div>
-                    </div>
-                    ${matchDays == 2 && a.z2 ? `
-                    <div style="display:flex; flex-direction:column; align-items:center; justify-content:center; pointer-events:none;">
-                        <div class="draw-pill" style="background-color:${p2Color};"><span style="color:white; opacity: 0.9;">${a.z2}</span> <span class="peg-num" style="color:white;">${a.p2}</span>${p2Icon}</div>
-                    </div>` : '<div></div>'}
-                  </div>`;
-        });
-        div.innerHTML = h; container.appendChild(div);
-    }
-
-    // THE CLIPBOARD REGISTRATION SYSTEM (PRINT ONLY)
-    function generateRegistrationSheet() {
-        const container = document.getElementById('registrationPrintSection');
-        container.innerHTML = '';
-        const title = (document.getElementById('matchTitle').value || "THE MATCH").toUpperCase();
-        
-        let list = []; 
+        document.getElementById('resTitle').innerText = document.getElementById('matchTitle').value || "DRAW";
+        const tb = document.getElementById('teamsBucket'); tb.innerHTML = ''; const sb = document.getElementById('solosBucket'); sb.innerHTML = '';
         appState.forEach(g => {
-            g.anglers.forEach(a => { 
-                if(a.name || g.isTeam) { list.push({ isTeam: g.isTeam, team: g.tName, angler: a }); } 
+            const div = document.createElement('div'); div.className = 'zone-card';
+            const fZ = g.anglers[0]?.z1; div.style.borderTopColor = zColors[fZ] || 'black';
+            let h = `<div class="zone-header" style="background:${zSofts[fZ]||'#f1f5f9'};"><span>${g.tName || 'SOLO'}</span></div>`;
+            h += `<div class="res-row" style="border:none; font-size:10px; color:#64748b;"><span></span><span style="text-align:center;">DAY 1</span><span style="text-align:center;">DAY 2</span></div>`;
+            g.anglers.forEach((a, aI) => {
+                let sC = isSwapMode ? 'swap-active' : ''; if(swapObj1?.eId === g.id && swapObj1?.aI === aI) sC += ' swap-selected';
+                h += `<div class="res-row ${sC}" onclick="handleSwapClick('${g.id}',${aI})"><span class="angler-name">${a.name}${a.mobility?' <span class="a-tag">[A]</span>':''}</span>
+                    <div class="draw-pill" style="background:${zColors[a.z1]}"><span>${a.z1}</span> <span class="peg-num">${a.p1}</span>${isPegSafe(a.p1,1)?'<br><small>[A]</small>':''}</div>
+                    <div class="draw-pill" style="background:${zColors[a.z2]}"><span>${a.z2}</span> <span class="peg-num">${a.p2}</span>${isPegSafe(a.p2,2)?'<br><small>[A]</small>':''}</div></div>`;
             });
+            div.innerHTML = h; if(g.isTeam) tb.appendChild(div); else sb.appendChild(div);
         });
-        
-        // Sort: Teams alphabetically, then Solos alphabetically
-        let teams = list.filter(item => item.isTeam);
-        let solos = list.filter(item => !item.isTeam);
+        document.getElementById('teamsBucketContainer').style.display = tb.innerHTML ? 'block' : 'none';
+        document.getElementById('solosBucketContainer').style.display = sb.innerHTML ? 'block' : 'none';
+        window.scrollTo(0,0);
+    }
 
-        let teamGroups = {};
-        teams.forEach(item => {
-            if(!teamGroups[item.team]) teamGroups[item.team] = [];
-            teamGroups[item.team].push(item);
-        });
-
-        Object.values(teamGroups).forEach(grp => grp.sort((a,b) => (a.angler.name || '').localeCompare(b.angler.name || '')));
-        let sortedTeamNames = Object.keys(teamGroups).sort((a,b) => a.localeCompare(b));
-        solos.sort((a,b) => (a.angler.name || '').localeCompare(b.angler.name || ''));
-        
-        let h = `<div class="roster-header"><h1>${title}</h1><h2>REGISTRATION & ACCOUNTING SHEET</h2></div>`;
-        h += `<table class="print-table">
-                <thead><tr>
-                    <th>ANGLER NAME</th>
-                    <th>TEAM</th>
-                    <th style="text-align:center;">PRESENT</th>
-                    <th style="text-align:center;">PAID (FEES)</th>
-                    <th style="text-align:center;">PAID (POOLS)</th>
-                </tr></thead><tbody>`;
-
-        sortedTeamNames.forEach(tName => {
-            let grp = teamGroups[tName];
-            h += `<tr style="background:#f1f5f9;"><td colspan="5" style="font-size:16px; font-weight:900;">TEAM: ${tName || "UNNAMED TEAM"}</td></tr>`;
-            grp.forEach(item => {
-                let mTag = item.angler.mobility ? ' <strong>[A]</strong>' : '';
-                h += `<tr>
-                        <td style="font-size: 16px;">${item.angler.name || '---'}${mTag}</td>
-                        <td style="font-size: 12px; color:#64748b;">${tName}</td>
-                        <td style="text-align:center;"><div class="print-checkbox"></div></td>
-                        <td style="text-align:center;"><div class="print-checkbox"></div></td>
-                        <td style="text-align:center;"><div class="print-checkbox"></div></td>
-                      </tr>`;
-            });
-        });
-
-        if(solos.length > 0) {
-            h += `<tr style="background:#f1f5f9;"><td colspan="5" style="font-size:16px; font-weight:900;">SOLO ANGLERS</td></tr>`;
-            solos.forEach(item => {
-                let mTag = item.angler.mobility ? ' <strong>[A]</strong>' : '';
-                h += `<tr>
-                        <td style="font-size: 16px;">${item.angler.name || '---'}${mTag}</td>
-                        <td style="font-size: 12px; color:#64748b;">SOLO</td>
-                        <td style="text-align:center;"><div class="print-checkbox"></div></td>
-                        <td style="text-align:center;"><div class="print-checkbox"></div></td>
-                        <td style="text-align:center;"><div class="print-checkbox"></div></td>
-                      </tr>`;
-            });
-        }
-        
-        h += `</tbody></table>`;
-        container.innerHTML = h;
-
-        document.body.classList.add('printing-registration');
-        window.print();
-        document.body.classList.remove('printing-registration');
+    function generateRegistrationSheet() {
+        const c = document.getElementById('registrationPrintSection'); c.innerHTML = '';
+        let h = `<div class="roster-header"><h1>${document.getElementById('matchTitle').value}</h1><h2>REGISTRATION</h2></div><table class="print-table"><thead><tr><th>NAME</th><th>TEAM</th><th>PRESENT</th><th>FEES</th><th>POOLS</th></tr></thead><tbody>`;
+        appState.sort((a,b)=>(a.tName||"SOLO").localeCompare(b.tName||"SOLO")).forEach(e => { e.anglers.forEach(a => { h += `<tr><td>${a.name}${a.mobility?' [A]':''}</td><td>${e.tName||'SOLO'}</td><td><div class="print-checkbox"></div></td><td><div class="print-checkbox"></div></td><td><div class="print-checkbox"></div></td></tr>`; }); });
+        c.innerHTML = h + "</tbody></table>"; document.body.classList.add('printing-registration'); window.print(); document.body.classList.remove('printing-registration');
     }
 
     function printZoneRosters() {
-        const container = document.getElementById('rosterSection');
-        container.innerHTML = '';
-        const title = (document.getElementById('matchTitle').value || "THE MATCH").toUpperCase();
-        
-        let daysToPrint = matchDays == 2 ? [1, 2] : [1];
-        
-        daysToPrint.forEach(day => {
-            zones.forEach(zone => {
-                let zoneAnglers = [];
-                appState.forEach(team => {
-                    team.anglers.forEach(a => {
-                        if (a.name) {
-                            if (day === 1 && a.z1 === zone) zoneAnglers.push({ name: a.name, team: team.tName || 'SOLO', peg: a.p1, mobility: a.mobility });
-                            else if (day === 2 && a.z2 === zone) zoneAnglers.push({ name: a.name, team: team.tName || 'SOLO', peg: a.p2, mobility: a.mobility });
-                        }
-                    });
-                });
-                
-                if(zoneAnglers.length === 0) return; 
-                zoneAnglers.sort((a, b) => a.peg - b.peg);
-
-                const page = document.createElement('div');
-                page.className = 'roster-page';
-                page.innerHTML = `
-                    <div class="roster-header"><h1>${title}</h1><h2>DAY ${day} - ${zone} ZONE</h2></div>
-                    <table class="print-table">
-                        <thead><tr><th style="width: 80px; text-align:center;">PEG</th><th>ANGLER NAME</th><th>TEAM</th></tr></thead>
-                        <tbody>
-                            ${zoneAnglers.map(ang => `
-                                <tr>
-                                    <td style="font-size: 22px; font-weight: 900; text-align: center;">${ang.peg}</td>
-                                    <td style="font-size: 16px;">${ang.name} ${ang.mobility ? '<strong>[A]</strong>' : ''}</td>
-                                    <td style="font-size: 14px; color: #475569;">${ang.team}</td>
-                                </tr>
-                            `).join('')}
-                        </tbody>
-                    </table>
-                `;
-                container.appendChild(page);
-            });
-        });
-        
-        document.body.classList.add('printing-rosters');
-        window.print();
-        document.body.classList.remove('printing-rosters');
+        const c = document.getElementById('rosterSection'); c.innerHTML = '';
+        [1,2].forEach(d => zones.forEach(z => {
+            let list = []; appState.forEach(e => e.anglers.forEach(a => { if((d===1?a.z1:a.z2)===z) list.push({n:a.name, t:e.tName, p:(d===1?a.p1:a.p2)}); }));
+            if(!list.length) return; list.sort((a,b)=>a.p-b.p);
+            let h = `<div class="roster-page"><div class="roster-header"><h1>DAY ${d} - ${z}</h1></div><table class="print-table"><thead><tr><th>PEG</th><th>NAME</th><th>TEAM</th></tr></thead><tbody>`;
+            list.forEach(i => h += `<tr><td>${i.p}</td><td>${i.n}</td><td>${i.t||'SOLO'}</td></tr>`);
+            c.innerHTML += h + "</tbody></table></div>";
+        }));
+        document.body.classList.add('printing-rosters'); window.print(); document.body.classList.remove('printing-rosters');
     }
 
     function generateDispatchSlips() {
-        const container = document.getElementById('dispatchSection');
-        container.innerHTML = '';
-        const title = (document.getElementById('matchTitle').value || "MATCH RESULTS").toUpperCase();
-        const stamp = new Date().toLocaleString();
-
-        appState.filter(e => e.isTeam).forEach(e => {
-            const slip = document.createElement('div');
-            slip.className = 'dispatch-slip';
-            slip.innerHTML = `
-                <div class="dispatch-header">
-                    <div><h1>${title}</h1><h2>TEAM: ${e.tName} | DISPATCH SLIP</h2></div>
-                    <div style="text-align:right; font-size:12px; font-weight:900;">${stamp}</div>
-                </div>
-                <table class="print-table" style="margin-top:0;">
-                    <thead><tr><th>ANGLER NAME</th><th>DAY 1 (ZONE & PEG)</th><th>DAY 2 (ZONE & PEG)</th></tr></thead>
-                    <tbody>
-                    ${e.anglers.map(a => {
-                        let p1Safe = isPegSafe(a.p1, 1) ? ' <strong>[A PEG]</strong>' : '';
-                        let p2Safe = isPegSafe(a.p2, 2) ? ' <strong>[A PEG]</strong>' : '';
-                        let aMob = a.mobility ? '<strong>[A]</strong>' : '';
-                        return `<tr>
-                                    <td>${a.name || '---'} ${aMob}</td>
-                                    <td><b>[${a.z1} ZONE]</b> PEG ${a.p1}${p1Safe}</td>
-                                    <td>${matchDays == 2 ? `<b>[${a.z2} ZONE]</b> PEG ${a.p2}${p2Safe}` : '---'}</td>
-                                </tr>`;
-                    }).join('')}
-                    </tbody>
-                </table>
-            `;
-            container.appendChild(slip);
+        const c = document.getElementById('dispatchSection'); c.innerHTML = '';
+        appState.forEach(e => {
+            let h = `<div class="dispatch-slip"><div class="dispatch-header"><h1>TEAM: ${e.tName||'SOLO'}</h1></div><table class="print-table"><thead><tr><th>NAME</th><th>DAY 1</th><th>DAY 2</th></tr></thead><tbody>`;
+            e.anglers.forEach(a => h += `<tr><td>${a.name}</td><td>${a.z1} ${a.p1}</td><td>${a.z2} ${a.p2}</td></tr>`);
+            c.innerHTML += h + "</tbody></table></div>";
         });
-
-        const solos = appState.filter(e => !e.isTeam);
-        for (let i = 0; i < solos.length; i += 4) {
-            const batch = solos.slice(i, i + 4);
-            const page = document.createElement('div');
-            page.style.pageBreakAfter = 'always';
-            
-            batch.forEach(e => {
-                const a = e.anglers[0];
-                let p1Safe = isPegSafe(a.p1, 1) ? ' <strong>[A PEG]</strong>' : '';
-                let p2Safe = isPegSafe(a.p2, 2) ? ' <strong>[A PEG]</strong>' : '';
-                let aMob = a.mobility ? '<strong>[A]</strong>' : '';
-                
-                const slip = document.createElement('div');
-                slip.className = 'dispatch-slip';
-                slip.innerHTML = `
-                    <div class="dispatch-header">
-                        <div><h1>${title}</h1><h2>SOLO COMPETITOR: ${a.name} ${aMob}</h2></div>
-                    </div>
-                    <table class="print-table" style="margin-top:0;">
-                        <thead><tr><th>DAY 1 (ZONE & PEG)</th><th>DAY 2 (ZONE & PEG)</th></tr></thead>
-                        <tbody>
-                            <tr>
-                                <td><b>[${a.z1} ZONE]</b> PEG ${a.p1}${p1Safe}</td>
-                                <td>${matchDays == 2 ? `<b>[${a.z2} ZONE]</b> PEG ${a.p2}${p2Safe}` : '---'}</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                `;
-                page.appendChild(slip);
-            });
-            container.appendChild(page);
-        }
-
-        document.body.classList.add('printing-dispatch');
-        window.print();
-        document.body.classList.remove('printing-dispatch');
+        document.body.classList.add('printing-dispatch'); window.print(); document.body.classList.remove('printing-dispatch');
     }
 
     function exportToCSV() {
         let csv = "NAME,TEAM,DAY 1 ZONE,DAY 2 ZONE\n";
-        appState.forEach(g => g.anglers.forEach(a => { 
-            if(a.name) csv += `${a.name},${g.tName || "SOLO"},${a.z1 || ""},${matchDays==2?(a.z2||""):""}\n`; 
-        }));
-        const blob = new Blob([csv], {type: 'text/csv'});
-        const lnk = document.createElement('a'); lnk.href = URL.createObjectURL(blob); 
-        let matchName = document.getElementById('matchTitle').value.trim() || "ZONEDRAW_EXPORT";
-        lnk.download = `${matchName.replace(/[^a-z0-9]/gi, '_').toUpperCase()}_${Date.now()}.csv`; 
-        lnk.click();
+        appState.forEach(g => g.anglers.forEach(a => csv += `${a.name},${g.tName||'SOLO'},${a.z1},${a.z2}\n`));
+        const b = new Blob([csv], {type: 'text/csv'}); const l = document.createElement('a'); l.href = URL.createObjectURL(b); l.download = "LIST.csv"; l.click();
     }
 
     function exportAccountingCSV() {
-        let csv = "NAME,TEAM,PRESENT (Y/N),PAID (Y/N)\n";
-        let list = []; 
-        appState.forEach(g => g.anglers.forEach(a => { if(a.name || g.isTeam) list.push({ isTeam: g.isTeam, team: g.tName, angler: a }); }));
-        list.sort((a,b) => {
-            if (a.isTeam && !b.isTeam) return -1;
-            if (!a.isTeam && b.isTeam) return 1;
-            if (a.isTeam && b.isTeam) { const cmp = (a.team || '').localeCompare(b.team || ''); if (cmp !== 0) return cmp; }
-            return (a.angler.name || '').localeCompare(b.angler.name || '');
-        });
-
-        list.forEach(item => { csv += `${item.angler.name || ""},${item.team || "SOLO"},,\n`; });
-        
-        const blob = new Blob([csv], {type: 'text/csv'});
-        const lnk = document.createElement('a'); lnk.href = URL.createObjectURL(blob); 
-        let matchName = document.getElementById('matchTitle').value.trim() || "ACCOUNTING";
-        lnk.download = `${matchName.replace(/[^a-z0-9]/gi, '_').toUpperCase()}_ACCOUNTING.csv`; 
-        lnk.click();
+        let csv = "NAME,TEAM,PRESENT,PAID\n";
+        appState.forEach(g => g.anglers.forEach(a => csv += `${a.name},${g.tName||'SOLO'},,\n`));
+        const b = new Blob([csv], {type: 'text/csv'}); const l = document.createElement('a'); l.href = URL.createObjectURL(b); l.download = "ACCOUNTING.csv"; l.click();
     }
 
-    function handleAmend() {
-        document.querySelectorAll('body > div[id$="Section"]').forEach(s => s.style.display = 'none');
-        document.getElementById('entrySection').style.display = 'block'; 
-        document.getElementById('commandBar').style.display = 'flex';
-        renderStateToScreen(); window.scrollTo(0,0);
-    }
-
-    function shareDraw() {
-        document.getElementById('pdfOverlay').style.display = 'flex';
-        const element = document.getElementById('resultsSection');
-
-        document.body.classList.add('full-color-share');
-        
-        element.querySelectorAll('.bucket-grid').forEach(grid => {
-            grid.style.display = 'grid';
-            grid.style.gridTemplateColumns = '1fr';
-        });
-
-        setTimeout(() => {
-            const matchName = document.getElementById('matchTitle').value || "MATCH_DRAW";
-            const ts = Date.now();
-            const opt = {
-                margin:       0.2,
-                filename:     `${matchName.replace(/[^a-z0-9]/gi, '_')}_Digital_Draw_${ts}.pdf`,
-                image:        { type: 'jpeg', quality: 0.98 },
-                html2canvas:  { scale: 2, useCORS: true, backgroundColor: '#ffffff', scrollY: 0 },
-                jsPDF:        { unit: 'in', format: 'a4', orientation: 'portrait' } 
-            };
-
-            html2pdf().set(opt).from(element).save().then(() => {
-                document.body.classList.remove('full-color-share');
-                element.querySelectorAll('.bucket-grid').forEach(grid => {
-                    grid.style.display = ''; grid.style.gridTemplateColumns = '';
-                });
-                document.getElementById('pdfOverlay').style.display = 'none';
-            }).catch(err => {
-                document.body.classList.remove('full-color-share');
-                element.querySelectorAll('.bucket-grid').forEach(grid => {
-                    grid.style.display = ''; grid.style.gridTemplateColumns = '';
-                });
-                document.getElementById('pdfOverlay').style.display = 'none';
-                console.error("PDF Generation failed:", err);
-            });
-        }, 500); 
-    }
+    function handleAmend() { document.querySelectorAll('body > div[id$="Section"]').forEach(s => s.style.display = 'none'); document.getElementById('entrySection').style.display = 'block'; document.getElementById('commandBar').style.display = 'flex'; renderStateToScreen(); }
     
+    function shareDraw() {
+        const el = document.getElementById('resultsSection'); document.body.classList.add('full-color-share');
+        html2pdf().set({ margin:0.2, filename:'DRAW.pdf', image:{type:'jpeg',quality:0.98}, html2canvas:{scale:2}, jsPDF:{unit:'in',format:'a4'} }).from(el).save().then(() => document.body.classList.remove('full-color-share'));
+    }
+
     window.onload = () => {
-        loadState();
+        let saved = localStorage.getItem('zonedraw_current_state_v12');
+        if (saved) {
+            let e = JSON.parse(saved); document.getElementById('matchTitle').value = e.title || '';
+            document.getElementById('accPegs1_a').value = e.safePegs1_a || ''; document.getElementById('accPegs2_a').value = e.safePegs2_a || '';
+            document.getElementById('accPegsAnchor').value = e.safePegsAnchor || ''; if(e.anchorZone) document.getElementById('anchorZoneSelect').value = e.anchorZone;
+            setMobilityMode(e.mobilityMode || 'A'); setDays(e.days || 2); 
+            appState = e.data || []; if (appState.some(e => e.anglers.some(a => a.z1))) displayDraw(); else handleAmend();
+        } else startNewDraw();
     };
 </script>
 </body>
