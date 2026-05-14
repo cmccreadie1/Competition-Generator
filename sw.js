@@ -1,4 +1,4 @@
-const CACHE_NAME = 'zonedraw-v12.04.05-contrast-v1';
+const CACHE_NAME = 'zonedraw-v12.04.06-tab-scroll-v1';
 const ASSETS_TO_CACHE = [
     './',
     './index.html',
