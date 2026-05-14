@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ZONEDRAW v12.04.14</title>
+    <title>ZONEDRAW v12.04.15</title>
     <link rel="manifest" href="manifest.json">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
@@ -446,7 +446,7 @@
 
 <div class="fixed-header no-print">
     <div class="header-content">
-        <div class="brand-name">ZONEDRAW <span id="vTag" class="v-tag">v12.04.14</span></div>
+        <div class="brand-name">ZONEDRAW <span id="vTag" class="v-tag">v12.04.15</span></div>
     </div>
 </div>
 
@@ -1181,9 +1181,13 @@
                 if(mobilityMode === 'B' && a.mobility) { 
                     a.z1 = a.z2 = ancZ; 
                 } else { 
-                    let av = zones.filter(z => p1[zones.indexOf(z)].p.length); 
+                    let av = zones.filter(z => p1[zones.indexOf(z)].p.length > 0); 
                     a.z1 = av[Math.floor(Math.random() * av.length)]; 
-                    let av2 = zones.filter(z => z !== a.z1); 
+                    
+                    let av2 = zones.filter(z => z !== a.z1 && p2[zones.indexOf(z)].p.length > 0); 
+                    if(av2.length === 0) {
+                        av2 = zones.filter(z => p2[zones.indexOf(z)].p.length > 0); 
+                    }
                     a.z2 = av2[Math.floor(Math.random() * av2.length)]; 
                 }
                 
