@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ZONEDRAW v12.02.01</title>
+    <title>ZONEDRAW v12.03.00</title>
     <link rel="manifest" href="manifest.json">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
@@ -46,10 +46,7 @@
         .brand-name { font-size: 20px; font-weight: 900; letter-spacing: -0.5px; color: var(--text); display: flex; align-items: center; }
         .v-tag { font-size: 14px; color: var(--accent); margin-left: 10px; font-weight: 900; }
         
-        .home-btn { background: white; border: 2px solid var(--border); color: var(--text); padding: 10px 20px; border-radius: 8px; cursor: pointer; font-size: 13px; font-weight: 900; transition: 0.2s; }
-        .home-btn:hover { border-color: #ef4444; color: #ef4444; }
-
-        #entrySection, #resultsSection, #dispatchSection, #rosterSection, #registrationPrintSection, #historySection { max-width: 1400px; margin: 0 auto; padding: 100px 20px 140px; display: none; }
+        #entrySection, #resultsSection, #dispatchSection, #rosterSection, #registrationPrintSection { max-width: 1400px; margin: 0 auto; padding: 100px 20px 140px; display: none; }
         
         .control-panel { background: var(--card); border-radius: 16px; padding: 30px; border: 2px solid var(--border); text-align: center; margin-bottom: 30px; }
         
@@ -94,6 +91,10 @@
         
         .group-label { grid-column: 1 / -1; font-size: 1.4rem; font-weight: 900; color: var(--text); border-bottom: 3px solid var(--text); padding-bottom: 10px; margin: 40px 0 20px; letter-spacing: 1px; }
         .entry-group-label { font-size: 1.1rem; font-weight: 900; color: #64748b; margin: 30px 0 15px; letter-spacing: 1px; text-align: left; }
+
+        /* WIPE MODAL STYLES */
+        .modal-overlay { position: fixed; inset: 0; background: rgba(15, 23, 42, 0.85); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); z-index: 9999; display: none; align-items: center; justify-content: center; }
+        .modal-content { background: var(--card); border-radius: 24px; padding: 40px; width: 90%; max-width: 550px; text-align: center; box-shadow: 0 25px 50px rgba(0,0,0,0.25); }
         
         /* Printer Rules (Optimized for Paper) */
         @media print { 
@@ -140,10 +141,10 @@
 
 <div class="fixed-header no-print">
     <div class="header-content">
-        <button class="home-btn" onclick="confirmRestart()" tabindex="-1">⚠️ RESTART & CLEAR ALL</button>
-        <div class="brand-name">ZONEDRAW <span id="vTag" class="v-tag">v12.02.01</span></div>
-        <div style="width: 180px; text-align:right;">
-            <button class="btn-tool" onclick="showHistory()" style="font-size: 12px; padding: 8px 15px;">📜 ARCHIVES</button>
+        <div class="brand-name">ZONEDRAW <span id="vTag" class="v-tag">v12.03.00</span></div>
+        <div style="display:flex; align-items:center; gap:15px;">
+            <span style="font-size: 10px; color: #64748b; max-width: 150px; text-align: right; line-height: 1.2; font-weight: 700; text-transform: none;">Only use this to clear the app for a new competition. This cannot be undone.</span>
+            <button class="btn-action" style="background:#ef4444; border-color:#ef4444; padding: 10px 18px; font-size: 12px;" onclick="showWipeModal()" tabindex="-1">⚠️ WIPE ENTIRE BOARD</button>
         </div>
     </div>
 </div>
@@ -151,7 +152,7 @@
 <div id="entrySection" class="no-print">
     <div class="control-panel" id="setupPanel">
         <label style="font-size: 12px; opacity: 0.6; letter-spacing: 1px; font-weight: 900;">COMPETITION IDENTITY</label>
-        <input type="text" id="matchTitle" style="font-size:24px; text-align:center; margin-top:10px; border-width: 3px;" placeholder="e.g. SCOTTISH SHORE CHAMPIONSHIP 2026" onblur="persistToVault()">
+        <input type="text" id="matchTitle" style="font-size:24px; text-align:center; margin-top:10px; border-width: 3px;" placeholder="e.g. SCOTTISH SHORE CHAMPIONSHIP 2026" onblur="persistState()">
         
         <div style="margin-top:30px; display:flex; flex-direction:column; align-items:center; gap:10px;">
             <button class="btn-action-outline" onclick="let p = document.getElementById('accPanelWrapper'); p.style.display = p.style.display === 'none' ? 'flex' : 'none';" type="button" tabindex="-1">⚙️ CONFIGURE ACCESSIBILITY OPTIONS</button>
@@ -177,7 +178,7 @@
                 </div>
 
                 <div id="modeBSetup" style="display:none; flex-direction:column; gap:10px; width:100%; margin-top:10px;">
-                    <select id="anchorZoneSelect" onchange="persistToVault()" style="border-width: 2px;">
+                    <select id="anchorZoneSelect" onchange="persistState()" style="border-width: 2px;">
                         <option value="RED">ANCHOR ZONE: RED</option>
                         <option value="YELLOW">ANCHOR ZONE: YELLOW</option>
                         <option value="GREEN">ANCHOR ZONE: GREEN</option>
@@ -256,11 +257,6 @@
 
 <div id="rosterSection" class="no-print"></div>
 
-<div id="historySection">
-    <h2 style="text-align:center; letter-spacing:3px;">ARCHIVED TOURNAMENTS</h2>
-    <div id="historyGrid" style="display:grid; grid-template-columns:repeat(auto-fit, minmax(320px, 1fr)); gap:30px; margin-top:40px;"></div>
-</div>
-
 <div id="commandBar" class="command-bar no-print">
     <div style="display:flex; gap:30px; align-items:center;">
         <div style="display:flex; flex-direction:column; margin-right:20px;"><span style="font-size:11px; font-weight:900; color:#64748b;">TOTAL ANGLERS</span><span id="tkAnglers" style="font-size:28px; font-weight:900; color:var(--text);">0</span></div>
@@ -286,6 +282,21 @@
     <div style="width:400px; height:8px; background:#f1f5f9; border-radius:10px; overflow:hidden; margin-top:30px;"><div id="pBar" style="height:100%; width:0%; background:var(--accent); transition:0.1s;"></div></div>
 </div>
 
+<div id="wipeModal" class="modal-overlay no-print" data-html2canvas-ignore="true">
+    <div class="modal-content">
+        <h2 style="color: #ef4444; font-size: 28px; margin-top: 0; letter-spacing: 1px;">⚠️ DANGER ZONE</h2>
+        <p style="font-size: 16px; font-weight: 700; color: var(--text); margin-bottom: 30px; line-height: 1.5; text-transform: none;">
+            You are about to permanently delete all anglers, teams, and draw data. 
+            <br><br>
+            If you proceed, an emergency text backup will be automatically downloaded to your device.
+        </p>
+        <div style="display: flex; flex-direction: column; gap: 15px;">
+            <button onclick="closeWipeModal()" class="btn-action" style="background: var(--accent); border-color: var(--accent);">RETURN TO CURRENT DRAW</button>
+            <button onclick="executeNuclearWipe()" class="btn-action-outline" style="color: #ef4444; border-color: #ef4444; background: white;">YES, WIPE AND RESTART</button>
+        </div>
+    </div>
+</div>
+
 <script>
     const zones = ['RED', 'YELLOW', 'GREEN', 'BLUE'];
     const zColors = { 'RED': 'var(--red-color)', 'YELLOW': 'var(--yellow-color)', 'GREEN': 'var(--green-color)', 'BLUE': 'var(--blue-color)' };
@@ -304,7 +315,7 @@
         let val = el.value;
         let nums = val.match(/\d+/g);
         el.value = nums ? nums.join(', ') : '';
-        persistToVault();
+        persistState();
     }
 
     function setMobilityMode(m) {
@@ -314,14 +325,62 @@
         document.getElementById('modeASetup').style.display = m === 'A' ? 'flex' : 'none';
         document.getElementById('modeBSetup').style.display = m === 'B' ? 'flex' : 'none';
         checkTeamClash();
-        persistToVault();
+        persistState();
     }
 
-    function confirmRestart() {
-        if(confirm("WARNING: This will clear the entire board and return to a blank template. Proceed?")) {
-            localStorage.removeItem('zonedraw_active_key');
-            startNewDraw();
+    function showWipeModal() {
+        document.getElementById('wipeModal').style.display = 'flex';
+    }
+
+    function closeWipeModal() {
+        document.getElementById('wipeModal').style.display = 'none';
+    }
+
+    function executeNuclearWipe() {
+        // Step 1: Generate and Download the Emergency Text Backup
+        let txt = "ZONEDRAW EMERGENCY BACKUP\n";
+        txt += "=========================\n";
+        txt += "MATCH: " + (document.getElementById('matchTitle').value || "UNNAMED MATCH") + "\n";
+        txt += "DATE: " + new Date().toLocaleString() + "\n\n";
+        
+        const teams = appState.filter(e => e.isTeam);
+        if(teams.length > 0) {
+            txt += "--- TEAM ROSTERS ---\n";
+            teams.forEach(t => {
+                txt += "TEAM: " + (t.tName || "UNNAMED") + "\n";
+                t.anglers.forEach(a => {
+                    if(a.name) {
+                        let mob = a.mobility ? '[A]' : '';
+                        txt += `  - ${a.name} ${mob} | D1: ${a.z1 || '-'} ${a.p1 || '-'} | D2: ${a.z2 || '-'} ${a.p2 || '-'}\n`;
+                    }
+                });
+                txt += "\n";
+            });
         }
+        
+        const solos = appState.filter(e => !e.isTeam);
+        if(solos.length > 0) {
+            txt += "--- SOLO COMPETITORS ---\n";
+            solos.forEach(s => {
+                let a = s.anglers[0];
+                if(a && a.name) {
+                    let mob = a.mobility ? '[A]' : '';
+                    txt += `${a.name} ${mob} | D1: ${a.z1 || '-'} ${a.p1 || '-'} | D2: ${a.z2 || '-'} ${a.p2 || '-'}\n`;
+                }
+            });
+        }
+        
+        const blob = new Blob([txt], {type: 'text/plain'});
+        const lnk = document.createElement('a'); 
+        lnk.href = URL.createObjectURL(blob); 
+        let matchName = document.getElementById('matchTitle').value.trim() || "ZONEDRAW_BACKUP";
+        lnk.download = `${matchName.replace(/[^a-z0-9]/gi, '_').toUpperCase()}_${Date.now()}.txt`; 
+        lnk.click();
+
+        // Step 2: Wipe the Board
+        localStorage.removeItem('zonedraw_current_state_v12');
+        closeWipeModal();
+        startNewDraw();
     }
 
     function setDays(d) {
@@ -329,7 +388,7 @@
         document.getElementById('dayOpt1').classList.toggle('active', d === 1);
         document.getElementById('dayOpt2').classList.toggle('active', d === 2);
         document.getElementById('day2PegsContainer').style.display = d === 2 ? 'block' : 'none';
-        persistToVault();
+        persistState();
     }
 
     function startNewDraw() {
@@ -352,63 +411,6 @@
         document.getElementById('entrySolosContainer').style.display = 'none';
         document.getElementById('commandBar').style.display = 'none';
         updateTicker();
-    }
-
-    function showHistory() {
-        document.querySelectorAll('body > div[id$="Section"]').forEach(s => s.style.display = 'none');
-        document.getElementById('commandBar').style.display = 'none';
-        
-        const section = document.getElementById('historySection'); section.style.display = 'block';
-        const grid = document.getElementById('historyGrid'); grid.innerHTML = '';
-        
-        const vault = JSON.parse(localStorage.getItem('zonedraw_vault_v12') || '{}');
-        Object.keys(vault).forEach(title => {
-            const e = vault[title];
-            const div = document.createElement('div'); div.className = 'control-panel'; div.style.cursor = 'pointer'; div.style.marginBottom = '0';
-            div.innerHTML = `
-                <div style="display:flex; justify-content:flex-end;">
-                    <button onclick="event.stopPropagation(); deleteHistoryItem('${title}')" style="background:none; border:none; color:#ef4444; font-size:22px; cursor:pointer; padding:0; line-height:0.5;" title="Delete Record">✖</button>
-                </div>
-                <strong style="color:var(--accent); font-size:18px; display:block; margin-top:-5px;">${title}</strong>
-                <small style="text-transform:none; opacity:0.6; margin-top:10px; display:block; font-weight: 700;">${e.time}</small>
-            `;
-            div.onclick = () => { loadMatch(title, e); handleAmend(); };
-            grid.appendChild(div);
-        });
-    }
-
-    function deleteHistoryItem(title) {
-        if(confirm(`PERMANENTLY DELETE MATCH: ${title}?`)) {
-            const vault = JSON.parse(localStorage.getItem('zonedraw_vault_v12') || '{}');
-            delete vault[title];
-            localStorage.setItem('zonedraw_vault_v12', JSON.stringify(vault));
-            if(localStorage.getItem('zonedraw_active_key') === title) {
-                localStorage.removeItem('zonedraw_active_key');
-                startNewDraw();
-            } else {
-                showHistory(); 
-            }
-        }
-    }
-
-    function loadMatch(title, entry) {
-        document.getElementById('matchTitle').value = title;
-        document.getElementById('accPegs1_a').value = entry.safePegs1_a || '';
-        document.getElementById('accPegs2_a').value = entry.safePegs2_a || '';
-        document.getElementById('accPegsAnchor').value = entry.safePegsAnchor || '';
-        if(entry.anchorZone) document.getElementById('anchorZoneSelect').value = entry.anchorZone;
-        
-        setMobilityMode(entry.mobilityMode || 'A');
-        setDays(entry.days || 2); 
-        currentZoneSize = entry.zoneSize || 0;
-        
-        appState = (entry.data || []).map(e => ({
-            ...e, 
-            id: e.id || genId(), 
-            anglers: (e.anglers || [{}]).map(a => ({
-                ...a, name: a.name || '', mobility: a.mobility ? 1 : 0
-            }))
-        }));
     }
 
     function bulkInit() {
@@ -455,7 +457,7 @@
                 entry.anglers[0].name = card.querySelector('.a-name-input').value.trim().toUpperCase();
             }
         });
-        persistToVault();
+        persistState();
     }
 
     function checkTeamClash() {
@@ -556,7 +558,7 @@
         if(idx === -1) return;
         appState.splice(idx, 1);
         renderStateToScreen();
-        persistToVault(); 
+        persistState(); 
     }
 
     function breakStateTeam(id) {
@@ -570,7 +572,7 @@
         });
         
         renderStateToScreen();
-        persistToVault(); 
+        persistState(); 
     }
 
     function mergeSelected() {
@@ -590,7 +592,7 @@
         
         appState.push({ id: genId(), isTeam: true, tName: '', anglers: newTeamAnglers });
         renderStateToScreen();
-        persistToVault(); 
+        persistState(); 
     }
 
     function checkMerge() {
@@ -873,7 +875,7 @@
             }
         });
 
-        persistToVault();
+        persistState();
         displayDraw();
     }
 
@@ -888,11 +890,10 @@
         }
     }
 
-    function persistToVault() {
-        const title = document.getElementById('matchTitle').value || 'UNNAMED_MATCH';
-        const vault = JSON.parse(localStorage.getItem('zonedraw_vault_v12') || '{}');
-        vault[title] = { 
-            time: new Date().toLocaleString(), 
+    // ALWAYS-ON SINGLE SAVE STATE
+    function persistState() {
+        const stateObj = { 
+            title: document.getElementById('matchTitle').value || '',
             data: appState, 
             days: matchDays, 
             zoneSize: currentZoneSize,
@@ -902,8 +903,39 @@
             safePegsAnchor: document.getElementById('accPegsAnchor').value,
             anchorZone: document.getElementById('anchorZoneSelect').value
         };
-        localStorage.setItem('zonedraw_vault_v12', JSON.stringify(vault));
-        localStorage.setItem('zonedraw_active_key', title);
+        localStorage.setItem('zonedraw_current_state_v12', JSON.stringify(stateObj));
+    }
+
+    function loadState() {
+        let saved = localStorage.getItem('zonedraw_current_state_v12');
+        if (saved) {
+            let entry = JSON.parse(saved);
+            document.getElementById('matchTitle').value = entry.title || '';
+            document.getElementById('accPegs1_a').value = entry.safePegs1_a || '';
+            document.getElementById('accPegs2_a').value = entry.safePegs2_a || '';
+            document.getElementById('accPegsAnchor').value = entry.safePegsAnchor || '';
+            if(entry.anchorZone) document.getElementById('anchorZoneSelect').value = entry.anchorZone;
+            
+            setMobilityMode(entry.mobilityMode || 'A');
+            setDays(entry.days || 2); 
+            currentZoneSize = entry.zoneSize || 0;
+            
+            appState = (entry.data || []).map(e => ({
+                ...e, 
+                id: e.id || genId(), 
+                anglers: (e.anglers || [{}]).map(a => ({
+                    ...a, name: a.name || '', mobility: a.mobility ? 1 : 0
+                }))
+            }));
+            
+            if (appState.some(e => e.anglers.some(a => a.z1))) {
+                displayDraw(); 
+            } else {
+                handleAmend();
+            }
+        } else {
+            startNewDraw();
+        }
     }
 
     function toggleExportMenu() {
@@ -954,7 +986,7 @@
             e2.anglers[aIdx].z2 = tempZ2;
             e2.anglers[aIdx].p2 = tempP2;
             
-            persistToVault();
+            persistState();
             toggleSwapMode(); 
         }
     }
@@ -1306,19 +1338,7 @@
     }
     
     window.onload = () => {
-        let activeKey = localStorage.getItem('zonedraw_active_key');
-        let vault = JSON.parse(localStorage.getItem('zonedraw_vault_v12') || '{}');
-        
-        if (activeKey && vault[activeKey]) {
-            loadMatch(activeKey, vault[activeKey]);
-            if (appState.some(e => e.anglers.some(a => a.z1))) {
-                displayDraw(); 
-            } else {
-                handleAmend();
-            }
-        } else {
-            startNewDraw();
-        }
+        loadState();
     };
 </script>
 </body>
