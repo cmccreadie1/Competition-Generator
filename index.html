@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ZONEDRAW v12.04.08</title>
+    <title>ZONEDRAW v12.04.09</title>
     <link rel="manifest" href="manifest.json">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
@@ -444,7 +444,7 @@
 
 <div class="fixed-header no-print">
     <div class="header-content">
-        <div class="brand-name">ZONEDRAW <span id="vTag" class="v-tag">v12.04.08</span></div>
+        <div class="brand-name">ZONEDRAW <span id="vTag" class="v-tag">v12.04.09</span></div>
         <div style="display:flex; align-items:center; gap:15px;">
             <span style="font-size: 10px; color: #64748b; max-width: 150px; text-align: right; line-height: 1.2; font-weight: 700; text-transform: none;">Only use this to clear the app for a new competition. This cannot be undone.</span>
             <button class="btn-action" style="background:#ef4444; border-color:#ef4444; padding: 10px 18px; font-size: 12px;" onclick="showWipeModal()" tabindex="-1">⚠️ WIPE ENTIRE BOARD</button>
@@ -491,9 +491,9 @@
             </div>
 
             <div id="modeASetup" style="display:flex; flex-direction:column; gap:10px; width:100%; margin-top:5px;">
-                <input type="text" id="accPegs1_a" style="border-color:var(--a-color); border-width: 2px;" placeholder="DAY 1 SAFE PEGS" oninput="formatPegs(this)">
+                <input type="text" id="accPegs1_a" style="border-color:var(--a-color); border-width: 2px;" placeholder="DAY 1 SAFE PEGS" onblur="formatPegs(this)">
                 <div id="day2PegsContainer" style="display:none; width:100%;">
-                    <input type="text" id="accPegs2_a" style="border-color:var(--a-color); border-width: 2px;" placeholder="DAY 2 SAFE PEGS" oninput="formatPegs(this)">
+                    <input type="text" id="accPegs2_a" style="border-color:var(--a-color); border-width: 2px;" placeholder="DAY 2 SAFE PEGS" onblur="formatPegs(this)">
                 </div>
             </div>
 
@@ -504,7 +504,7 @@
                     <option value="GREEN">ANCHOR ZONE: GREEN</option>
                     <option value="BLUE">ANCHOR ZONE: BLUE</option>
                 </select>
-                <input type="text" id="accPegsAnchor" style="border-color:var(--a-color); border-width: 2px;" placeholder="ANCHOR SAFE PEGS" oninput="formatPegs(this)">
+                <input type="text" id="accPegsAnchor" style="border-color:var(--a-color); border-width: 2px;" placeholder="ANCHOR SAFE PEGS" onblur="formatPegs(this)">
             </div>
         </div>
 
