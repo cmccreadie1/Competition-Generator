@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ZONEDRAW v12.04.06</title>
+    <title>ZONEDRAW v12.04.07</title>
     <link rel="manifest" href="manifest.json">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
@@ -427,7 +427,7 @@
             
             .print-table { width: 100%; border-collapse: collapse; margin-top: 20px; }
             .print-table th { border: 2px solid black; padding: 12px; font-size: 14px; font-weight: 900; text-align: left; background: #f8fafc; }
-            .print-table td { border: 1px solid black; padding: 10px 12px; font-size: 14px; font-weight: 800; }
+            .print-table td { border: 1px solid black; padding: 10px 12px; font-size: 14px; font-weight: 800; height: 25px; }
             .print-checkbox { display: inline-block; width: 20px; height: 20px; border: 2px solid black; margin: 0 auto; }
             
             .dispatch-slip { padding: 30px; border: 4px solid black; margin-bottom: 30px; page-break-inside: avoid; }
@@ -444,7 +444,7 @@
 
 <div class="fixed-header no-print">
     <div class="header-content">
-        <div class="brand-name">ZONEDRAW <span id="vTag" class="v-tag">v12.04.06</span></div>
+        <div class="brand-name">ZONEDRAW <span id="vTag" class="v-tag">v12.04.07</span></div>
         <div style="display:flex; align-items:center; gap:15px;">
             <span style="font-size: 10px; color: #64748b; max-width: 150px; text-align: right; line-height: 1.2; font-weight: 700; text-transform: none;">Only use this to clear the app for a new competition. This cannot be undone.</span>
             <button class="btn-action" style="background:#ef4444; border-color:#ef4444; padding: 10px 18px; font-size: 12px;" onclick="showWipeModal()" tabindex="-1">⚠️ WIPE ENTIRE BOARD</button>
@@ -1279,10 +1279,11 @@
         const c = document.getElementById('dispatchSection'); 
         c.innerHTML = '';
         
-        appState.forEach(e => {
-            let h = `<div class="dispatch-slip">
+        const teams = appState.filter(e => e.isTeam);
+        teams.forEach(e => {
+            let h = `<div class="dispatch-slip" style="page-break-after: always;">
                         <div class="dispatch-header">
-                            <h1>TEAM: ${e.tName || 'SOLO'}</h1>
+                            <h1>TEAM: ${e.tName || 'UNNAMED TEAM'}</h1>
                         </div>
                         <table class="print-table">
                             <thead>
@@ -1290,20 +1291,71 @@
                                     <th>NAME</th>
                                     <th>DAY 1</th>
                                     <th>DAY 2</th>
+                                    <th style="width:100px;">PRIZE POT (£)</th>
+                                    <th style="width:120px;">SECRET PAIRS (£)</th>
+                                    <th style="width:120px;">ANGLER TOTAL</th>
                                 </tr>
                             </thead>
                             <tbody>`;
                             
             e.anglers.forEach(a => {
                 h += `<tr>
-                        <td>${a.name}</td>
+                        <td>${a.name} ${a.mobility ? ' [A]' : ''}</td>
                         <td>${a.z1} ${a.p1}</td>
                         <td>${a.z2} ${a.p2}</td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
                       </tr>`;
             });
             
-            c.innerHTML += h + "</tbody></table></div>";
+            h += `      <tr>
+                            <td colspan="5" style="text-align: right; font-weight: 900; font-size: 16px; padding: 15px;">TOTAL TEAM CASH HANDOVER:</td>
+                            <td style="font-weight: 900; font-size: 16px; background: #f8fafc;">£</td>
+                        </tr>
+                    </tbody></table></div>`;
+            c.innerHTML += h;
         });
+
+        const solos = appState.filter(e => !e.isTeam);
+        if(solos.length > 0) {
+            for (let i = 0; i < solos.length; i += 4) {
+                const batch = solos.slice(i, i + 4);
+                const page = document.createElement('div');
+                page.style.pageBreakAfter = 'always';
+
+                batch.forEach(e => {
+                    const a = e.anglers[0];
+                    let h = `<div class="dispatch-slip">
+                                <div class="dispatch-header">
+                                    <h1>SOLO COMPETITOR: ${a.name || 'UNNAMED'} ${a.mobility ? ' [A]' : ''}</h1>
+                                </div>
+                                <table class="print-table">
+                                    <thead>
+                                        <tr>
+                                            <th>DAY 1</th>
+                                            <th>DAY 2</th>
+                                            <th style="width:100px;">PRIZE POT (£)</th>
+                                            <th style="width:120px;">SECRET PAIRS (£)</th>
+                                            <th style="width:120px;">TOTAL</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>${a.z1} ${a.p1}</td>
+                                            <td>${a.z2} ${a.p2}</td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>`;
+                    page.innerHTML += h;
+                });
+                c.appendChild(page);
+            }
+        }
         
         document.body.classList.add('printing-dispatch'); 
         window.print(); 
