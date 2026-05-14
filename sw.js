@@ -1,4 +1,4 @@
-const CACHE_NAME = 'zonedraw-v12.04.15-ghost-patch-v1';
+const CACHE_NAME = 'zonedraw-v12.04.16-silent-validator-v1';
 const ASSETS_TO_CACHE = [
     './',
     './index.html',
