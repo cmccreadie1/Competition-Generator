@@ -3,14 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ZONEDRAW v12.02.00</title>
+    <title>ZONEDRAW v12.02.01</title>
     <link rel="manifest" href="manifest.json">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
     <style>
         :root {
-            /* MODERN FLAT THEME FOR PRINTING */
+            /* MODERN FLAT THEME FOR PRINTING & SCREEN */
             --bg: #f8fafc; 
             --card: #ffffff; 
             --text: #0f172a;
@@ -18,11 +18,17 @@
             --accent-glow: rgba(79, 70, 229, 0.15);
             --border: #e2e8f0;
             
-            /* High Contrast Solid Colors */
+            /* High Contrast Solid Colors for Pills */
             --red-color: #ef4444;
-            --yellow-color: #d97706;
+            --yellow-color: #f59e0b;
             --green-color: #10b981;
             --blue-color: #3b82f6;
+
+            /* Soft Pastel Washes for Headers */
+            --red-soft: #fef2f2;
+            --yellow-soft: #fffbeb;
+            --green-soft: #ecfdf5;
+            --blue-soft: #eff6ff;
             
             --pending: #f59e0b; 
             
@@ -53,19 +59,19 @@
         .dt-opt { padding: 12px 10px; border-radius: 6px; cursor: pointer; font-weight: 900; font-size: 13px; transition: 0.2s; display: flex; align-items: center; justify-content: center; color: var(--text); background: white; border: 2px solid transparent; }
         .dt-opt.active { border-color: var(--accent); color: var(--accent); background: rgba(79, 70, 229, 0.05); }
 
-        .zone-card { background: var(--card); border: 2px solid var(--border); border-top-width: 6px; border-radius: 12px; padding: 15px; position: relative; transition: 0.2s; break-inside: avoid; page-break-inside: avoid; }
+        .zone-card { background: var(--card); border: 2px solid var(--border); border-top-width: 6px; border-radius: 12px; padding: 15px; position: relative; transition: 0.2s; break-inside: avoid; page-break-inside: avoid; overflow: hidden; }
         .zone-card.solo-card { height: fit-content; align-self: start; }
         .zone-card.selected { border-color: var(--accent); }
         .zone-card.pending { border-color: var(--pending); }
         
-        .pending-tag { position: absolute; top: -12px; right: 15px; background: white; border: 2px solid var(--pending); color: var(--pending); font-size: 10px; font-weight: 900; padding: 4px 10px; border-radius: 6px; z-index: 10; letter-spacing: 1px; }
-        .zone-header { font-size: 11px; font-weight: 900; color: #64748b; margin-bottom: 12px; border-bottom: 2px solid #f1f5f9; padding-bottom: 8px; display: flex; justify-content: space-between; align-items: center; }
+        .pending-tag { position: absolute; top: 12px; right: 15px; background: white; border: 2px solid var(--pending); color: var(--pending); font-size: 10px; font-weight: 900; padding: 4px 10px; border-radius: 6px; z-index: 10; letter-spacing: 1px; }
+        .zone-header { font-size: 11px; font-weight: 900; color: #64748b; margin: -15px -15px 12px -15px; padding: 12px 15px; border-bottom: 2px solid var(--border); border-radius: 10px 10px 0 0; display: flex; justify-content: space-between; align-items: center; transition: 0.2s; }
 
-        .res-row { display: grid; grid-template-columns: 1fr 110px 110px; gap: 8px; align-items: center; padding: 8px 0; border-bottom: 2px solid #f8fafc; }
+        .res-row { display: grid; grid-template-columns: 1fr 110px 110px; gap: 8px; align-items: center; padding: 8px 10px; border-bottom: 2px solid #f8fafc; }
         .res-row:last-child { border-bottom: none; }
         .angler-name { font-size: 14px; font-weight: 900; letter-spacing: 0.5px; pointer-events: none; }
         
-        .draw-pill { padding: 6px 10px; border-radius: 8px; font-size: 10px; font-weight: 900; text-align: center; border: 2px solid; background: white; pointer-events: none; }
+        .draw-pill { padding: 6px 10px; border-radius: 8px; font-size: 11px; font-weight: 900; text-align: center; border: none; color: white; pointer-events: none; }
         .peg-num { font-size: 18px; font-weight: 900; margin-left: 6px; vertical-align: middle; }
 
         .res-row.swap-active { cursor: pointer; transition: 0.2s; border-radius: 8px; padding: 8px; pointer-events: auto; background: #f8fafc; border: 2px dashed #cbd5e1; }
@@ -106,8 +112,10 @@
             body { background: white !important; margin: 0; color: black !important; }
             
             .zone-card { border: 3px solid black !important; background: white !important; color: black !important; box-shadow: none !important; }
+            .zone-header { background: white !important; border-bottom: 2px solid black !important; color: black !important; }
             .res-row { border-bottom: 1px solid #ccc !important; }
             .draw-pill { border: 2px solid black !important; color: black !important; background: white !important; }
+            .peg-num { color: black !important; }
             .a-name { color: black !important; font-weight: 900 !important; }
             .a-tag { color: black !important; border: 1px solid black !important; padding: 2px 4px !important; border-radius: 4px !important; }
             
@@ -133,7 +141,7 @@
 <div class="fixed-header no-print">
     <div class="header-content">
         <button class="home-btn" onclick="confirmRestart()" tabindex="-1">⚠️ RESTART & CLEAR ALL</button>
-        <div class="brand-name">ZONEDRAW <span id="vTag" class="v-tag">v12.02.00</span></div>
+        <div class="brand-name">ZONEDRAW <span id="vTag" class="v-tag">v12.02.01</span></div>
         <div style="width: 180px; text-align:right;">
             <button class="btn-tool" onclick="showHistory()" style="font-size: 12px; padding: 8px 15px;">📜 ARCHIVES</button>
         </div>
@@ -281,6 +289,7 @@
 <script>
     const zones = ['RED', 'YELLOW', 'GREEN', 'BLUE'];
     const zColors = { 'RED': 'var(--red-color)', 'YELLOW': 'var(--yellow-color)', 'GREEN': 'var(--green-color)', 'BLUE': 'var(--blue-color)' };
+    const zSofts = { 'RED': 'var(--red-soft)', 'YELLOW': 'var(--yellow-soft)', 'GREEN': 'var(--green-soft)', 'BLUE': 'var(--blue-soft)' };
     
     let appState = []; 
     let matchDays = 2;
@@ -599,13 +608,12 @@
     function initiateShuffle() {
         syncScreenToState();
         
-        // Remove completely empty rows to clean up board
         appState = appState.filter(e => {
             if (e.isTeam) return e.anglers.some(a => a.name.trim() !== '') || e.tName.trim() !== '';
             return e.anglers[0].name.trim() !== '';
         });
 
-        // 100% WIPE OF ALL PEGS to prevent Domino Effect
+        // 100% WIPE OF ALL PEGS
         appState.forEach(entry => {
             entry.anglers.forEach(a => {
                 a.z1 = undefined; a.p1 = undefined; a.z2 = undefined; a.p2 = undefined;
@@ -630,7 +638,7 @@
                 let hasA = entry.anglers.some(ang => ang.mobility > 0);
                 if (entry.isTeam && hasA) return 3; // Phase 1
                 if (entry.isTeam && !hasA) return 2; // Phase 2
-                return 1; // Phase 3 (Solos, with or without A, they act as fluid shock absorbers)
+                return 1; // Phase 3 (Solos, with or without A)
             };
             return getPriority(b) - getPriority(a);
         });
@@ -974,10 +982,13 @@
 
     function renderResultCard(container, g) {
         const div = document.createElement('div'); div.className = 'zone-card visible';
-        const firstZ1 = g.anglers[0] && g.anglers[0].z1 ? g.anglers[0].z1 : 'GREEN';
-        div.style.borderTopColor = zColors[firstZ1] || 'black';
+        const firstZ1 = g.anglers[0] && g.anglers[0].z1 ? g.anglers[0].z1 : '';
+        let headerBg = firstZ1 ? zSofts[firstZ1] : 'transparent';
+        let borderColor = firstZ1 ? zColors[firstZ1] : 'var(--border)';
+
+        div.style.borderTopColor = borderColor;
         
-        let h = `<div class="zone-header"><span>${g.tName || 'SOLO ANGLER'}</span></div>`;
+        let h = `<div class="zone-header" style="background-color: ${headerBg};"><span>${g.tName || 'SOLO ANGLER'}</span></div>`;
         
         h += `<div class="res-row" style="border:none; padding-top:0; padding-bottom:4px; pointer-events:none;">
                 <span></span>
@@ -1003,20 +1014,20 @@
 
             let aMob = a.mobility ? '<span class="a-tag">[A]</span>' : '';
             
-            let p1Color = zColors[a.z1] || 'black';
-            let p2Color = zColors[a.z2] || 'black';
+            let p1Color = zColors[a.z1] || '#94a3b8';
+            let p2Color = zColors[a.z2] || '#94a3b8';
 
-            let p1Icon = p1Safe ? '<br><span style="font-size:9px; color:#0f172a; display:block; margin-top:3px;">[A PEG]</span>' : '';
-            let p2Icon = p2Safe ? '<br><span style="font-size:9px; color:#0f172a; display:block; margin-top:3px;">[A PEG]</span>' : '';
+            let p1Icon = p1Safe ? '<br><span style="font-size:9px; color:white; display:block; margin-top:3px; opacity: 0.9;">[A PEG]</span>' : '';
+            let p2Icon = p2Safe ? '<br><span style="font-size:9px; color:white; display:block; margin-top:3px; opacity: 0.9;">[A PEG]</span>' : '';
 
             h += `<div class="${rowClass}" ${clickEvt}>
                     <span class="angler-name">${a.name}${aMob}</span>
                     <div style="display:flex; flex-direction:column; align-items:center; justify-content:center; pointer-events:none;">
-                        <div class="draw-pill" style="border-color:${p1Color}; color:${p1Color};"><span style="color:#0f172a;">${a.z1}</span> <span class="peg-num">${a.p1}</span>${p1Icon}</div>
+                        <div class="draw-pill" style="background-color:${p1Color};"><span style="color:white; opacity: 0.9;">${a.z1}</span> <span class="peg-num" style="color:white;">${a.p1}</span>${p1Icon}</div>
                     </div>
                     ${matchDays == 2 && a.z2 ? `
                     <div style="display:flex; flex-direction:column; align-items:center; justify-content:center; pointer-events:none;">
-                        <div class="draw-pill" style="border-color:${p2Color}; color:${p2Color};"><span style="color:#0f172a;">${a.z2}</span> <span class="peg-num">${a.p2}</span>${p2Icon}</div>
+                        <div class="draw-pill" style="background-color:${p2Color};"><span style="color:white; opacity: 0.9;">${a.z2}</span> <span class="peg-num" style="color:white;">${a.p2}</span>${p2Icon}</div>
                     </div>` : '<div></div>'}
                   </div>`;
         });
@@ -1217,8 +1228,10 @@
     }
 
     function exportToCSV() {
-        let csv = "NAME,TEAM,DAY 1 ZONE,DAY 1 PEG,DAY 2 ZONE,DAY 2 PEG\n";
-        appState.forEach(g => g.anglers.forEach(a => { if(a.name) csv += `${a.name},${g.tName || "SOLO"},${a.z1},${a.p1},${matchDays==2?a.z2:""},${matchDays==2?a.p2:""}\n`; }));
+        let csv = "NAME,TEAM,DAY 1 ZONE,DAY 2 ZONE\n";
+        appState.forEach(g => g.anglers.forEach(a => { 
+            if(a.name) csv += `${a.name},${g.tName || "SOLO"},${a.z1 || ""},${matchDays==2?(a.z2||""):""}\n`; 
+        }));
         const blob = new Blob([csv], {type: 'text/csv'});
         const lnk = document.createElement('a'); lnk.href = URL.createObjectURL(blob); 
         let matchName = document.getElementById('matchTitle').value.trim() || "ZONEDRAW_EXPORT";
@@ -1256,6 +1269,8 @@
     function shareDraw() {
         document.getElementById('pdfOverlay').style.display = 'flex';
         const element = document.getElementById('resultsSection');
+
+        document.body.classList.add('full-color-share');
         
         element.querySelectorAll('.bucket-grid').forEach(grid => {
             grid.style.display = 'grid';
@@ -1274,11 +1289,13 @@
             };
 
             html2pdf().set(opt).from(element).save().then(() => {
+                document.body.classList.remove('full-color-share');
                 element.querySelectorAll('.bucket-grid').forEach(grid => {
                     grid.style.display = ''; grid.style.gridTemplateColumns = '';
                 });
                 document.getElementById('pdfOverlay').style.display = 'none';
             }).catch(err => {
+                document.body.classList.remove('full-color-share');
                 element.querySelectorAll('.bucket-grid').forEach(grid => {
                     grid.style.display = ''; grid.style.gridTemplateColumns = '';
                 });
