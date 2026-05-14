@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ZONEDRAW v12.04.15</title>
+    <title>ZONEDRAW v12.04.16</title>
     <link rel="manifest" href="manifest.json">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
@@ -128,7 +128,7 @@
         .bucket-grid { 
             display: grid; 
             grid-template-columns: repeat(auto-fill, minmax(400px, 1fr)); 
-            gap: 20px; 
+            gap: 15px; 
         }
 
         .duration-toggle { 
@@ -169,7 +169,7 @@
             border: 2px solid var(--border); 
             border-top-width: 6px; 
             border-radius: 12px; 
-            padding: 15px; 
+            padding: 10px; 
             position: relative; 
             transition: 0.2s; 
             break-inside: avoid; 
@@ -209,8 +209,8 @@
             font-size: 11px; 
             font-weight: 900; 
             color: #64748b; 
-            margin: -15px -15px 12px -15px; 
-            padding: 12px 15px; 
+            margin: -10px -10px 10px -10px; 
+            padding: 8px 12px; 
             border-bottom: 2px solid var(--border); 
             border-radius: 10px 10px 0 0; 
             display: flex; 
@@ -221,10 +221,10 @@
 
         .res-row { 
             display: grid; 
-            grid-template-columns: 1fr 110px 110px; 
+            grid-template-columns: 1fr 100px 100px; 
             gap: 8px; 
             align-items: center; 
-            padding: 8px 10px; 
+            padding: 5px 8px; 
             border-bottom: 2px solid #f8fafc; 
         }
 
@@ -233,16 +233,16 @@
         }
 
         .angler-name { 
-            font-size: 14px; 
+            font-size: 13px; 
             font-weight: 900; 
             letter-spacing: 0.5px; 
             pointer-events: none; 
         }
         
         .draw-pill { 
-            padding: 6px 10px; 
+            padding: 4px 8px; 
             border-radius: 8px; 
-            font-size: 11px; 
+            font-size: 10px; 
             font-weight: 900; 
             text-align: center; 
             border: 2px solid transparent; 
@@ -272,7 +272,7 @@
         }
 
         .peg-num { 
-            font-size: 18px; 
+            font-size: 16px; 
             font-weight: 900; 
             margin-left: 6px; 
             vertical-align: middle; 
@@ -292,7 +292,53 @@
             color: var(--a-color); 
             font-weight: 900; 
             margin-left: 6px; 
-            font-size: 13px; 
+            font-size: 12px; 
+        }
+
+        .zone-key-container {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            margin-bottom: 25px;
+            flex-wrap: wrap;
+        }
+
+        .zone-key-pill {
+            color: white;
+            font-weight: 900;
+            font-size: 11px;
+            padding: 4px 14px;
+            border-radius: 6px;
+            letter-spacing: 1px;
+        }
+
+        .anomaly-banner {
+            background: #fef2f2;
+            border: 2px solid #ef4444;
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        .anomaly-banner h3 {
+            color: #ef4444;
+            margin: 0 0 10px 0;
+            font-size: 16px;
+            text-align: center;
+        }
+
+        .anomaly-banner ul {
+            color: #0f172a;
+            font-size: 12px;
+            font-weight: 700;
+            margin: 0;
+            padding-left: 20px;
+            text-transform: none;
+        }
+
+        .anomaly-banner li {
+            margin-bottom: 5px;
         }
 
         .btn-action { 
@@ -369,7 +415,7 @@
             color: var(--text); 
             border-bottom: 3px solid var(--text); 
             padding-bottom: 10px; 
-            margin: 40px 0 20px; 
+            margin: 30px 0 15px; 
             letter-spacing: 1px; 
         }
 
@@ -446,7 +492,7 @@
 
 <div class="fixed-header no-print">
     <div class="header-content">
-        <div class="brand-name">ZONEDRAW <span id="vTag" class="v-tag">v12.04.15</span></div>
+        <div class="brand-name">ZONEDRAW <span id="vTag" class="v-tag">v12.04.16</span></div>
     </div>
 </div>
 
@@ -546,13 +592,27 @@
         <button onclick="exportAccountingCSV()" class="btn-action-outline" style="border-color:#10b981; color:#10b981;">CSV ACCOUNTING</button>
     </div>
     <div id="swapPrompt" class="no-print" style="display:none; text-align:center; background:#8b5cf6; color:white; padding:15px; font-weight:900; margin-bottom:20px; border-radius:12px;">SWAP MODE ACTIVE (Select a specific day peg to swap)</div>
-    <h1 id="resTitle" style="text-align:center; font-size:2.5rem; margin-bottom:40px; color: black;"></h1>
+    
+    <div id="anomalyBanner" class="anomaly-banner no-print">
+        <h3>⚠️ DRAW ANOMALIES DETECTED</h3>
+        <ul id="anomalyList"></ul>
+    </div>
+
+    <h1 id="resTitle" style="text-align:center; font-size:1.8rem; margin: 10px 0 15px; color: black;"></h1>
+    
+    <div class="zone-key-container no-print">
+        <div class="zone-key-pill" style="background:var(--red-color);">RED</div>
+        <div class="zone-key-pill" style="background:var(--yellow-color);">YELLOW</div>
+        <div class="zone-key-pill" style="background:var(--green-color);">GREEN</div>
+        <div class="zone-key-pill" style="background:var(--blue-color);">BLUE</div>
+    </div>
+
     <div id="resultsArea">
         <div id="teamsBucketContainer" style="display:none;">
             <div class="group-label">TEAMS</div>
             <div id="teamsBucket" class="bucket-grid"></div>
         </div>
-        <div id="solosBucketContainer" style="display:none; margin-top:50px;">
+        <div id="solosBucketContainer" style="display:none; margin-top:40px;">
             <div class="group-label">SOLOS</div>
             <div id="solosBucket" class="bucket-grid"></div>
         </div>
@@ -1248,13 +1308,79 @@
         } 
     }
 
+    // --- THE SILENT VALIDATOR ---
+    function runValidator() {
+        let errors = [];
+        let pegMapD1 = { RED:[], YELLOW:[], GREEN:[], BLUE:[] };
+        let pegMapD2 = { RED:[], YELLOW:[], GREEN:[], BLUE:[] };
+
+        appState.forEach(team => {
+            let tName = team.tName || 'SOLO';
+
+            if (team.isTeam) {
+                let d1Zones = [];
+                let d2Zones = [];
+                team.anglers.forEach(a => {
+                    if(a.z1) {
+                        if(d1Zones.includes(a.z1)) errors.push(`TEAM CLASH: '${tName}' has multiple anglers in ${a.z1} ZONE on DAY 1.`);
+                        d1Zones.push(a.z1);
+                    }
+                    if(matchDays === 2 && a.z2) {
+                        if(d2Zones.includes(a.z2)) errors.push(`TEAM CLASH: '${tName}' has multiple anglers in ${a.z2} ZONE on DAY 2.`);
+                        d2Zones.push(a.z2);
+                    }
+                });
+            }
+
+            team.anglers.forEach(a => {
+                let aName = a.name || 'UNNAMED';
+
+                // Ghost Peg Check
+                if (!a.z1 || a.p1 === 99 || a.p1 === undefined) errors.push(`GHOST PEG: '${aName}' has an invalid peg on DAY 1.`);
+                if (matchDays === 2 && (!a.z2 || a.p2 === 99 || a.p2 === undefined)) errors.push(`GHOST PEG: '${aName}' has an invalid peg on DAY 2.`);
+
+                // Double Zone Check (Ignores [A] anglers if Mobility Mode B is active)
+                if (matchDays === 2 && a.z1 && a.z2 && a.z1 === a.z2) {
+                    let isStaticAnchor = (mobilityMode === 'B' && a.mobility);
+                    if (!isStaticAnchor) {
+                        errors.push(`DOUBLE ZONE: '${aName}' is assigned to ${a.z1} on both days.`);
+                    }
+                }
+
+                // Peg Clash Check (Are two people holding the exact same peg?)
+                if (a.z1 && a.p1 && a.p1 !== 99) {
+                    if (pegMapD1[a.z1].includes(a.p1)) errors.push(`PEG CLASH: '${a.z1} ${a.p1}' is assigned to multiple anglers on DAY 1.`);
+                    pegMapD1[a.z1].push(a.p1);
+                }
+                if (matchDays === 2 && a.z2 && a.p2 && a.p2 !== 99) {
+                    if (pegMapD2[a.z2].includes(a.p2)) errors.push(`PEG CLASH: '${a.z2} ${a.p2}' is assigned to multiple anglers on DAY 2.`);
+                    pegMapD2[a.z2].push(a.p2);
+                }
+            });
+        });
+
+        return [...new Set(errors)]; // Return unique errors
+    }
+
     function displayDraw() {
         document.querySelectorAll('body > div[id$="Section"]').forEach(s => s.style.display = 'none');
         document.getElementById('resultsSection').style.display = 'block';
         document.getElementById('resTitle').innerText = document.getElementById('matchTitle').value || "DRAW";
         
-        // Ensure Command Bar is hidden on finalized draw screen
+        // Hide Command Bar
         document.getElementById('commandBar').style.display = 'none';
+
+        // Run the Silent Validator
+        const anomalies = runValidator();
+        const banner = document.getElementById('anomalyBanner');
+        const list = document.getElementById('anomalyList');
+        
+        if (anomalies.length > 0) {
+            banner.style.display = 'block';
+            list.innerHTML = anomalies.map(err => `<li>${err}</li>`).join('');
+        } else {
+            banner.style.display = 'none';
+        }
 
         const tb = document.getElementById('teamsBucket'); 
         tb.innerHTML = ''; 
