@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ZONEDRAW v12.04.20</title>
+    <title>ZONEDRAW v12.04.21</title>
     <link rel="manifest" href="manifest.json">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
@@ -193,7 +193,6 @@
             display: flex; 
             justify-content: space-between; 
             align-items: center; 
-            transition: 0.2s; 
         }
 
         .res-row { 
@@ -231,11 +230,9 @@
         .draw-pill.swap-active { 
             cursor: pointer; 
             border: 2px dashed #0f172a; 
-            opacity: 0.9;
         }
 
         .draw-pill.swap-active:hover { 
-            opacity: 1;
             transform: scale(1.05); 
         }
 
@@ -243,7 +240,6 @@
             border: 3px solid #0f172a !important; 
             transform: scale(1.1);
             box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-            opacity: 1;
             z-index: 10;
             position: relative;
         }
@@ -470,7 +466,7 @@
 
 <div class="fixed-header no-print">
     <div class="header-content">
-        <div class="brand-name">ZONEDRAW <span id="vTag" class="v-tag">v12.04.20</span></div>
+        <div class="brand-name">ZONEDRAW <span id="vTag" class="v-tag">v12.04.21</span></div>
         <button id="nuclearResetBtn" onclick="showWipeModal()" class="btn-action-outline" style="border-color:#ef4444; color:#ef4444; padding: 8px 16px; font-size: 11px; display: none;">🏁 FINISH & RESET</button>
     </div>
 </div>
@@ -694,6 +690,7 @@
 
     const genId = () => 'id_' + Math.random().toString(36).substr(2, 9);
 
+    // AUTO-SAVE ENGINE
     setInterval(() => {
         if (isAppReady) {
             persistState();
@@ -815,7 +812,7 @@
         document.getElementById('editDrawBanner').style.display = 'none';
         document.getElementById('initMatchBtn').style.display = 'inline-block';
         document.getElementById('commandBar').style.display = 'none';
-        document.getElementById('nuclearResetBtn').style.display = 'none';
+        document.getElementById('nuclearResetBtn').style.display = 'block';
         
         updateTicker();
     }
@@ -1242,7 +1239,10 @@
         document.getElementById('nuclearResetBtn').style.display = 'block'; 
         document.getElementById('setupPanel').style.display = isSafe ? 'none' : 'block';
         document.getElementById('editDrawBanner').style.display = isSafe ? 'block' : 'none';
+        
+        // DYNAMIC ACCESSIBILITY LOCK: Only show Rule Toggles if NOT in Safe Edit
         document.getElementById('accPanelWrapper').style.display = isSafe ? 'none' : 'flex';
+        
         renderStateToScreen();
     }
 
