@@ -1,5 +1,5 @@
-const CACHE_NAME = 'zonedraw-v12.04.22';
-const ASSETS = [
+const CACHE_NAME = 'zonedraw-v12.04.17-nuclear-backup-v1';
+const ASSETS_TO_CACHE = [
     './',
     './index.html',
     './manifest.json',
@@ -7,7 +7,7 @@ const ASSETS = [
 ];
 
 self.addEventListener('install', (event) => {
-    event.waitUntil(caches.open(CACHE_NAME).then((cache) => cache.addAll(ASSETS)));
+    event.waitUntil(caches.open(CACHE_NAME).then((cache) => cache.addAll(ASSETS_TO_CACHE)));
     self.skipWaiting();
 });
 
