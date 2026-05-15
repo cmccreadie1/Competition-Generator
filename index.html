@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ZONEDRAW v12.04.17</title>
+    <title>ZONEDRAW v12.04.20</title>
     <link rel="manifest" href="manifest.json">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
@@ -87,7 +87,7 @@
 
         .header-content { 
             display: flex; 
-            justify-content: center; 
+            justify-content: space-between; 
             align-items: center; 
             max-width: 1400px; 
             margin: 0 auto; 
@@ -180,29 +180,6 @@
         .zone-card.solo-card { 
             height: fit-content; 
             align-self: start; 
-        }
-
-        .zone-card.selected { 
-            border-color: var(--accent); 
-        }
-
-        .zone-card.pending { 
-            border-color: var(--pending); 
-        }
-        
-        .pending-tag { 
-            position: absolute; 
-            top: 12px; 
-            right: 15px; 
-            background: white; 
-            border: 2px solid var(--pending); 
-            color: var(--pending); 
-            font-size: 10px; 
-            font-weight: 900; 
-            padding: 4px 10px; 
-            border-radius: 6px; 
-            z-index: 10; 
-            letter-spacing: 1px; 
         }
 
         .zone-header { 
@@ -493,14 +470,15 @@
 
 <div class="fixed-header no-print">
     <div class="header-content">
-        <div class="brand-name">ZONEDRAW <span id="vTag" class="v-tag">v12.04.17</span></div>
+        <div class="brand-name">ZONEDRAW <span id="vTag" class="v-tag">v12.04.20</span></div>
+        <button id="nuclearResetBtn" onclick="showWipeModal()" class="btn-action-outline" style="border-color:#ef4444; color:#ef4444; padding: 8px 16px; font-size: 11px; display: none;">🏁 FINISH & RESET</button>
     </div>
 </div>
 
 <div id="entrySection" class="no-print">
     <div id="editDrawBanner" style="display:none; background:#ecfdf5; border: 2px solid #10b981; border-radius:12px; padding: 15px; margin-bottom: 20px; text-align: center;">
         <h3 style="color:#10b981; margin:0 0 5px 0; font-size: 16px;">EDITING CURRENT DRAW</h3>
-        <p style="color:#0f172a; margin:0; font-size: 12px; text-transform: none; font-weight: 600;">You can safely change names, update mobility [A] tags, and link/unlink teams. Your existing peg numbers are locked and will not change.</p>
+        <p style="color:#0f172a; margin:0; font-size: 12px; text-transform: none; font-weight: 600;">You can safely change names, update mobility [A] tags, and link/unlink teams. Your existing peg numbers are locked.</p>
     </div>
 
     <div class="control-panel" id="setupPanel">
@@ -522,13 +500,10 @@
                 <label style="display:block; margin-bottom:8px; font-size: 11px; font-weight: 900; color: #64748b;">SOLOS</label>
                 <input type="number" id="initIndivs" value="0" style="width:90px; text-align:center; font-size: 18px; padding: 9px 10px;">
             </div>
-            <div style="margin-bottom: 2px;">
-                <button class="btn-action-outline" onclick="let p = document.getElementById('accPanelWrapper'); p.style.display = p.style.display === 'none' ? 'flex' : 'none';" type="button" tabindex="-1" style="padding: 12px 20px;">⚙️ ACCESSIBILITY OPTIONS</button>
-            </div>
         </div>
 
-        <div id="accPanelWrapper" style="display:none; flex-direction:column; align-items:center; gap:15px; width:100%; max-width:700px; padding: 20px; background: #ffffff; border-radius: 12px; border: 3px solid var(--border); margin: 20px auto 0;">
-            <span style="font-size:11px; opacity:0.6; text-transform:none; font-weight: 600;">Toggle to restrict anglers with physical requirements to specific safe pegs on the beach.</span>
+        <div id="accPanelWrapper" style="display:flex; flex-direction:column; align-items:center; gap:15px; width:100%; max-width:700px; padding: 20px; background: #ffffff; border-radius: 12px; border: 3px solid var(--border); margin: 20px auto 0;">
+            <span style="font-size:11px; opacity:0.6; text-transform:none; font-weight: 600;">ACCESSIBILITY SETTINGS (Rule changes require full re-draw)</span>
             <div style="display:flex; justify-content:center; gap:10px; width:100%;">
                 <div id="mobModeA" class="dt-opt active" style="flex:1; flex-direction:column; border-width: 2px;" onclick="setMobilityMode('A')">
                     <span>DISTRIBUTED PEGS</span>
@@ -579,22 +554,23 @@
         <button onclick="toggleSwapMode()" id="swapBtn" class="btn-action-outline" style="border-color:#8b5cf6; color:#8b5cf6;">SWAP PEGS</button>
         <button onclick="toggleExportMenu()" id="exportToggleBtn" class="btn-action" style="background:#0f172a; border-color:#0f172a;">🖨️ OUTPUT MENU</button>
     </div>
+    
     <div id="exportMenu" class="no-print" style="display:none; gap:12px; justify-content:center; margin-bottom:30px; padding:20px; background:white; border-radius:16px; flex-wrap:wrap; border:3px solid var(--border);">
         <button onclick="generateRegistrationSheet()" class="btn-action" style="background:#10b981;">PRINT REGISTRATION</button>
         <button onclick="shareDraw()" class="btn-action" style="background:#64748b;">SHARE PDF</button>
         <button onclick="generateDispatchSlips()" class="btn-action" style="background:#0ea5e9;">TEAM SLIPS</button>
         <button onclick="printZoneRosters()" class="btn-action" style="background:#0ea5e9;">ZONE ROSTERS</button>
         <button onclick="exportToCSV()" class="btn-action-outline" style="border-color:#10b981; color:#10b981;">CSV LIST</button>
-        <button onclick="exportAccountingCSV()" class="btn-action-outline" style="border-color:#10b981; color:#10b981;">CSV ACCOUNTING</button>
     </div>
-    <div id="swapPrompt" class="no-print" style="display:none; text-align:center; background:#8b5cf6; color:white; padding:15px; font-weight:900; margin-bottom:20px; border-radius:12px;">SWAP MODE ACTIVE (Select a specific day peg to swap)</div>
-    
+
     <div id="anomalyBanner" class="anomaly-banner no-print">
         <h3>⚠️ DRAW ANOMALIES DETECTED</h3>
         <ul id="anomalyList"></ul>
     </div>
 
-    <h1 id="resTitle" style="text-align:center; font-size:1.8rem; margin: 10px 0 10px; color: black;"></h1>
+    <div id="swapPrompt" class="no-print" style="display:none; text-align:center; background:#8b5cf6; color:white; padding:15px; font-weight:900; margin-bottom:20px; border-radius:12px;">SWAP MODE ACTIVE (Select a specific day peg to swap)</div>
+
+    <h1 id="resTitle" style="text-align:center; font-size:1.8rem; margin: 10px 0 15px; color: black;"></h1>
     
     <div class="zone-key-container no-print">
         <div id="keyRed" class="zone-key-pill" style="background:var(--red-color);">RED</div>
@@ -666,12 +642,6 @@
                 ⚠️ TOTAL RE-DRAW<br>
                 <span style="font-size: 11px; font-weight: 600; text-transform: none; display: block; margin-top: 5px;">Add latecomers. (Permanently deletes and redraws pegs).</span>
             </button>
-            <div style="margin-top: 15px; padding-top: 15px; border-top: 2px dashed #e2e8f0;">
-                <button onclick="showWipeModal()" class="btn-action-outline" style="border-color:#ef4444; color:#ef4444; width: 100%; padding: 15px;">
-                    🏁 FINISH & RESET COMPETITION<br>
-                    <span style="font-size: 10px; font-weight: 600; text-transform: none; display: block; margin-top: 5px;">Auto-backups and wipes the app for a new tournament.</span>
-                </button>
-            </div>
             <button onclick="closeManageModal()" class="btn-action-outline" style="border-color:#64748b; color:#64748b; margin-top: 10px;">CANCEL</button>
         </div>
     </div>
@@ -680,7 +650,7 @@
 <div id="redrawModal" class="modal-overlay no-print">
     <div class="modal-content">
         <h2 style="color: #ef4444; font-size: 28px; margin-top: 0;">⚠️ REDRAW CONFIRMATION</h2>
-        <p style="font-size: 16px; font-weight: 700; margin-bottom: 30px; text-transform: none;">Are you sure? This will delete all current pegs and return you to the Entry screen to allow late additions.</p>
+        <p style="font-size: 16px; font-weight: 700; margin-bottom: 30px; text-transform: none;">This will delete all current pegs and return you to the Entry screen to allow late additions and match rule changes. Proceed?</p>
         <div style="display: flex; flex-direction: column; gap: 15px;">
             <button onclick="closeRedrawModal()" class="btn-action">CANCEL</button>
             <button onclick="executePegWipe()" class="btn-action-outline" style="color: #ef4444; border-color: #ef4444;">YES, WIPE PEGS & REDRAW</button>
@@ -714,9 +684,7 @@
         'BLUE': 'var(--blue-soft)' 
     };
     
-    // IGNITION LOCK
     let isAppReady = false; 
-
     let appState = []; 
     let matchDays = 2;
     let currentZoneSize = 0; 
@@ -726,7 +694,6 @@
 
     const genId = () => 'id_' + Math.random().toString(36).substr(2, 9);
 
-    // THE HEARTBEAT AUTO-SAVE ENGINE
     setInterval(() => {
         if (isAppReady) {
             persistState();
@@ -765,33 +732,16 @@
         checkTeamClash();
     }
 
-    function showManageModal() {
-        document.getElementById('manageModal').style.display = 'flex';
-    }
-
-    function closeManageModal() {
-        document.getElementById('manageModal').style.display = 'none';
-    }
-
-    function showRedrawModal() {
-        document.getElementById('redrawModal').style.display = 'flex';
-    }
-
-    function closeRedrawModal() {
-        document.getElementById('redrawModal').style.display = 'none';
-    }
-
-    function showWipeModal() { 
-        document.getElementById('wipeModal').style.display = 'flex'; 
-    }
-    
-    function closeWipeModal() { 
-        document.getElementById('wipeModal').style.display = 'none'; 
-    }
+    function showManageModal() { document.getElementById('manageModal').style.display = 'flex'; }
+    function closeManageModal() { document.getElementById('manageModal').style.display = 'none'; }
+    function showRedrawModal() { document.getElementById('redrawModal').style.display = 'flex'; }
+    function closeRedrawModal() { document.getElementById('redrawModal').style.display = 'none'; }
+    function showWipeModal() { document.getElementById('wipeModal').style.display = 'flex'; }
+    function closeWipeModal() { document.getElementById('wipeModal').style.display = 'none'; }
 
     function handleSafeEdit() {
         closeManageModal();
-        handleAmend(); 
+        handleAmend(true); 
     }
 
     function handleTotalRedraw() {
@@ -803,11 +753,13 @@
         closeRedrawModal();
         appState.forEach(e => {
             e.anglers.forEach(a => {
-                a.z1 = undefined; a.p1 = undefined;
-                a.z2 = undefined; a.p2 = undefined;
+                a.z1 = undefined; 
+                a.p1 = undefined;
+                a.z2 = undefined; 
+                a.p2 = undefined;
             });
         });
-        handleAmend();
+        handleAmend(false); 
     }
 
     function executeNuclearWipe() {
@@ -863,6 +815,7 @@
         document.getElementById('editDrawBanner').style.display = 'none';
         document.getElementById('initMatchBtn').style.display = 'inline-block';
         document.getElementById('commandBar').style.display = 'none';
+        document.getElementById('nuclearResetBtn').style.display = 'none';
         
         updateTicker();
     }
@@ -873,10 +826,20 @@
         const i = parseInt(document.getElementById('initIndivs').value) || 0;
         
         for(let x = 0; x < t; x++) {
-            appState.push({ id: genId(), isTeam: true, tName: '', anglers: [{},{},{},{}] });
+            appState.push({ 
+                id: genId(), 
+                isTeam: true, 
+                tName: '', 
+                anglers: [{}, {}, {}, {}] 
+            });
         }
         for(let y = 0; y < i; y++) {
-            appState.push({ id: genId(), isTeam: false, tName: '', anglers: [{}] });
+            appState.push({ 
+                id: genId(), 
+                isTeam: false, 
+                tName: '', 
+                anglers: [{}] 
+            });
         }
         
         document.getElementById('initMatchBtn').style.display = 'none';
@@ -888,7 +851,9 @@
 
         setTimeout(() => {
             const firstInput = document.querySelector('#entryList input[type="text"]');
-            if (firstInput) { firstInput.focus(); }
+            if (firstInput) { 
+                firstInput.focus(); 
+            }
         }, 50);
     }
 
@@ -911,7 +876,9 @@
 
     function updateTeamName(id, val) {
         let entry = appState.find(e => e.id === id);
-        if(entry) { entry.tName = val.trim().toUpperCase(); }
+        if(entry) { 
+            entry.tName = val.trim().toUpperCase(); 
+        }
     }
 
     function updateAnglerName(id, aIdx, val) {
@@ -919,20 +886,6 @@
         if(entry && entry.anglers[aIdx]) {
             entry.anglers[aIdx].name = val.trim().toUpperCase();
             updateTicker();
-        }
-    }
-
-    function updateDrawButtons() {
-        const hasDraw = appState.some(e => e.anglers.some(a => a.z1));
-        const viewCont = document.getElementById('viewDrawContainer');
-        const processCont = document.getElementById('processDrawContainer');
-        
-        if (hasDraw) {
-            viewCont.style.display = 'flex';
-            processCont.style.display = 'none';
-        } else {
-            viewCont.style.display = 'none';
-            processCont.style.display = 'flex';
         }
     }
 
@@ -948,9 +901,14 @@
             div.dataset.id = entry.id;
             
             let h = `<div class="zone-header"><span>${entry.isTeam ? 'TEAM' : 'SOLO'}</span><div style="display:flex; align-items:center;">`;
-            if(!entry.isTeam) { h += `<input type="checkbox" class="merge-cb" onchange="checkMerge()" tabindex="-1" style="width:20px; height:20px;">`; }
-            if(entry.isTeam) { h += `<button class="btn-tool" onclick="breakStateTeam('${entry.id}')" tabindex="-1" style="margin-left:12px;">🔗 UNLINK</button>`; } 
-            else { h += `<button onclick="deleteStateEntry('${entry.id}')" tabindex="-1" style="background:none; border:none; color:#ef4444; font-weight:900; font-size:24px; cursor:pointer; margin-left:12px;">×</button>`; }
+            if(!entry.isTeam) { 
+                h += `<input type="checkbox" class="merge-cb" onchange="checkMerge()" tabindex="-1" style="width:20px; height:20px;">`; 
+            }
+            if(entry.isTeam) { 
+                h += `<button class="btn-tool" onclick="breakStateTeam('${entry.id}')" tabindex="-1" style="margin-left:12px;">🔗 UNLINK</button>`; 
+            } else { 
+                h += `<button onclick="deleteStateEntry('${entry.id}')" tabindex="-1" style="background:none; border:none; color:#ef4444; font-weight:900; font-size:24px; cursor:pointer; margin-left:12px;">×</button>`; 
+            }
             h += `</div></div>`;
             
             if(entry.isTeam) {
@@ -979,19 +937,30 @@
         
         document.getElementById('entryTeamsContainer').style.display = tb.innerHTML ? 'block' : 'none';
         document.getElementById('entrySolosContainer').style.display = sb.innerHTML ? 'block' : 'none';
-        updateTicker(); checkMerge(); checkTeamClash(); updateDrawButtons();
+        updateTicker(); 
+        checkMerge(); 
+        checkTeamClash(); 
+        
+        const hasD = appState.some(e => e.anglers.some(a => a.z1));
+        document.getElementById('viewDrawContainer').style.display = hasD ? 'block' : 'none';
+        document.getElementById('processDrawContainer').style.display = hasD ? 'none' : 'block';
     }
 
     function deleteStateEntry(id) { 
         const idx = appState.findIndex(e => e.id === id); 
-        if(idx > -1) { appState.splice(idx,1); renderStateToScreen(); } 
+        if(idx > -1) { 
+            appState.splice(idx,1); 
+            renderStateToScreen(); 
+        } 
     }
     
     function breakStateTeam(id) { 
         const idx = appState.findIndex(e => e.id === id); 
         if(idx > -1) { 
             const t = appState.splice(idx,1)[0]; 
-            t.anglers.forEach(a => { appState.push({ id: genId(), isTeam: false, tName: '', anglers: [{...a}] }); }); 
+            t.anglers.forEach(a => { 
+                appState.push({ id: genId(), isTeam: false, tName: '', anglers: [{...a}] }); 
+            }); 
             renderStateToScreen(); 
         } 
     }
@@ -1009,78 +978,150 @@
         renderStateToScreen(); 
     }
     
-    function checkMerge() { document.getElementById('mergeBtn').style.display = (document.querySelectorAll('.merge-cb:checked').length === 4) ? 'inline-block' : 'none'; }
+    function checkMerge() { 
+        document.getElementById('mergeBtn').style.display = (document.querySelectorAll('.merge-cb:checked').length === 4) ? 'inline-block' : 'none'; 
+    }
     
     function checkTeamClash() {
-        let clash = false; if (mobilityMode === 'B') appState.forEach(e => { if (e.isTeam && e.anglers.filter(a => a.mobility).length > 1) clash = true; }); 
+        let clash = false; 
+        if (mobilityMode === 'B') {
+            appState.forEach(e => { 
+                if (e.isTeam && e.anglers.filter(a => a.mobility).length > 1) clash = true; 
+            }); 
+        }
         document.getElementById('teamClashWarning').style.display = clash ? 'block' : 'none';
         document.getElementById('mainActionBtn').disabled = clash;
+        document.getElementById('mainActionBtn').style.opacity = clash ? '0.4' : '1';
     }
     
     function updateTicker() { 
-        let ent = 0; appState.forEach(e => e.anglers.forEach(a => { if (a.name && (a.name || '').trim() !== '') ent++; }));
+        let ent = 0; 
+        appState.forEach(e => e.anglers.forEach(a => { 
+            if (a.name && (a.name || '').trim() !== '') ent++; 
+        }));
         document.getElementById('tkAnglers').innerText = ent; 
     }
 
     function initiateShuffle() {
         appState = appState.filter(e => e.isTeam ? (e.anglers.some(a => (a.name || '').trim() !== '') || (e.tName || '').trim() !== '') : (e.anglers[0].name || '').trim() !== '');
-        appState.forEach(e => e.anglers.forEach(a => { a.z1 = a.p1 = a.z2 = a.p2 = undefined; }));
+        appState.forEach(e => e.anglers.forEach(a => { 
+            a.z1 = undefined; a.p1 = undefined; 
+            a.z2 = undefined; a.p2 = undefined; 
+        }));
         renderStateToScreen();
-        const over = document.getElementById('shuffleOverlay'); const pBar = document.getElementById('pBar');
-        over.style.display = 'flex'; let p = 0;
-        const inv = setInterval(() => { p += 5; pBar.style.width = p + '%'; if(p >= 100) { clearInterval(inv); over.style.display = 'none'; runDraw(); } }, 30);
+        const over = document.getElementById('shuffleOverlay'); 
+        const pBar = document.getElementById('pBar');
+        over.style.display = 'flex'; 
+        let p = 0;
+        const inv = setInterval(() => { 
+            p += 5; pBar.style.width = p + '%'; 
+            if(p >= 100) { 
+                clearInterval(inv); 
+                over.style.display = 'none'; 
+                runDraw(); 
+            } 
+        }, 30);
     }
 
     function runDraw() {
         appState.sort((a,b) => {
-            let getP = (e) => { let hasA = e.anglers.some(ang => ang.mobility); if(e.isTeam && hasA) return 3; if(e.isTeam) return 2; return 1; };
+            let getP = (e) => { 
+                let hasA = e.anglers.some(ang => ang.mobility); 
+                if(e.isTeam && hasA) return 3; 
+                if(e.isTeam) return 2; 
+                return 1; 
+            };
             return getP(b) - getP(a);
         });
+        
         const s1A = (document.getElementById('accPegs1_a').value || '').match(/\d+/g)?.map(Number) || [];
         const s2A = (document.getElementById('accPegs2_a').value || '').match(/\d+/g)?.map(Number) || [];
         const sAnch = (document.getElementById('accPegsAnchor').value || '').match(/\d+/g)?.map(Number) || [];
         const ancZ = document.getElementById('anchorZoneSelect').value;
-        let tot = 0; appState.forEach(e => tot += e.isTeam ? 4 : 1);
-        let zSize = Math.max(Math.ceil(tot/4), 1); currentZoneSize = zSize;
-        let p1 = zones.map((z, idx) => { let p = []; for(let i = 1; i <= zSize; i++) p.push((idx*zSize)+i); p.sort(() => Math.random() - 0.5); return {z, p}; });
-        let p2 = zones.map((z, idx) => { let p = []; for(let i = 1; i <= zSize; i++) p.push((idx*zSize)+i); p.sort(() => Math.random() - 0.5); return {z, p}; });
+        
+        let tot = 0; 
+        appState.forEach(e => tot += e.isTeam ? 4 : 1);
+        let zSize = Math.max(Math.ceil(tot/4), 1); 
+        currentZoneSize = zSize;
+        
+        let p1 = zones.map((z, idx) => { 
+            let p = []; 
+            for(let i = 1; i <= zSize; i++) p.push((idx*zSize)+i); 
+            p.sort(() => Math.random() - 0.5); 
+            return {z, p}; 
+        });
+        let p2 = zones.map((z, idx) => { 
+            let p = []; 
+            for(let i = 1; i <= zSize; i++) p.push((idx*zSize)+i); 
+            p.sort(() => Math.random() - 0.5); 
+            return {z, p}; 
+        });
         
         const pull = (z, d2, mob) => {
-            const pools = d2 ? p2 : p1; const zI = zones.indexOf(z);
-            if(mobilityMode === 'B' && mob && z === ancZ) { let sI = pools[zI].p.findIndex(p => sAnch.includes(p)); if(sI > -1) return pools[zI].p.splice(sI, 1)[0]; } 
-            else if(mobilityMode === 'A') {
+            const pools = d2 ? p2 : p1; 
+            const zI = zones.indexOf(z);
+            if(mobilityMode === 'B' && mob && z === ancZ) { 
+                let sI = pools[zI].p.findIndex(p => sAnch.includes(p)); 
+                if(sI > -1) return pools[zI].p.splice(sI, 1)[0]; 
+            } else if(mobilityMode === 'A') {
                 const sL = d2 ? s2A : s1A;
-                if(mob) { let sI = pools[zI].p.findIndex(p => sL.includes(p)); if(sI > -1) return pools[zI].p.splice(sI, 1)[0]; } 
-                else if(sL.length) { let nI = pools[zI].p.findIndex(p => !sL.includes(p)); if(nI > -1) return pools[zI].p.splice(nI, 1)[0]; }
+                if(mob) { 
+                    let sI = pools[zI].p.findIndex(p => sL.includes(p)); 
+                    if(sI > -1) return pools[zI].p.splice(sI, 1)[0]; 
+                } else if(sL.length) { 
+                    let nI = pools[zI].p.findIndex(p => !sL.includes(p)); 
+                    if(nI > -1) return pools[zI].p.splice(nI, 1)[0]; 
+                }
             }
             return pools[zI].p.pop() || 99;
         };
-        const canS = (z, d, mob) => { if(!mob) return true; let sL = d === 1 ? s1A : s2A; return (d === 1 ? p1 : p2)[zones.indexOf(z)].p.some(p => sL.includes(p)); };
+        
+        const canS = (z, d, mob) => { 
+            if(!mob) return true; 
+            let sL = d === 1 ? s1A : s2A; 
+            return (d === 1 ? p1 : p2)[zones.indexOf(z)].p.some(p => sL.includes(p)); 
+        };
         
         appState.forEach(e => {
             if(e.isTeam) {
                 let hasA = e.anglers.some(a => a.mobility);
                 if(mobilityMode === 'B' && hasA) {
-                    let d1Z = [], d2Z = []; e.anglers.forEach(a => { if(a.mobility) { d1Z.push(ancZ); d2Z.push(ancZ); } else { d1Z.push(undefined); d2Z.push(undefined); } });
-                    e.anglers.forEach((a, i) => { if(!a.mobility) { let av = zones.filter(z => z !== ancZ && !d1Z.includes(z)); d1Z[i] = av[0]; } });
+                    let d1Z = [], d2Z = []; 
+                    e.anglers.forEach(a => { 
+                        if(a.mobility) { d1Z.push(ancZ); d2Z.push(ancZ); } 
+                        else { d1Z.push(undefined); d2Z.push(undefined); } 
+                    });
+                    e.anglers.forEach((a, i) => { 
+                        if(!a.mobility) { 
+                            let av = zones.filter(z => z !== ancZ && !d1Z.includes(z)); 
+                            d1Z[i] = av[0]; 
+                        } 
+                    });
                     let sI = e.anglers.map((a, i) => !a.mobility ? i : -1).filter(i => i > -1);
-                    d2Z[sI[0]] = d1Z[sI[1]]; d2Z[sI[1]] = d1Z[sI[2]]; d2Z[sI[2]] = d1Z[sI[0]];
-                    e.anglers.forEach((a, i) => { a.z1 = d1Z[i]; a.p1 = pull(a.z1, 0, a.mobility); a.z2 = d2Z[i]; a.p2 = pull(a.z2, 1, a.mobility); });
-                } else if (mobilityMode === 'A' && hasA) {
-                    let d1Z = [...zones].sort(() => Math.random() - 0.5); let d2Z = [d1Z[1], d1Z[2], d1Z[3], d1Z[0]];
-                    let mI = e.anglers.findIndex(a => a.mobility); let best = 0;
-                    for(let i = 0; i < 4; i++) { if(canS(d1Z[i], 1, 1) && canS(d2Z[i], 2, 1)) { best = i; break; } }
-                    let col = [0, 1, 2, 3]; [col[mI], col[best]] = [col[best], col[mI]];
-                    e.anglers.forEach((a, i) => { a.z1 = d1Z[col[i]]; a.p1 = pull(a.z1, 0, a.mobility); a.z2 = d2Z[col[i]]; a.p2 = pull(a.z2, 1, a.mobility); });
+                    d2Z[sI[0]] = d1Z[sI[1]]; 
+                    d2Z[sI[1]] = d1Z[sI[2]]; 
+                    d2Z[sI[2]] = d1Z[sI[0]];
+                    e.anglers.forEach((a, i) => { 
+                        a.z1 = d1Z[i]; a.p1 = pull(a.z1, 0, a.mobility); 
+                        a.z2 = d2Z[i]; a.p2 = pull(a.z2, 1, a.mobility); 
+                    });
                 } else {
-                    let d1Z = [...zones].sort(() => Math.random() - 0.5); let d2Z = [d1Z[1], d1Z[2], d1Z[3], d1Z[0]];
-                    e.anglers.forEach((a, i) => { a.z1 = d1Z[i]; a.p1 = pull(a.z1, 0, 0); a.z2 = d2Z[i]; a.p2 = pull(a.z2, 1, 0); });
+                    let d1Z = [...zones].sort(() => Math.random() - 0.5); 
+                    let d2Z = [d1Z[1], d1Z[2], d1Z[3], d1Z[0]];
+                    e.anglers.forEach((a, i) => { 
+                        a.z1 = d1Z[i]; a.p1 = pull(a.z1, 0, a.mobility); 
+                        a.z2 = d2Z[i]; a.p2 = pull(a.z2, 1, a.mobility); 
+                    });
                 }
             } else {
                 let a = e.anglers[0]; 
-                if(mobilityMode === 'B' && a.mobility) { a.z1 = a.z2 = ancZ; } else { 
-                    let av = zones.filter(z => p1[zones.indexOf(z)].p.length > 0); a.z1 = av[Math.floor(Math.random() * av.length)]; 
-                    let av2 = zones.filter(z => z !== a.z1 && p2[zones.indexOf(z)].p.length > 0); if(av2.length === 0) av2 = zones.filter(z => p2[zones.indexOf(z)].p.length > 0);
+                if(mobilityMode === 'B' && a.mobility) { 
+                    a.z1 = a.z2 = ancZ; 
+                } else { 
+                    let av = zones.filter(z => p1[zones.indexOf(z)].p.length > 0); 
+                    a.z1 = av[Math.floor(Math.random() * av.length)]; 
+                    let av2 = zones.filter(z => z !== a.z1 && p2[zones.indexOf(z)].p.length > 0); 
+                    if(av2.length === 0) av2 = zones.filter(z => p2[zones.indexOf(z)].p.length > 0);
                     a.z2 = av2[Math.floor(Math.random() * av2.length)]; 
                 }
                 a.p1 = pull(a.z1, 0, a.mobility); a.p2 = pull(a.z2, 1, a.mobility);
@@ -1089,29 +1130,40 @@
         displayDraw();
     }
 
-    function isPegSafe(p, d) { 
-        if(mobilityMode === 'B') return (document.getElementById('accPegsAnchor').value.match(/\d+/g) || []).includes(String(p)); 
-        return (document.getElementById(d === 1 ? 'accPegs1_a' : 'accPegs2_a').value.match(/\d+/g) || []).includes(String(p)); 
+    function toggleSwapMode() { 
+        isSwapMode = !isSwapMode; 
+        swapObj1 = null; 
+        document.getElementById('swapPrompt').style.display = isSwapMode ? 'block' : 'none'; 
+        displayDraw(); 
     }
-
-    function toggleExportMenu() { const m = document.getElementById('exportMenu'); m.style.display = m.style.display === 'none' ? 'flex' : 'none'; }
-
-    function toggleSwapMode() { isSwapMode = !isSwapMode; swapObj1 = null; document.getElementById('swapPrompt').style.display = isSwapMode ? 'block' : 'none'; displayDraw(); }
 
     function handleSwapClick(eId, aI, day) { 
         if(!isSwapMode) return; 
-        if(!swapObj1) { swapObj1 = {eId, aI, day}; displayDraw(); } else { 
-            if(swapObj1.day !== day) { alert("Please select another Day " + swapObj1.day + " peg to complete the swap."); return; }
-            const e1 = appState.find(e => e.id === swapObj1.eId); const e2 = appState.find(e => e.id === eId); 
-            const a1 = e1.anglers[swapObj1.aI]; const a2 = e2.anglers[aI]; 
-            if(day === 1) { [a1.z1, a2.z1] = [a2.z1, a1.z1]; [a1.p1, a2.p1] = [a2.p1, a1.p1]; } 
-            else { [a1.z2, a2.z2] = [a2.z2, a1.z2]; [a1.p2, a2.p2] = [a2.p2, a1.p2]; }
+        if(!swapObj1) { 
+            swapObj1 = {eId, aI, day}; 
+            displayDraw(); 
+        } else { 
+            if(swapObj1.day !== day) { 
+                alert("Please select another Day " + swapObj1.day + " peg to complete the swap."); 
+                return; 
+            }
+            const e1 = appState.find(e => e.id === swapObj1.eId); 
+            const e2 = appState.find(e => e.id === eId); 
+            const a1 = e1.anglers[swapObj1.aI]; 
+            const a2 = e2.anglers[aI]; 
+            if(day === 1) { 
+                [a1.z1, a2.z1] = [a2.z1, a1.z1]; [a1.p1, a2.p1] = [a2.p1, a1.p1]; 
+            } else { 
+                [a1.z2, a2.z2] = [a2.z2, a1.z2]; [a1.p2, a2.p2] = [a2.p2, a1.p2]; 
+            }
             toggleSwapMode(); 
         } 
     }
 
     function runValidator() {
-        let errors = []; let pM1 = { RED:[], YELLOW:[], GREEN:[], BLUE:[] }; let pM2 = { RED:[], YELLOW:[], GREEN:[], BLUE:[] };
+        let errors = []; 
+        let pM1 = { RED:[], YELLOW:[], GREEN:[], BLUE:[] }; 
+        let pM2 = { RED:[], YELLOW:[], GREEN:[], BLUE:[] };
         appState.forEach(team => {
             let tN = team.tName || 'SOLO';
             if (team.isTeam) {
@@ -1136,61 +1188,98 @@
     function displayDraw() {
         document.querySelectorAll('body > div[id$="Section"]').forEach(s => s.style.display = 'none');
         document.getElementById('resultsSection').style.display = 'block';
-        document.getElementById('resTitle').innerText = document.getElementById('matchTitle').value || "DRAW";
-        document.getElementById('commandBar').style.display = 'none';
-
-        // UPDATE DYNAMIC KEY
+        document.getElementById('nuclearResetBtn').style.display = 'none'; 
+        document.getElementById('resTitle').innerText = document.getElementById('matchTitle').value || "MATCH DRAW";
+        
         const s = currentZoneSize;
         document.getElementById('keyRed').innerText = `RED (1-${s})`;
         document.getElementById('keyYellow').innerText = `YELLOW (${s+1}-${s*2})`;
         document.getElementById('keyGreen').innerText = `GREEN (${(s*2)+1}-${s*3})`;
         document.getElementById('keyBlue').innerText = `BLUE (${(s*3)+1}-${s*4})`;
 
-        const anom = runValidator(); const banner = document.getElementById('anomalyBanner'); const list = document.getElementById('anomalyList');
-        if (anom.length > 0) { banner.style.display = 'block'; list.innerHTML = anom.map(err => `<li>${err}</li>`).join(''); } 
-        else { banner.style.display = 'none'; }
+        const anom = runValidator(); 
+        const banner = document.getElementById('anomalyBanner'); 
+        const list = document.getElementById('anomalyList');
+        if (anom.length > 0) { 
+            banner.style.display = 'block'; 
+            list.innerHTML = anom.map(err => `<li>${err}</li>`).join(''); 
+        } else { 
+            banner.style.display = 'none'; 
+        }
 
         const tb = document.getElementById('teamsBucket'); tb.innerHTML = ''; 
         const sb = document.getElementById('solosBucket'); sb.innerHTML = '';
         
         appState.forEach(g => {
-            const div = document.createElement('div'); div.className = 'zone-card';
-            const fZ = g.anglers[0]?.z1; div.style.borderTopColor = zColors[fZ] || 'black';
-            let h = `<div class="zone-header" style="background:${zSofts[fZ]||'#f1f5f9'};"><span>${g.tName || 'SOLO'}</span></div>`;
+            const div = document.createElement('div'); 
+            div.className = 'zone-card';
+            div.style.borderTopColor = zColors[g.anglers[0].z1];
+            let h = `<div class="zone-header" style="background:${zSofts[g.anglers[0].z1]}"><span>${g.tName || 'SOLO'}</span></div>`;
             h += `<div class="res-row" style="border:none; font-size:10px; color:#64748b;"><span></span><span style="text-align:center;">DAY 1</span><span style="text-align:center;">DAY 2</span></div>`;
             g.anglers.forEach((a, aI) => {
-                let p1C = isSwapMode ? 'swap-active' : ''; if(swapObj1?.eId === g.id && swapObj1?.aI === aI && swapObj1?.day === 1) p1C += ' swap-selected';
-                let p2C = isSwapMode ? 'swap-active' : ''; if(swapObj1?.eId === g.id && swapObj1?.aI === aI && swapObj1?.day === 2) p2C += ' swap-selected';
+                let p1C = isSwapMode ? 'swap-active' : ''; 
+                if(swapObj1?.eId === g.id && swapObj1?.aI === aI && swapObj1?.day === 1) p1C += ' swap-selected';
+                let p2C = isSwapMode ? 'swap-active' : ''; 
+                if(swapObj1?.eId === g.id && swapObj1?.aI === aI && swapObj1?.day === 2) p2C += ' swap-selected';
+                
                 h += `<div class="res-row"><span class="angler-name">${a.name || ''}${a.mobility ? ' <span class="a-tag">[A]</span>' : ''}</span>
-                        <div class="draw-pill ${p1C}" style="background:${zColors[a.z1]}" onclick="handleSwapClick('${g.id}',${aI},1)"><span>${a.z1}</span> <span class="peg-num">${a.p1}</span>${isPegSafe(a.p1,1) ? '<br><small>[A]</small>' : ''}</div>
-                        <div class="draw-pill ${p2C}" style="background:${zColors[a.z2]}" onclick="handleSwapClick('${g.id}',${aI},2)"><span>${a.z2}</span> <span class="peg-num">${a.p2}</span>${isPegSafe(a.p2,2) ? '<br><small>[A]</small>' : ''}</div></div>`;
+                        <div class="draw-pill ${p1C}" style="background:${zColors[a.z1]}" onclick="handleSwapClick('${g.id}',${aI},1)"><span>${a.z1}</span> <span class="peg-num">${a.p1}</span></div>
+                        <div class="draw-pill ${p2C}" style="background:${zColors[a.z2]}" onclick="handleSwapClick('${g.id}',${aI},2)"><span>${a.z2}</span> <span class="peg-num">${a.p2}</span></div></div>`;
             });
-            div.innerHTML = h; if(g.isTeam) tb.appendChild(div); else sb.appendChild(div);
+            div.innerHTML = h; 
+            if(g.isTeam) tb.appendChild(div); else sb.appendChild(div);
         });
         document.getElementById('teamsBucketContainer').style.display = tb.innerHTML ? 'block' : 'none';
         document.getElementById('solosBucketContainer').style.display = sb.innerHTML ? 'block' : 'none';
+        document.getElementById('commandBar').style.display = 'none';
         window.scrollTo(0,0);
+    }
+
+    function handleAmend(isSafe) {
+        document.querySelectorAll('body > div[id$="Section"]').forEach(s => s.style.display = 'none');
+        document.getElementById('entrySection').style.display = 'block';
+        document.getElementById('commandBar').style.display = 'flex';
+        document.getElementById('nuclearResetBtn').style.display = 'block'; 
+        document.getElementById('setupPanel').style.display = isSafe ? 'none' : 'block';
+        document.getElementById('editDrawBanner').style.display = isSafe ? 'block' : 'none';
+        document.getElementById('accPanelWrapper').style.display = isSafe ? 'none' : 'flex';
+        renderStateToScreen();
+    }
+
+    function isPegSafe(p, d) { 
+        if(mobilityMode === 'B') return (document.getElementById('accPegsAnchor').value.match(/\d+/g) || []).includes(String(p)); 
+        return (document.getElementById(d === 1 ? 'accPegs1_a' : 'accPegs2_a').value.match(/\d+/g) || []).includes(String(p)); 
+    }
+
+    function toggleExportMenu() { 
+        const m = document.getElementById('exportMenu'); 
+        m.style.display = m.style.display === 'none' ? 'flex' : 'none'; 
     }
 
     function generateRegistrationSheet() {
         const c = document.getElementById('registrationPrintSection'); c.innerHTML = '';
         let h = `<div class="roster-header"><h1>${document.getElementById('matchTitle').value}</h1><h2>REGISTRATION</h2></div><table class="print-table"><thead><tr><th>NAME</th><th>TEAM</th><th>PRESENT</th><th>FEES</th><th>POOLS</th></tr></thead><tbody>`;
-        appState.sort((a,b) => (a.tName || "SOLO").localeCompare(b.tName || "SOLO")).forEach(e => { e.anglers.forEach(a => { 
-            h += `<tr><td>${a.name || ''}${a.mobility ? ' [A]' : ''}</td><td>${e.tName || 'SOLO'}</td><td><div class="print-checkbox"></div></td><td><div class="print-checkbox"></div></td><td><div class="print-checkbox"></div></td></tr>`; 
-        }); });
+        appState.sort((a,b) => (a.tName || "SOLO").localeCompare(b.tName || "SOLO")).forEach(e => { 
+            e.anglers.forEach(a => { 
+                h += `<tr><td>${a.name || ''}${a.mobility ? ' [A]' : ''}</td><td>${e.tName || 'SOLO'}</td><td><div class="print-checkbox"></div></td><td><div class="print-checkbox"></div></td><td><div class="print-checkbox"></div></td></tr>`; 
+            }); 
+        });
         c.innerHTML = h + "</tbody></table>"; 
         document.body.classList.add('printing-registration'); window.print(); document.body.classList.remove('printing-registration');
     }
 
     function printZoneRosters() {
         const c = document.getElementById('rosterSection'); c.innerHTML = '';
-        [1, 2].forEach(d => { zones.forEach(z => {
-            let list = []; appState.forEach(e => { e.anglers.forEach(a => { if((d === 1 ? a.z1 : a.z2) === z) list.push({ n: a.name || '', t: e.tName, p: (d === 1 ? a.p1 : a.p2) }); }); });
-            if(!list.length) return; list.sort((a, b) => a.p - b.p);
-            let h = `<div class="roster-page"><div class="roster-header"><h1>DAY ${d} - ${z}</h1></div><table class="print-table"><thead><tr><th>PEG</th><th>NAME</th><th>TEAM</th></tr></thead><tbody>`;
-            list.forEach(i => { h += `<tr><td>${i.p}</td><td>${i.n}</td><td>${i.t || 'SOLO'}</td></tr>`; });
-            c.innerHTML += h + "</tbody></table></div>";
-        }); });
+        [1, 2].forEach(d => { 
+            zones.forEach(z => {
+                let list = []; 
+                appState.forEach(e => { e.anglers.forEach(a => { if((d === 1 ? a.z1 : a.z2) === z) list.push({ n: a.name || '', t: e.tName, p: (d === 1 ? a.p1 : a.p2) }); }); });
+                if(!list.length) return; list.sort((a, b) => a.p - b.p);
+                let h = `<div class="roster-page"><div class="roster-header"><h1>DAY ${d} - ${z}</h1></div><table class="print-table"><thead><tr><th>PEG</th><th>NAME</th><th>TEAM</th></tr></thead><tbody>`;
+                list.forEach(i => { h += `<tr><td>${i.p}</td><td>${i.n}</td><td>${i.t || 'SOLO'}</td></tr>`; });
+                c.innerHTML += h + "</tbody></table></div>";
+            }); 
+        });
         document.body.classList.add('printing-rosters'); window.print(); document.body.classList.remove('printing-rosters');
     }
 
@@ -1211,47 +1300,27 @@
         document.body.classList.add('printing-dispatch'); window.print(); document.body.classList.remove('printing-dispatch');
     }
 
-    function exportToCSV() {
-        let csv = "NAME,TEAM,DAY 1 ZONE,DAY 2 ZONE\n"; appState.forEach(g => { g.anglers.forEach(a => { csv += `${a.name || ''},${g.tName || 'SOLO'},${a.z1},${a.z2}\n`; }); });
-        const b = new Blob([csv], { type: 'text/csv' }); const l = document.createElement('a'); l.href = URL.createObjectURL(b); l.download = "LIST.csv"; l.click();
-    }
-
-    function exportAccountingCSV() {
-        let csv = "NAME,TEAM,PRESENT,PAID\n"; appState.forEach(g => { g.anglers.forEach(a => { csv += `${a.name || ''},${g.tName || 'SOLO'},,\n`; }); });
-        const b = new Blob([csv], { type: 'text/csv' }); const l = document.createElement('a'); l.href = URL.createObjectURL(b); l.download = "ACCOUNTING.csv"; l.click();
-    }
-
-    function handleAmend() { 
-        document.querySelectorAll('body > div[id$="Section"]').forEach(s => s.style.display = 'none'); 
-        document.getElementById('entrySection').style.display = 'block'; 
-        document.getElementById('commandBar').style.display = 'flex'; 
-        if(appState.length > 0) { document.getElementById('initMatchBtn').style.display = 'none'; document.getElementById('amendTools').style.display = 'flex'; document.getElementById('actionBtnArea').style.display = 'flex'; }
-        const hasD = appState.some(e => e.anglers.some(a => a.z1));
-        document.getElementById('setupPanel').style.display = hasD ? 'none' : 'block';
-        document.getElementById('editDrawBanner').style.display = hasD ? 'block' : 'none';
-        renderStateToScreen(); 
-    }
-    
     function shareDraw() {
         const el = document.getElementById('resultsSection'); 
         html2pdf().set({ margin: 0.2, filename: 'DRAW.pdf', image: { type: 'jpeg', quality: 0.98 }, html2canvas: { scale: 2 }, jsPDF: { unit: 'in', format: 'a4' } }).from(el).save();
     }
 
+    function exportToCSV() {
+        let csv = "NAME,TEAM,DAY 1 ZONE,DAY 1 PEG,DAY 2 ZONE,DAY 2 PEG\n"; 
+        appState.forEach(g => { g.anglers.forEach(a => { csv += `${a.name || ''},${g.tName || 'SOLO'},${a.z1},${a.p1},${a.z2},${a.p2}\n`; }); });
+        const b = new Blob([csv], { type: 'text/csv' }); const l = document.createElement('a'); l.href = URL.createObjectURL(b); l.download = "LIST.csv"; l.click();
+    }
+
     window.onload = () => {
-        isAppReady = false; let saved = localStorage.getItem('zonedraw_current_state_v12');
-        if (saved) {
-            let e = JSON.parse(saved); document.getElementById('matchTitle').value = e.title || '';
-            document.getElementById('accPegs1_a').value = e.safePegs1_a || ''; document.getElementById('accPegs2_a').value = e.safePegs2_a || '';
-            document.getElementById('accPegsAnchor').value = e.safePegsAnchor || ''; 
-            if(e.anchorZone) document.getElementById('anchorZoneSelect').value = e.anchorZone;
-            setMobilityMode(e.mobilityMode || 'A'); setDays(e.days || 2); appState = e.data || []; 
-            if (appState.length > 0) { document.getElementById('initMatchBtn').style.display = 'none'; document.getElementById('commandBar').style.display = 'flex'; document.getElementById('amendTools').style.display = 'flex';
-                document.getElementById('initTeams').value = appState.filter(item => item.isTeam).length;
-                document.getElementById('initIndivs').value = appState.filter(item => !item.isTeam).length;
-            }
-            if (appState.some(e => e.anglers.some(a => a.z1))) displayDraw(); else handleAmend();
-        } else { startNewDraw(); }
-        setTimeout(() => { isAppReady = true; }, 500); 
+        let s = localStorage.getItem('zonedraw_current_state_v12');
+        if(s) {
+            let e = JSON.parse(s); document.getElementById('matchTitle').value = e.title || '';
+            appState = e.data || []; matchDays = e.days || 2; currentZoneSize = e.zoneSize || 0; mobilityMode = e.mobilityMode || 'A';
+            document.getElementById('accPegs1_a').value = e.safePegs1_a || ''; 
+            document.getElementById('accPegs2_a').value = e.safePegs2_a || '';
+            if(appState.some(x => x.anglers.some(a => a.z1))) displayDraw(); else handleAmend(false);
+        } else { handleAmend(false); }
+        isAppReady = true;
     };
 </script>
 </body>
